@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "lib": ["dom","dom.iterable", "esnext"],
+    "noImplicitAny": true,
+    "target": "ES2017",
+    "module": "ESNext",
+    "sourceMap": false,
+    "declaration": true,
+    "declarationDir": "./dist",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "jsx": "react-jsx",
+    "useDefineForClassFields": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "resolveJsonModule": true
+  },
+  "exclude": [
+    "node_modules",
+    "api/src",
+    "webpack.config.ts",
+    "__tests__/"
+  ]
+}

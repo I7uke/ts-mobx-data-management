@@ -1,19 +1,26 @@
-import {v4 as uuidv4} from 'uuid';
-import {DataWithUuid} from "../../interfaces/dataWithUuid";
+import cloneDeep from "lodash.clonedeep";
+import {DataWithUuid} from "./type/dataWithUuid";
 
-type CallbackApplyFilters<DataItem extends DataWithUuid> = (data: DataItem[]) => DataItem[];
+type CallbackApplyFilters<TItem extends DataWithUuid> = (dataList: TItem[]) => TItem[];
 
-interface InitDataStoreDataManager<DataItem extends DataWithUuid> {
-    dataForManage?: DataItem[];
-    callbackApplyFilters?: CallbackApplyFilters<DataItem>
+type InitData<TItem extends DataWithUuid> = {
+    readonly dataList?:TItem[];
+    readonly filters?: CallbackApplyFilters<TItem>;
 }
 
 /**
  * Хранилище для управления данными
  */
-export class StoreDataManager<DataItem extends DataWithUuid> {
+export class StoreDataManager<TItem extends DataWithUuid> {
+
+    private _dataList: TItem[];
+
+    get dataList(): TItem[] {
+        return cloneDeep(this._dataList);
+    }
+
+
     //region Данные для управления
-    private _dataForManage: DataItem[];
 
     /**
      * Получить все текущие управляемые данные
