@@ -154,7 +154,7 @@ export class StoreDataSource<TItem extends DataWithUuid> {
         }
     }
 
-    private _applyFilters(): TItem[] {
+    private _applyCallbackFilter(): TItem[] {
         const itemsArray: TItem[] = this._getItemsArray();
 
         if (typeof this._callbackApplyFilters === 'function') {
@@ -245,10 +245,10 @@ export class StoreDataSource<TItem extends DataWithUuid> {
     public deleteItemByUuid(uuid: string, isWithoutTrigger?: boolean ): boolean {
         const isDeleteItem: boolean = this._deleteItemByUuid(uuid);
 
-        if(isWithoutTrigger) {
+        if(!isWithoutTrigger) {
             this._applyCallbacksListenersChangeDataSource({
                 changeType: 'deleteItem',
-                itemsList: this._applyFilters()
+                itemsList: this._applyCallbackFilter()
             });
         }
 
@@ -277,11 +277,11 @@ export class StoreDataSource<TItem extends DataWithUuid> {
             }
         }
 
-        if (isWithoutTrigger) {
+        if (!isWithoutTrigger) {
             if (isDeleteAllSuccess) {
                 this._applyCallbacksListenersChangeDataSource({
                     changeType: 'deleteItem',
-                    itemsList: this._applyFilters()
+                    itemsList: this._applyCallbackFilter()
                 });
             }
         }
@@ -297,10 +297,10 @@ export class StoreDataSource<TItem extends DataWithUuid> {
     public addNewItem(item: TItem, isWithoutTrigger?: boolean ): TItem {
        const newItem = this._addNewItem(item);
 
-        if(isWithoutTrigger) {
+        if(!isWithoutTrigger) {
             this._applyCallbacksListenersChangeDataSource({
                 changeType: 'addNewItem',
-                itemsList: this._applyFilters()
+                itemsList: this._applyCallbackFilter()
             });
         }
 
@@ -324,10 +324,10 @@ export class StoreDataSource<TItem extends DataWithUuid> {
             addedItemsList.push(addedItem);
         }
 
-        if(isWithoutTrigger) {
+        if(!isWithoutTrigger) {
             this._applyCallbacksListenersChangeDataSource({
                 changeType: 'addNewItem',
-                itemsList: this._applyFilters()
+                itemsList: this._applyCallbackFilter()
             });
         }
 
@@ -335,26 +335,31 @@ export class StoreDataSource<TItem extends DataWithUuid> {
     }
 
 
+    /**
+     * Редактировать существующий элемент
+     * Вернет элемент если его удалось найти в общем списке
+     * Если элемент не удалось найти вернет undefined
+     * @param item
+     * @param isWithoutTrigger
+     */
+    public editItem(item: TItem, isWithoutTrigger?: boolean ): TItem | undefined {
+        const editItem: TItem | undefined = this._ediItem(item);
+
+        if(!isWithoutTrigger) {
+            if (editItem){
+                this._applyCallbacksListenersChangeDataSource({
+                    changeType: 'editItem',
+                    itemsList: this._applyCallbackFilter()
+                });
+            }
+        }
+
+        return editItem;
+    }
 
 
-    //
-    // /**
-    //  * Редактировать существующий элемент, создает КОПИЮ и редактирует ее
-    //  * Вернет true если элемент удалось изменить
-    //  * @param item
-    //  */
-    // public editExistingItem(item: DataItem): DataItem | undefined {
-    //     const copyEditItem: DataItem = Object.assign({}, item);
-    //
-    //     for (let i = 0; i < this._dataForManage.length; ++i) {
-    //         if (this._dataForManage[i].uuid === copyEditItem.uuid) {
-    //             this._dataForManage[i] = copyEditItem;
-    //             return copyEditItem;
-    //         }
-    //     }
-    //     return undefined;
-    // }
-    //
+
+
     //
     //
     //
