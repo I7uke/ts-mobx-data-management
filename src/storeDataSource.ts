@@ -1,19 +1,25 @@
 import cloneDeep from "lodash.clonedeep";
-import {DataWithUuid} from "./type/dataWithUuid";
 import {v4 as uuidv4} from 'uuid';
 
-type ChangeDataSource<TItem extends DataWithUuid> = {
+export interface DataSourceItem {
+    readonly uuid: string;
+}
+
+type ChangeDataSource<TItem extends DataSourceItem> = {
     readonly changeType: 'addNewItem' | 'editItem' | 'deleteItem' | 'clear' | 'destroy';
     readonly itemsList: TItem[];
 }
 
-type CallbackApplyFilters<TItem extends DataWithUuid> = (dataList: TItem[]) => TItem[];
-type CallbackChangeDataSource<TItem extends DataWithUuid> = (param: ChangeDataSource<TItem>) => void;
+type CallbackApplyFilters<TItem extends DataSourceItem> = (dataList: TItem[]) => TItem[];
+type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ChangeDataSource<TItem>) => void;
+
+
+const ERROR_INVALID_ITEM_TYPE: string = 'Invalid item type';
 
 /**
  * Хранилище для управления данными
  */
-export default class StoreDataSource<TItem extends DataWithUuid> {
+export default class StoreDataSource<TItem extends DataSourceItem> {
     /**
      * Элементы для внутреннего хранения в формат Hash Tables
      * @private
@@ -40,6 +46,10 @@ export default class StoreDataSource<TItem extends DataWithUuid> {
      * @private
      */
     private _validNewItem(item: TItem): TItem {
+        if (typeof item !== 'object') {
+            throw new Error(ERROR_INVALID_ITEM_TYPE);
+        }
+
         const copyItem: TItem = cloneDeep(item);
 
         if (typeof copyItem.uuid !== 'string') {
@@ -74,6 +84,10 @@ export default class StoreDataSource<TItem extends DataWithUuid> {
      * @private
      */
     private _validExistingItem(item: TItem): TItem | undefined {
+        if (typeof item !== 'object') {
+            throw new Error(ERROR_INVALID_ITEM_TYPE);
+        }
+
         if (typeof item.uuid !== 'string') {
             return undefined;
         }
@@ -401,6 +415,9 @@ export default class StoreDataSource<TItem extends DataWithUuid> {
      * @param isWithoutTrigger - триггеры слушателей не сработают если флаг будет установлен в true
      */
     public addNewItem(item: TItem, isWithoutTrigger?: boolean): TItem {
+
+
+
         const newItem = this._addNewItem(item);
 
         if (!isWithoutTrigger) {
