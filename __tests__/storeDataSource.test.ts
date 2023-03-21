@@ -1,4 +1,8 @@
-import StoreDataSource, {DataSourceItem} from "../src/storeDataSource";
+import StoreDataSource, {
+    DataSourceItem,
+    DataSourceItemChangeType,
+    ListenerChangeDataSource
+} from "../src/storeDataSource";
 import {v4 as uuidv4} from 'uuid';
 
 interface TestDataType extends DataSourceItem {
@@ -14,7 +18,7 @@ interface TestDataType extends DataSourceItem {
     }
 }
 
-function GET_TEST_ITEM():TestDataType {
+function GET_TEST_ITEM(): TestDataType {
     return {
         uuid: uuidv4(),
         fieldBoolean: true,
@@ -333,11 +337,11 @@ test('Add new item wrong type empty Object', () => {
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     // @ts-ignore
     const newItem = testStoreDataSource.addNewItem({})
-    expect(newItem).toEqual({uuid: newItem?.uuid });
+    expect(newItem).toEqual({uuid: newItem?.uuid});
 });
 
 test('Add new item wrong type Object without uuid', () => {
-    const testStoreDataSource: StoreDataSource<{uuid: string, a: number, b: number}> = new StoreDataSource<{uuid: string, a: number, b: number}>();
+    const testStoreDataSource: StoreDataSource<{ uuid: string, a: number, b: number }> = new StoreDataSource<{ uuid: string, a: number, b: number }>();
     // @ts-ignore
     const newItem = testStoreDataSource.addNewItem({a: 1, b: 2})
     expect(newItem).toEqual({uuid: newItem?.uuid, a: 1, b: 2});
@@ -413,7 +417,7 @@ test('Edit item wrong type empty Object', () => {
 });
 
 test('Edit item wrong type Object without uuid', () => {
-    const testStoreDataSource: StoreDataSource<{uuid: string, a: number, b: number}> = new StoreDataSource<{uuid: string, a: number, b: number}>();
+    const testStoreDataSource: StoreDataSource<{ uuid: string, a: number, b: number }> = new StoreDataSource<{ uuid: string, a: number, b: number }>();
     // @ts-ignore
     const newItem = testStoreDataSource.editItem({a: 1, b: 2})
     expect(newItem).toEqual(undefined);
@@ -456,7 +460,10 @@ test('Delete items list by uuid wrong type 1', () => {
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     testStoreDataSource.setNewDataSource(TEST_DATA);
     // @ts-ignore
-    testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, 0, 1, 2, undefined, null, '', 'uuid', [], {
+        a: 1,
+        b: 2
+    }]);
     expect(testStoreDataSource.itemsCount).toEqual(99);
 });
 
@@ -465,7 +472,10 @@ test('Delete items list by uuid wrong type 2', () => {
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     testStoreDataSource.setNewDataSource(TEST_DATA);
     // @ts-ignore
-    const isDelete: boolean = testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    const isDelete: boolean = testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, 0, 1, 2, undefined, null, '', 'uuid', [], {
+        a: 1,
+        b: 2
+    }]);
     expect(isDelete).toEqual(false);
 });
 
@@ -476,7 +486,7 @@ test('Add new items list 1', () => {
     const newItem1 = GET_TEST_ITEM();
     const newItem2 = GET_TEST_ITEM();
     const newItem3 = GET_TEST_ITEM();
-    expect(testStoreDataSource.addNewItemsList([newItem1, newItem2, newItem3])).toEqual([newItem1,newItem2, newItem3]);
+    expect(testStoreDataSource.addNewItemsList([newItem1, newItem2, newItem3])).toEqual([newItem1, newItem2, newItem3]);
 });
 
 test('Count items after add new items list', () => {
@@ -511,7 +521,7 @@ test('Add new items list wrong type 1', () => {
     const newItem1: TestDataType = GET_TEST_ITEM();
     const newItem2: TestDataType = GET_TEST_ITEM();
     // @ts-ignore
-    testStoreDataSource.addNewItemsList([newItem1,newItem2, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    testStoreDataSource.addNewItemsList([newItem1, newItem2, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
     expect(testStoreDataSource.itemsCount).toEqual(103);
 });
 
@@ -522,7 +532,7 @@ test('Add new items list wrong type 2', () => {
     const newItem1: TestDataType = GET_TEST_ITEM();
     const newItem2: TestDataType = GET_TEST_ITEM();
     // @ts-ignore
-    expect(testStoreDataSource.addNewItemsList([newItem1,newItem2, 0, 1, 2, undefined, null, '', 'uuid', [] ])).toEqual([newItem1,newItem2]);
+    expect(testStoreDataSource.addNewItemsList([newItem1, newItem2, 0, 1, 2, undefined, null, '', 'uuid', []])).toEqual([newItem1, newItem2]);
 });
 
 test('Edit items list 1', () => {
@@ -558,9 +568,184 @@ test('Edit items list wrong type 1', () => {
     const TEST_DATA = GET_TEST_DATA(100);
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     testStoreDataSource.setNewDataSource(TEST_DATA);
-    const editItem1: TestDataType =  TEST_DATA[0];
-    const editItem2: TestDataType =  TEST_DATA[1];
+    const editItem1: TestDataType = TEST_DATA[0];
+    const editItem2: TestDataType = TEST_DATA[1];
     // @ts-ignore
-    const result =testStoreDataSource.editItemsList([editItem1, editItem2, 0, 1, 2, undefined, null, '', 'uuid', []]);
+    const result = testStoreDataSource.editItemsList([editItem1, editItem2, 0, 1, 2, undefined, null, '', 'uuid', []]);
     expect(result).toEqual([editItem1, editItem2]);
+});
+
+test('Listener addNewItem 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA, true);
+    const newItem: TestDataType = GET_TEST_ITEM();
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    testStoreDataSource.addNewItem(newItem);
+
+    expect(result).toEqual({
+        changeType: 'addNewItem',
+        itemsList: [...TEST_DATA, newItem]
+    });
+});
+
+test('Listener addNewItem 2', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const newItem: TestDataType = GET_TEST_ITEM();
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    testStoreDataSource.addNewItem(newItem, true);
+    expect(result).toEqual(undefined);
+});
+
+test('Listener deleteItemByUuid 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA, true);
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    testStoreDataSource.deleteItemByUuid(TEST_DATA[0].uuid);
+
+    expect(result).toEqual({
+        changeType: 'deleteItem',
+        itemsList: TEST_DATA.slice(1)
+    });
+});
+
+test('Listener deleteItemByUuid 2', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA, true);
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    testStoreDataSource.deleteItemByUuid(TEST_DATA[0].uuid, true);
+    expect(result).toEqual(undefined);
+});
+
+test('Listener editItem 1', () => {
+    const TEST_DATA = GET_TEST_DATA(5);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA, true);
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    const editItem: TestDataType = {
+        ...TEST_DATA[0],
+        fieldDate: new Date(),
+        fieldString: 'change text',
+        fieldNumber: 100500
+    };
+
+    testStoreDataSource.editItem(editItem);
+
+    expect(result).toStrictEqual({
+        changeType: 'editItem',
+        itemsList: [editItem, ...TEST_DATA.slice(1)]
+    });
+});
+
+test('Listener editItem 2', () => {
+    const TEST_DATA = GET_TEST_DATA(5);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA, true);
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    const editItem: TestDataType = {
+        ...TEST_DATA[0],
+        fieldDate: new Date(),
+        fieldString: 'change text',
+        fieldNumber: 100500
+    };
+
+    testStoreDataSource.editItem(editItem, true);
+
+    expect(result).toStrictEqual(undefined);
+});
+
+test('Listener setNewDataSource 1', () => {
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    const TEST_DATA = GET_TEST_DATA(5);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    })
+
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+
+    expect(result).toStrictEqual({
+        changeType: 'newDataSource',
+        itemsList: TEST_DATA
+    });
+});
+
+test('Listener setNewDataSource 2', () => {
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    const TEST_DATA = GET_TEST_DATA(5);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    });
+
+    testStoreDataSource.setNewDataSource(TEST_DATA, true);
+    expect(result).toStrictEqual(undefined);
+});
+
+test('Listener removeListenerChangeDataSource 1', () => {
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    const TEST_DATA = GET_TEST_DATA(5);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+
+    const listener = (param: ListenerChangeDataSource<TestDataType>) => {
+        result = param;
+    };
+
+    testStoreDataSource.addListenerChangeDataSource(listener)
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    expect(testStoreDataSource.removeListenerChangeDataSource(listener)).toStrictEqual(true);
+});
+
+test('Listener removeListenerChangeDataSource 2', () => {
+    let result: ListenerChangeDataSource<TestDataType> | undefined = undefined;
+
+    const TEST_DATA = GET_TEST_DATA(5);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+
+    testStoreDataSource.addListenerChangeDataSource((param) => {
+        result = param;
+    })
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    expect(testStoreDataSource.removeListenerChangeDataSource((param: ListenerChangeDataSource<TestDataType>) => {
+        result = param;
+    })).toStrictEqual(false);
 });

@@ -5,13 +5,15 @@ export interface DataSourceItem {
     readonly uuid: string;
 }
 
-type ChangeDataSource<TItem extends DataSourceItem> = {
-    readonly changeType: 'addNewItem' | 'editItem' | 'deleteItem' | 'clear' | 'destroy';
+export type DataSourceItemChangeType = 'addNewItem' | 'editItem' | 'deleteItem' | 'clear' | 'destroy' | 'newDataSource';
+
+export type ListenerChangeDataSource<TItem extends DataSourceItem> = {
+    readonly changeType: DataSourceItemChangeType;
     readonly itemsList: TItem[];
 }
 
 type CallbackApplyFilters<TItem extends DataSourceItem> = (dataList: TItem[]) => TItem[];
-type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ChangeDataSource<TItem>) => void;
+type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ListenerChangeDataSource<TItem>) => void;
 
 /**
  * Хранилище для управления данными
@@ -47,7 +49,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
             return undefined;
         }
 
-        if(Array.isArray(item)) {
+        if (Array.isArray(item)) {
             return undefined;
         }
 
@@ -93,7 +95,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
             return undefined;
         }
 
-        if(Array.isArray(item)) {
+        if (Array.isArray(item)) {
             return undefined;
         }
 
@@ -124,7 +126,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
     private _addNewItem(newItem: TItem): TItem | undefined {
         const validNewItem = this._validNewItem(newItem);
 
-        if(!validNewItem) {
+        if (!validNewItem) {
             return undefined;
         }
 
@@ -200,7 +202,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @param param
      * @private
      */
-    private _applyCallbacksListenersChangeDataSource(param: ChangeDataSource<TItem>) {
+    private _applyCallbacksListenersChangeDataSource(param: ListenerChangeDataSource<TItem>) {
         for (const keyListener in this._callbacksListenersChangeDataSource) {
             if (this._callbacksListenersChangeDataSource.hasOwnProperty(keyListener)) {
                 if (typeof this._callbacksListenersChangeDataSource[keyListener] === 'function') {
@@ -258,13 +260,13 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * Удалить слушатель изменения данных
      * @param listener
      */
-    public removeListenerChangeDataSource(listener: CallbackChangeDataSource<TItem>) {
+    public removeListenerChangeDataSource(listener: CallbackChangeDataSource<TItem>): boolean {
         for (const listenerId in this._callbacksListenersChangeDataSource) {
             if (listener === this._callbacksListenersChangeDataSource[listenerId]) {
-                delete this._callbacksListenersChangeDataSource[listenerId];
-                return;
+                return delete this._callbacksListenersChangeDataSource[listenerId];
             }
         }
+        return false;
     }
 
     /**
@@ -331,7 +333,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
 
         if (!isWithoutTrigger) {
             this._applyCallbacksListenersChangeDataSource({
-                changeType: 'addNewItem',
+                changeType: 'newDataSource',
                 itemsList: this._applyCallbackFilter()
             });
         }
