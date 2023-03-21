@@ -14,7 +14,7 @@ interface TestDataType extends DataSourceItem {
     }
 }
 
-function GET_TEST_ITEM() {
+function GET_TEST_ITEM():TestDataType {
     return {
         uuid: uuidv4(),
         fieldBoolean: true,
@@ -297,44 +297,270 @@ test('Get new item by uuid', () => {
     expect(testStoreDataSource.getItemByUuid(newItem.uuid)).toEqual(newItem);
 });
 
-test('Get new item by uuid wrong type', () => {
+test('Add new item wrong type number', () => {
     const TEST_DATA = GET_TEST_DATA(100);
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     testStoreDataSource.setNewDataSource(TEST_DATA);
     // @ts-ignore
-    expect(testStoreDataSource.addNewItem(0)).toThrow();
+    expect(testStoreDataSource.addNewItem(0)).toEqual(undefined);
+});
+
+test('Add new item wrong type null', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.addNewItem(null)).toEqual(undefined);
+});
+
+test('Add new item wrong type undefined', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.addNewItem(undefined)).toEqual(undefined);
+});
+
+test('Add new item wrong type Array', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.addNewItem([])).toEqual(undefined);
+});
+
+test('Add new item wrong type empty Object', () => {
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    // @ts-ignore
+    const newItem = testStoreDataSource.addNewItem({})
+    expect(newItem).toEqual({uuid: newItem?.uuid });
+});
+
+test('Add new item wrong type Object without uuid', () => {
+    const testStoreDataSource: StoreDataSource<{uuid: string, a: number, b: number}> = new StoreDataSource<{uuid: string, a: number, b: number}>();
+    // @ts-ignore
+    const newItem = testStoreDataSource.addNewItem({a: 1, b: 2})
+    expect(newItem).toEqual({uuid: newItem?.uuid, a: 1, b: 2});
+});
+
+test('Edit item', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const editItem: TestDataType = {
+        ...TEST_DATA[0],
+        fieldDate: new Date(),
+        fieldString: 'change text',
+        fieldNumber: 100500
+    };
+
+    expect(testStoreDataSource.editItem(editItem)).toEqual(editItem);
+});
+
+test('Get edit item by uuid', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+
+    const editItem: TestDataType = {
+        ...TEST_DATA[0],
+        fieldDate: new Date(),
+        fieldString: 'change text',
+        fieldNumber: 100500
+    };
+
+    testStoreDataSource.editItem(editItem);
+    expect(testStoreDataSource.getItemByUuid(editItem.uuid)).toEqual(editItem);
+});
+
+test('Edit item wrong type number', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.editItem(0)).toEqual(undefined);
+});
+
+test('Edit item wrong type null', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.editItem(null)).toEqual(undefined);
+});
+
+test('Edit item wrong type undefined', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.editItem(undefined)).toEqual(undefined);
+});
+
+test('Edit item wrong type Array', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    expect(testStoreDataSource.editItem([])).toEqual(undefined);
+});
+
+test('Edit item wrong type empty Object', () => {
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    // @ts-ignore
+    const newItem = testStoreDataSource.editItem({})
+    expect(newItem).toEqual(undefined);
+});
+
+test('Edit item wrong type Object without uuid', () => {
+    const testStoreDataSource: StoreDataSource<{uuid: string, a: number, b: number}> = new StoreDataSource<{uuid: string, a: number, b: number}>();
+    // @ts-ignore
+    const newItem = testStoreDataSource.editItem({a: 1, b: 2})
+    expect(newItem).toEqual(undefined);
+});
+
+test('Delete items list by uuid 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    expect(testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, TEST_DATA[1].uuid, TEST_DATA[2].uuid])).toEqual(true);
 });
 
 
+test('Delete items list by uuid 2', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const isDelete: boolean = testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, '111', '222']);
+    expect(isDelete).toEqual(false);
+});
 
+test('Count items after delete items list by uuid', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, TEST_DATA[1].uuid, TEST_DATA[2].uuid]);
+    expect(testStoreDataSource.itemsCount).toEqual(97);
+});
 
-// test('Items count after add new item', () => {
-//     expect(testStoreDataSource.itemsCount).toEqual(100);
-// });
-//
-// test('Try get new item by uuid', () => {
-//     expect(testStoreDataSource.getItemByUuid(newItem.uuid)).toEqual(newItem);
-// });
-//
-// const changeItem: TestDataType = {
-//     uuid: testStoreDataSource.itemsList[0].uuid,
-//     fieldString: 'change',
-//     fieldNumber: -100,
-//     fieldBoolean: false,
-//     fieldDate: new Date(),
-//     fieldObject: {
-//         a: 1,
-//         b: 'Text b',
-//         c: false,
-//         d: new Date()
-//     }
-// }
-//
-//
-// test('Edit item', () => {
-//     expect(testStoreDataSource.editItem(changeItem)).toEqual(changeItem);
-// });
+test('Delete items list by uuid empty uuid', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, '', '123', 'uuid']);
+    expect(testStoreDataSource.itemsCount).toEqual(99);
+});
 
-// test('Try get change item by uuid', () => {
-//     expect(testStoreDataSource.getItemByUuid(changeItem.uuid)).toEqual(changeItem);
-// });
+test('Delete items list by uuid wrong type 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    expect(testStoreDataSource.itemsCount).toEqual(99);
+});
+
+test('Delete items list by uuid wrong type 2', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    // @ts-ignore
+    const isDelete: boolean = testStoreDataSource.deleteItemsListByUuid([TEST_DATA[0].uuid, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    expect(isDelete).toEqual(false);
+});
+
+test('Add new items list 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const newItem1 = GET_TEST_ITEM();
+    const newItem2 = GET_TEST_ITEM();
+    const newItem3 = GET_TEST_ITEM();
+    expect(testStoreDataSource.addNewItemsList([newItem1, newItem2, newItem3])).toEqual([newItem1,newItem2, newItem3]);
+});
+
+test('Count items after add new items list', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const newItem1 = GET_TEST_ITEM();
+    const newItem2 = GET_TEST_ITEM();
+    const newItem3 = GET_TEST_ITEM();
+    testStoreDataSource.addNewItemsList([newItem1, newItem2, newItem3]);
+    expect(testStoreDataSource.itemsCount).toEqual(103);
+});
+
+test('Add new items list with empty uuid', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const newItem1: TestDataType = GET_TEST_ITEM();
+    const newItem2: TestDataType = GET_TEST_ITEM();
+    const newItem3: TestDataType = {
+        ...GET_TEST_ITEM(),
+        uuid: ''
+    };
+    testStoreDataSource.addNewItemsList([newItem1, newItem2, newItem3]);
+    expect(testStoreDataSource.itemsCount).toEqual(103);
+});
+
+test('Add new items list wrong type 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const newItem1: TestDataType = GET_TEST_ITEM();
+    const newItem2: TestDataType = GET_TEST_ITEM();
+    // @ts-ignore
+    testStoreDataSource.addNewItemsList([newItem1,newItem2, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    expect(testStoreDataSource.itemsCount).toEqual(103);
+});
+
+test('Add new items list wrong type 2', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const newItem1: TestDataType = GET_TEST_ITEM();
+    const newItem2: TestDataType = GET_TEST_ITEM();
+    // @ts-ignore
+    expect(testStoreDataSource.addNewItemsList([newItem1,newItem2, 0, 1, 2, undefined, null, '', 'uuid', [] ])).toEqual([newItem1,newItem2]);
+});
+
+test('Edit items list 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    expect(testStoreDataSource.editItemsList([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2]])).toEqual([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2]]);
+});
+
+test('Count items after edit items list', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    testStoreDataSource.editItemsList([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2]])
+    expect(testStoreDataSource.itemsCount).toEqual(100);
+});
+
+test('Edit items list with empty uuid', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const editItem1: TestDataType = TEST_DATA[0];
+    const editItem2: TestDataType = TEST_DATA[1];
+    const editItem3: TestDataType = {
+        ...TEST_DATA[2],
+        uuid: ''
+    };
+    const result = testStoreDataSource.editItemsList([editItem1, editItem2, editItem3]);
+    expect(result).toEqual([editItem1, editItem2]);
+});
+
+test('Edit items list wrong type 1', () => {
+    const TEST_DATA = GET_TEST_DATA(100);
+    const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
+    testStoreDataSource.setNewDataSource(TEST_DATA);
+    const editItem1: TestDataType =  TEST_DATA[0];
+    const editItem2: TestDataType =  TEST_DATA[1];
+    // @ts-ignore
+    const result =testStoreDataSource.editItemsList([editItem1, editItem2, 0, 1, 2, undefined, null, '', 'uuid', []]);
+    expect(result).toEqual([editItem1, editItem2]);
+});

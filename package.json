@@ -6,7 +6,8 @@
   "sideEffects": false,
   "scripts": {
     "test": "jest",
-    "test-storeDataSource": "jest storeDataSource.test.ts"
+    "test-coverage": "jest",
+    "test-storeDataSource": "jest storeDataSource.test.ts --coverage"
   },
   "keywords": [
     "ts",

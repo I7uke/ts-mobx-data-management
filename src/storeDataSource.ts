@@ -13,9 +13,6 @@ type ChangeDataSource<TItem extends DataSourceItem> = {
 type CallbackApplyFilters<TItem extends DataSourceItem> = (dataList: TItem[]) => TItem[];
 type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ChangeDataSource<TItem>) => void;
 
-
-const ERROR_INVALID_ITEM_TYPE: string = 'Invalid item type';
-
 /**
  * Хранилище для управления данными
  */
@@ -45,9 +42,17 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @param item
      * @private
      */
-    private _validNewItem(item: TItem): TItem {
+    private _validNewItem(item: TItem): TItem | undefined {
+        if (!item) {
+            return undefined;
+        }
+
+        if(Array.isArray(item)) {
+            return undefined;
+        }
+
         if (typeof item !== 'object') {
-            throw new Error(ERROR_INVALID_ITEM_TYPE);
+            return undefined;
         }
 
         const copyItem: TItem = cloneDeep(item);
@@ -84,8 +89,16 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @private
      */
     private _validExistingItem(item: TItem): TItem | undefined {
+        if (!item) {
+            return undefined;
+        }
+
+        if(Array.isArray(item)) {
+            return undefined;
+        }
+
         if (typeof item !== 'object') {
-            throw new Error(ERROR_INVALID_ITEM_TYPE);
+            return undefined;
         }
 
         if (typeof item.uuid !== 'string') {
@@ -108,8 +121,13 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @param newItem
      * @private
      */
-    private _addNewItem(newItem: TItem): TItem {
+    private _addNewItem(newItem: TItem): TItem | undefined {
         const validNewItem = this._validNewItem(newItem);
+
+        if(!validNewItem) {
+            return undefined;
+        }
+
         this._internalItems.set(validNewItem.uuid, validNewItem);
         return cloneDeep(validNewItem);
     }
@@ -305,7 +323,10 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         // Добавляем элементы
         for (const item of itemsList) {
             const validItem = this._validNewItem(item);
-            this._internalItems.set(validItem.uuid, validItem);
+
+            if (validItem) {
+                this._internalItems.set(validItem.uuid, validItem);
+            }
         }
 
         if (!isWithoutTrigger) {
@@ -414,11 +435,13 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @param item - новый элемент который нужно добавить
      * @param isWithoutTrigger - триггеры слушателей не сработают если флаг будет установлен в true
      */
-    public addNewItem(item: TItem, isWithoutTrigger?: boolean): TItem {
-
-
+    public addNewItem(item: TItem, isWithoutTrigger?: boolean): TItem | undefined {
 
         const newItem = this._addNewItem(item);
+
+        if (!newItem) {
+            return undefined;
+        }
 
         if (!isWithoutTrigger) {
             this._applyCallbacksListenersChangeDataSource({
@@ -444,7 +467,10 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
 
         for (const item of itemsList) {
             const addedItem = this._addNewItem(item);
-            addedItemsList.push(addedItem);
+
+            if (addedItem) {
+                addedItemsList.push(addedItem);
+            }
         }
 
         if (!isWithoutTrigger) {
