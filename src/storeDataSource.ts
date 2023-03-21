@@ -273,15 +273,20 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * Добавить функцию фильтрации
      * @param callback - функция фильтрации
      */
-    public addFilter(callback: CallbackApplyFilters<TItem>) {
+    public setFilter(callback: CallbackApplyFilters<TItem>) {
         this._callbackApplyFilters = callback;
     }
 
     /**
      * Удалить функцию фильтрации
      */
-    public removeFilter() {
-        this._callbackApplyFilters = undefined;
+    public removeFilter(): boolean {
+        if(this._callbackApplyFilters) {
+            this._callbackApplyFilters = undefined;
+            return true;
+        }
+
+        return false;
     }
 
     /**
