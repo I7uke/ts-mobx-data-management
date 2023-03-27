@@ -1,5 +1,5 @@
 import {action, computed, makeObservable, observable} from "mobx";
-import StoreDataSource, {DataSourceItem} from "./storeDataSource";
+import {DataSourceItem} from "./storeDataSource";
 
 type Pagination<TItem extends DataSourceItem> = {
     /**
@@ -27,6 +27,7 @@ type Pagination<TItem extends DataSourceItem> = {
      */
     readonly availableNumberItemsOnPage: number[];
 }
+type DataStatus = 'dataIsNotSet' | 'dataIsEmpty' | 'dataIsSet';
 
 //region Получить значения по умолчанию
 function getDefaultAvailableNumberItemsOnPage(): number[] {
@@ -135,6 +136,7 @@ function validationNumber(param: ValidationNumberParam): number {
     return integer;
 
 }
+
 //endregion
 
 //region Максимальное количество страниц
@@ -234,14 +236,15 @@ type GetPaginationParams<TItem extends DataSourceItem> = {
 }
 
 function getPagination<TItem extends DataSourceItem>(params: GetPaginationParams<TItem>): Pagination<TItem> {
-    const totalItems: number = validationNumber({
-        valueForValidation: params.itemsList.length,
-        defaultValue: 0
-    });
-
-    if (!totalItems) {
+    if (!Array.isArray(params.itemsList)) {
         return getEmptyPagination();
     }
+
+    if (!params.itemsList.length) {
+        return getEmptyPagination();
+    }
+
+    const totalItems: number = params.itemsList.length;
 
     const numberItemsPerPage: number = validationNumber({
         valueForValidation: params.numberItemsPerPage,
@@ -325,12 +328,56 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
         this._pagination_observable = pagination;
     }
 
+    private _dataStatus_observable: DataStatus;
 
-    public setOptions(params: Partial<GetPaginationParams<TItem>>){
+    /**
+     * Установить список элементов без рендера
+     * Данная установка не вызовет перерендера интерфейса
+     * @param itemsList
+     */
+    public setItemsListWithoutRender(itemsList:TItem[]){
+        if(!Array.isArray(!itemsList)) {
+            return;
+        }
 
-
+        this._itemsList = itemsList;
     }
 
+    /**
+     * Установить параметры
+     * Будут учитываться только переданные поля
+     * Если поле отсутствует то будет сохранено текущее значение этого поля
+     * @param params
+     */
+    public setOptions(params: Partial<GetPaginationParams<TItem>>) {
+        if (!Array.isArray(params.itemsList)
+            && typeof params.numberItemsPerPage !== 'number'
+            && typeof params.currentPage !== 'number'
+            && !Array.isArray(params.availableNumberItemsOnPage)
+        ) {
+            return;
+        }
+
+        if (Array.isArray(params.itemsList)) {
+            this._itemsList = params.itemsList;
+        }
+
+        this._dataStatus_observable = this._itemsList.length ? 'dataIsSet' : 'dataIsEmpty';
+
+        this._pagination_observable = getPagination({
+            numberItemsPerPage: (typeof params.numberItemsPerPage === 'number') ? params.numberItemsPerPage : this._pagination_observable.numberItemsPerPage,
+            currentPage: (typeof params.currentPage === 'number') ? params.currentPage : this._pagination_observable.currentPage,
+            itemsList: this._itemsList,
+            availableNumberItemsOnPage: Array.isArray(params.availableNumberItemsOnPage) ? params.availableNumberItemsOnPage : this._pagination_observable.availableNumberItemsOnPage,
+        });
+    }
+
+    /**
+     * Статус данных
+     */
+    get dataStatus(): DataStatus {
+        return this._dataStatus_observable;
+    }
 
     /**
      * Элементы на текущей странице
@@ -347,45 +394,10 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
     }
 
     /**
-     * Установить текущую страницу
-     * @param page
-     */
-    public setCurrentPage(page: number) {
-        const validCurrentPage: number = validationCurrentPage({
-            currentPage: page,
-            maxPages: this._pagination_observable.currentPage
-        });
-
-        const newPagination = getPagination({
-            currentPage: validCurrentPage,
-            availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
-            numberItemsPerPage: this._pagination_observable.numberItemsPerPage,
-            itemsList: this._itemsList
-        });
-
-        this._setPagination_action(newPagination);
-    }
-
-    /**
      * Возможные колличества элементов на странице
      */
     get availableNumberItemsOnPage(): number[] {
         return this._pagination_observable.availableNumberItemsOnPage;
-    }
-
-    /**
-     * Установить массив возможного колличества элементов на странице
-     * @param numberItemsPerPage
-     */
-    public setAvailableNumberItemsOnPage(numberItemsPerPage: number[]) {
-        const newPagination = getPagination({
-            currentPage: this._pagination_observable.currentPage,
-            availableNumberItemsOnPage: validationAvailableNumberItemsOnPage(numberItemsPerPage),
-            numberItemsPerPage: this._pagination_observable.numberItemsPerPage,
-            itemsList: this._itemsList
-        });
-
-        this._setPagination_action(newPagination);
     }
 
     /**
@@ -400,26 +412,6 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
      */
     get numberItemsPerPage(): number {
         return this._pagination_observable.numberItemsPerPage;
-    }
-
-    /**
-     * Установить количество элементов на одной странице
-     * @param numberItemsPerPage
-     */
-    public setNumberItemsPerPage(numberItemsPerPage: number) {
-        const validItemsOnPage = validationNumber({
-            valueForValidation: numberItemsPerPage,
-            defaultValue: 0
-        });
-
-        const newPagination = getPagination({
-            currentPage: this._pagination_observable.currentPage,
-            availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
-            numberItemsPerPage: validItemsOnPage,
-            itemsList: this._itemsList
-        });
-
-        this._setPagination_action(newPagination);
     }
 
     /**
@@ -443,11 +435,11 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
             currentPage: this._pagination_observable.currentPage + 1
         });
 
-        if(!nextPage) {
+        if (!nextPage) {
             return;
         }
 
-        if(nextPage === this._pagination_observable.currentPage) {
+        if (nextPage === this._pagination_observable.currentPage) {
             return;
         }
 
@@ -480,7 +472,7 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
             return;
         }
 
-        if(prevPage === this._pagination_observable.currentPage) {
+        if (prevPage === this._pagination_observable.currentPage) {
             return;
         }
 
@@ -494,20 +486,33 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
         this._setPagination_action(newPagination);
     }
 
-    constructor(init: InitStoreDataDisplay<TItem>) {
+    constructor(init?: InitStoreDataDisplay<TItem>) {
         this.eventShowPrevPage = this.eventShowPrevPage.bind(this);
         this.eventShowNextPage = this.eventShowNextPage.bind(this);
 
-        this._itemsList = init.itemsList;
+        let itemsList: TItem[] = [];
+        let dataStatus: DataStatus = 'dataIsNotSet';
 
+        if (init) {
+            if (Array.isArray(init.itemsList)) {
+                itemsList = init.itemsList;
+
+                if (init.itemsList.length) {
+                    dataStatus = 'dataIsSet';
+                }
+            }
+        }
+
+        this._itemsList = itemsList;
+        this._dataStatus_observable = dataStatus;
         this._pagination_observable = getPagination({
-            availableNumberItemsOnPage: validationAvailableNumberItemsOnPage(init.availableNumberItemsOnPage),
+            availableNumberItemsOnPage: validationAvailableNumberItemsOnPage(init?.availableNumberItemsOnPage),
             numberItemsPerPage: validationNumber({
-                valueForValidation: init.numberItemsPerPage,
+                valueForValidation: init?.numberItemsPerPage,
                 defaultValue: 0
             }),
             currentPage: validationNumber({
-                valueForValidation: init.currentPage,
+                valueForValidation: init?.currentPage,
                 defaultValue: 0
             }),
             itemsList: this._itemsList
@@ -515,9 +520,12 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
 
         makeObservable<this,
             '_pagination_observable' |
+            '_dataStatus_observable' |
             '_setPagination_action'>(this, {
             _pagination_observable: observable.ref,
+            _dataStatus_observable: observable.ref,
             _setPagination_action: action,
+            setOptions: action,
             itemsOnCurrentPage: computed,
             currentPage: computed,
             availableNumberItemsOnPage: computed,

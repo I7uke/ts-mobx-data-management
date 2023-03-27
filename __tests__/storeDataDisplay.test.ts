@@ -229,87 +229,6 @@ test('currentPage 100', () => {
     expect(storeDataDisplay.currentPage).toStrictEqual(5);
 });
 
-test('setCurrentPage(2)', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 3
-    });
-
-    storeDataDisplay.setCurrentPage(2);
-    expect(storeDataDisplay.currentPage).toStrictEqual(2);
-});
-
-test('setCurrentPage wrong type undefined', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 3
-    });
-
-    // @ts-ignore
-    storeDataDisplay.setCurrentPage(undefined);
-    expect(storeDataDisplay.currentPage).toStrictEqual(0);
-});
-
-test('setCurrentPage wrong type null', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 3
-    });
-
-    // @ts-ignore
-    storeDataDisplay.setCurrentPage(undefined);
-    expect(storeDataDisplay.currentPage).toStrictEqual(0);
-});
-
-test('setCurrentPage wrong type string', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 3
-    });
-
-    // @ts-ignore
-    storeDataDisplay.setCurrentPage('test');
-    expect(storeDataDisplay.currentPage).toStrictEqual(0);
-});
-
-test('setCurrentPage -1', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 3
-    });
-
-    storeDataDisplay.setCurrentPage(-1);
-    expect(storeDataDisplay.currentPage).toStrictEqual(0);
-});
-
-test('setCurrentPage(2) itemsOnCurrentPage', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 3
-    });
-
-    storeDataDisplay.setCurrentPage(2);
-    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[2], TEST_DATA[3]]);
-});
-
 test('maxPages 5', () => {
     const TEST_DATA = GET_TEST_DATA();
 
@@ -371,22 +290,6 @@ test('availableNumberItemsOnPage', () => {
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1,2,3,4,5]);
 });
 
-test('availableNumberItemsOnPage', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 5,
-        currentPage: 2,
-        availableNumberItemsOnPage: [1,2,3,4,5]
-    });
-
-    storeDataDisplay.setAvailableNumberItemsOnPage([6,7,8,9, 10])
-
-    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([6,7,8,9, 10]);
-});
-
-
 test('numberItemsPerPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
@@ -397,61 +300,6 @@ test('numberItemsPerPage', () => {
     });
 
     expect(storeDataDisplay.numberItemsPerPage).toStrictEqual(5);
-});
-
-
-test('setNumberItemsPerPage(2)', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 5,
-        currentPage: 2
-    });
-
-    storeDataDisplay.setNumberItemsPerPage(2);
-    expect(storeDataDisplay.numberItemsPerPage).toStrictEqual(2);
-});
-
-
-test('setNumberItemsPerPage wrong type null', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 2,
-        currentPage: 2
-    });
-    // @ts-ignore
-    storeDataDisplay.setNumberItemsPerPage(null);
-    expect(storeDataDisplay.numberItemsPerPage).toStrictEqual(0);
-});
-
-test('setNumberItemsPerPage wrong type undefined', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 5,
-        currentPage: 2
-    });
-    // @ts-ignore
-    storeDataDisplay.setNumberItemsPerPage(undefined);
-    expect(storeDataDisplay.numberItemsPerPage).toStrictEqual(0);
-});
-
-test('setNumberItemsPerPage wrong type undefined', () => {
-    const TEST_DATA = GET_TEST_DATA();
-
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
-        itemsList: TEST_DATA,
-        numberItemsPerPage: 5,
-        currentPage: 2
-    });
-
-    // @ts-ignore
-    storeDataDisplay.setNumberItemsPerPage('test');
-    expect(storeDataDisplay.numberItemsPerPage).toStrictEqual(0);
 });
 
 test('totalItems', () => {
@@ -552,4 +400,363 @@ test('eventShowPrevPage 3', () => {
     storeDataDisplay.eventShowPrevPage();
 
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0],TEST_DATA[1], TEST_DATA[2], TEST_DATA[3]]);
+});
+
+test('setOptions currentPage', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        currentPage: 2
+    });
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[2], TEST_DATA[3]]);
+});
+
+test('setOptions setCurrentPage -1', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        currentPage: -1
+    });
+    expect(storeDataDisplay.currentPage).toStrictEqual(0);
+});
+
+test('setOptions currentPage wrong type null', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        currentPage: null
+    });
+    expect(storeDataDisplay.currentPage).toStrictEqual(3);
+});
+
+test('setOptions currentPage wrong type undefined', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        currentPage: undefined
+    });
+    expect(storeDataDisplay.currentPage).toStrictEqual(3);
+});
+
+test('setCurrentPage wrong type string', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        currentPage: 'test'
+    });
+    expect(storeDataDisplay.currentPage).toStrictEqual(3);
+});
+
+
+test('set itemsList', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: TEST_DATA
+    });
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[4], TEST_DATA[5]]);
+});
+
+test('set itemsList empty', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: []
+    });
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([]);
+});
+
+test('set itemsList empty', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: []
+    });
+    expect(storeDataDisplay.currentPage).toStrictEqual(0);
+});
+
+test('setOptions availableNumberItemsOnPage', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        availableNumberItemsOnPage: [1,2,3]
+    });
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1,2,3]);
+});
+
+
+test('setOptions availableNumberItemsOnPage empty', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        availableNumberItemsOnPage: []
+    });
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
+});
+
+test('setOptions availableNumberItemsOnPage wrong type null', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        availableNumberItemsOnPage: null
+    });
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
+});
+
+test('setOptions availableNumberItemsOnPage wrong type undefined', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        availableNumberItemsOnPage: undefined
+    });
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
+});
+
+test('setOptions availableNumberItemsOnPage wrong type string', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        availableNumberItemsOnPage: 'test'
+    });
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
+});
+
+test('setOptions availableNumberItemsOnPage wrong type', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        availableNumberItemsOnPage: [1, 2, 4, 'test', null, NaN, '5', 6, 7]
+    });
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 4, 6, 7]);
+});
+
+
+test('setOptions numberItemsPerPage', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        numberItemsPerPage: 2
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[4], TEST_DATA[5]]);
+});
+
+test('setOptions numberItemsPerPage', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        numberItemsPerPage: 3
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[6], TEST_DATA[7], TEST_DATA[8]]);
+});
+
+
+test('setOptions numberItemsPerPage wrong type null', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        numberItemsPerPage: null
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[4], TEST_DATA[5]]);
+});
+
+test('setOptions numberItemsPerPage wrong type undefined', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        numberItemsPerPage: undefined
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[4], TEST_DATA[5]]);
+});
+
+test('setOptions numberItemsPerPage wrong type string', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        // @ts-ignore
+        numberItemsPerPage: 'test'
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[4], TEST_DATA[5]]);
+});
+
+
+test('dataStatus 1', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsSet');
+});
+
+test('dataStatus 2', () => {
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: [],
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsNotSet');
+});
+
+test('dataStatus 3', () => {
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: [],
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList:[]
+    });
+
+    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsEmpty');
+});
+
+test('dataStatus 3', () => {
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: [],
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setItemsListWithoutRender([]);
+
+    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsEmpty');
 });
