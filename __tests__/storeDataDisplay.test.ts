@@ -749,14 +749,87 @@ test('dataStatus 3', () => {
     expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsEmpty');
 });
 
-test('dataStatus 3', () => {
+test('setItemsListWithoutTriggers', () => {
     const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
         itemsList: [],
         numberItemsPerPage: 2,
         currentPage: 3
     });
 
-    storeDataDisplay.setItemsListWithoutRender([]);
+    storeDataDisplay.setItemsListWithoutTriggers([]);
+    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsNotSet');
+});
 
-    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsEmpty');
+
+test('setForceUpdate', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: [TEST_DATA[0], TEST_DATA[1]],
+        numberItemsPerPage: 1,
+        currentPage: 1
+    });
+
+    storeDataDisplay.setForceUpdate(() => TEST_DATA);
+    storeDataDisplay.eventShowNextPage();
+    storeDataDisplay.eventShowNextPage();
+    storeDataDisplay.eventShowNextPage();
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[3]]);
+});
+
+test('setForceUpdate wrong type', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: [TEST_DATA[0], TEST_DATA[1]],
+        numberItemsPerPage: 1,
+        currentPage: 1
+    });
+
+    // @ts-ignore
+    storeDataDisplay.setForceUpdate(undefined);
+    storeDataDisplay.eventShowNextPage();
+    storeDataDisplay.eventShowNextPage();
+    storeDataDisplay.eventShowNextPage();
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[1]]);
+});
+
+test('removeForceUpdate', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: [TEST_DATA[0], TEST_DATA[1]],
+        numberItemsPerPage: 1,
+        currentPage: 1
+    });
+
+    storeDataDisplay.setForceUpdate(() => TEST_DATA);
+    storeDataDisplay.removeForceUpdate();
+    storeDataDisplay.eventShowNextPage();
+    storeDataDisplay.eventShowNextPage();
+    storeDataDisplay.eventShowNextPage();
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[1]]);
+});
+
+test('destroy 1', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 3,
+        currentPage: 1
+    });
+    storeDataDisplay.destroy();
+    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsNotSet' );
+});
+
+test('destroy 2', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 3,
+        currentPage: 1
+    });
+
+    storeDataDisplay.destroy();
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([] );
 });

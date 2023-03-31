@@ -28,6 +28,7 @@ type Pagination<TItem extends DataSourceItem> = {
     readonly availableNumberItemsOnPage: number[];
 }
 type DataStatus = 'dataIsNotSet' | 'dataIsEmpty' | 'dataIsSet';
+type CallbackForceUpdate<TItem extends DataSourceItem> = () => TItem[];
 
 //region Получить значения по умолчанию
 function getDefaultAvailableNumberItemsOnPage(): number[] {
@@ -323,6 +324,7 @@ type InitStoreDataDisplay<TItem extends DataSourceItem> = {
 export default class StoreDataDisplay<TItem extends DataSourceItem> {
     private _itemsList: TItem[];
     private _pagination_observable: Pagination<TItem>;
+    private _callbackForceUpdate?: CallbackForceUpdate<TItem>;
 
     private _setPagination_action(pagination: Pagination<TItem>) {
         this._pagination_observable = pagination;
@@ -331,16 +333,67 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
     private _dataStatus_observable: DataStatus;
 
     /**
-     * Установить список элементов без рендера
-     * Данная установка не вызовет перерендера интерфейса
+     * Установить список элементов без триггеров
+     * Данная установка не вызовет обновления данных в визуальном представлении
      * @param itemsList
      */
-    public setItemsListWithoutRender(itemsList:TItem[]){
-        if(!Array.isArray(!itemsList)) {
+    public setItemsListWithoutTriggers(itemsList: TItem[]) {
+        if (!Array.isArray(!itemsList)) {
             return;
         }
 
         this._itemsList = itemsList;
+    }
+
+    /**
+     * Применить принудительное обновление
+     * После применения
+     * @private
+     */
+    private _applyCallbackForceUpdate() {
+        if (typeof this._callbackForceUpdate !== 'function') {
+            return;
+        }
+
+        const newItemsList = this._callbackForceUpdate();
+        this._callbackForceUpdate = undefined;
+
+        if (!Array.isArray(newItemsList)) {
+            return;
+        }
+
+        this._itemsList = newItemsList;
+    }
+
+    /**
+     * Установить callback принудительного обновления
+     * callback будет вызван при изменении данных в методах: setOptions, eventShowPrevPage, eventShowNextPage
+     * @param callback
+     */
+    public setForceUpdate(callback: CallbackForceUpdate<TItem>) {
+        if (typeof callback !== 'function') {
+            return;
+        }
+
+        this._callbackForceUpdate = callback;
+    }
+
+    /**
+     * Удалить callback принудительного обновления
+     */
+    public removeForceUpdate() {
+        this._callbackForceUpdate = undefined;
+    }
+
+    /**
+     * Очищает все переданные данные
+     * Будет возвравщен в первоначальное состояние
+     */
+    public destroy() {
+        this._itemsList = [];
+        this._callbackForceUpdate = undefined;
+        this._dataStatus_observable = 'dataIsNotSet';
+        this._pagination_observable = getEmptyPagination();
     }
 
     /**
@@ -357,6 +410,8 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
         ) {
             return;
         }
+
+        this._applyCallbackForceUpdate();
 
         if (Array.isArray(params.itemsList)) {
             this._itemsList = params.itemsList;
@@ -443,6 +498,8 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
             return;
         }
 
+        this._applyCallbackForceUpdate();
+
         const newPagination = getPagination({
             currentPage: nextPage,
             availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
@@ -476,6 +533,8 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
             return;
         }
 
+        this._applyCallbackForceUpdate();
+
         const newPagination = getPagination({
             currentPage: prevPage,
             availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
@@ -503,6 +562,7 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
             }
         }
 
+        this._callbackForceUpdate = undefined;
         this._itemsList = itemsList;
         this._dataStatus_observable = dataStatus;
         this._pagination_observable = getPagination({
@@ -526,6 +586,7 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
             _dataStatus_observable: observable.ref,
             _setPagination_action: action,
             setOptions: action,
+            destroy: action,
             itemsOnCurrentPage: computed,
             currentPage: computed,
             availableNumberItemsOnPage: computed,

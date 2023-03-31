@@ -252,6 +252,12 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @param listener
      */
     public addListenerChangeDataSource(listener: CallbackChangeDataSource<TItem>) {
+        for (const keyListener in this._callbacksListenersChangeDataSource) {
+            if(this._callbacksListenersChangeDataSource[keyListener] === listener) {
+                return;
+            }
+        }
+
         const listenerId: string = uuidv4();
         this._callbacksListenersChangeDataSource[listenerId] = listener;
     }
