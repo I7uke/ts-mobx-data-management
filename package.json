@@ -8,7 +8,8 @@
     "test": "jest",
     "test-coverage": "jest",
     "test-storeDataSource": "jest storeDataSource.test.ts --coverage",
-    "test-storeDataDisplay": "jest storeDataDisplay.test.ts --coverage"
+    "test-storeDataDisplay": "jest storeDataDisplay.test.ts --coverage",
+    "test-abstractStoreFilters": "jest abstractStoreFilters.test.ts --coverage"
   },
   "keywords": [
     "ts",

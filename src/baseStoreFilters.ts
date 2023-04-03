@@ -10,7 +10,13 @@ type FilterByValuesParams<TItem extends Object> = {
     readonly fieldsNames: (keyof TItem)[];
 }
 
-export abstract class BaseStoreFilters<TItem extends Object> {
+type FilterByValueParams<TItem extends Object> = {
+    readonly itemsList: TItem[];
+    readonly value: string | number;
+    readonly fieldsNames: (keyof TItem)[];
+}
+
+export abstract class AbstractStoreFilters<TItem extends Object> {
     protected _callbackUpdateViewData?: () => void;
 
     protected _eventUpdateViewData() {
@@ -145,11 +151,30 @@ export abstract class BaseStoreFilters<TItem extends Object> {
 
     protected _sortDate_09(inputData: TItem[], fieldNameDateType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
-            const itemTmpA = Number(a[fieldNameDateType]);
-            const itemTmpB = Number(b[fieldNameDateType]);
+            const itemTmpA: unknown  = a[fieldNameDateType];
+            const itemTmpB: unknown = b[fieldNameDateType];
 
-            const itemA: number = isNaN(itemTmpA) ? 0 : itemTmpA;
-            const itemB: number = isNaN(itemTmpB) ? 0 : itemTmpB;
+            let itemA: number = 0;
+            let itemB: number = 0;
+
+
+            if(itemTmpA) {
+                const itemANumber = Number(itemTmpA);
+                if(!isNaN(itemANumber)) {
+                    itemA = itemANumber;
+                }
+            } else {
+                itemA = Infinity;
+            }
+
+            if(itemTmpB) {
+                const itemBNumber = Number(itemTmpB);
+                if(!isNaN(itemBNumber)) {
+                    itemA = itemBNumber;
+                }
+            } else {
+                itemB = Infinity;
+            }
 
             return itemA - itemB;
         });
@@ -162,8 +187,8 @@ export abstract class BaseStoreFilters<TItem extends Object> {
             const itemTmpA = Number(a[fieldNameDateType]);
             const itemTmpB = Number(b[fieldNameDateType]);
 
-            const itemA: number = isNaN(itemTmpA) ? 0 : itemTmpA;
-            const itemB: number = isNaN(itemTmpB) ? 0 : itemTmpB;
+            const itemA: number = isNaN(itemTmpA) ? Infinity : itemTmpA;
+            const itemB: number = isNaN(itemTmpB) ? Infinity : itemTmpB;
 
             return itemB - itemA;
         });
@@ -214,7 +239,6 @@ export abstract class BaseStoreFilters<TItem extends Object> {
 
         return inputData;
     }
-
     //endregion
 
     protected _searchString(param: SearchStringParams<TItem>): TItem[] {
@@ -237,7 +261,7 @@ export abstract class BaseStoreFilters<TItem extends Object> {
         return result;
     }
 
-    protected _filterByValues(param: FilterByValuesParams<TItem>) {
+    protected _filterByValues(param: FilterByValuesParams<TItem>): TItem[] {
         const {values, fieldsNames, itemsList} = param;
 
         if (!Array.isArray(values)) {
@@ -274,5 +298,25 @@ export abstract class BaseStoreFilters<TItem extends Object> {
         return result;
     }
 
+    protected _filterByValue(param: FilterByValueParams<TItem>): TItem[] {
+        const {value, fieldsNames, itemsList} = param;
 
+        if (!itemsList.length) {
+            return itemsList;
+        }
+
+        const result: TItem[] = [];
+
+        for (const item of itemsList) {
+            for (const fieldName of fieldsNames) {
+                const currentItemValue = item[fieldName];
+                if (currentItemValue === value) {
+                    result.push(item);
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
 }
