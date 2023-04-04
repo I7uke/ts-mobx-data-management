@@ -1,12 +1,47 @@
 type SearchStringParams<TItem extends Object> = {
+    /**
+     * Список элементов для поиска
+     */
     readonly itemsList: TItem[];
+    /**
+     * Название полей по которым будет происходить поиск
+     */
     readonly fieldsNames: (keyof TItem)[];
+    /**
+     * Поисковый запрос
+     */
     readonly searchQuery: string;
 }
 
-type FilterByValuesParams<TItem extends Object> = {
+type PrimitiveTypes = null | undefined | number | string | boolean;
+
+type FilterArrayFieldByArrayValuesParams<TItem extends Object> = {
+    /**
+     * Список элементов для поиска
+     */
     readonly itemsList: TItem[];
-    readonly values: (string | number)[];
+    /**
+     * Список искомых значений
+     */
+    readonly searchValuesList: PrimitiveTypes[];
+    /**
+     * Название полей по которым будет происходить поиск
+     */
+    readonly fieldsNames: (keyof TItem)[];
+}
+
+type FilterByValuesListParams<TItem extends Object> = {
+    /**
+     * Список элементов для поиска
+     */
+    readonly itemsList: TItem[];
+    /**
+     * Список искомых значений
+     */
+    readonly searchValuesList: PrimitiveTypes[];
+    /**
+     * Название полей по которым будет происходить поиск
+     */
     readonly fieldsNames: (keyof TItem)[];
 }
 
@@ -15,6 +50,8 @@ type FilterByValueParams<TItem extends Object> = {
     readonly value: string | number;
     readonly fieldsNames: (keyof TItem)[];
 }
+
+
 
 export abstract class AbstractStoreFilters<TItem extends Object> {
     protected _callbackUpdateViewData?: () => void;
@@ -61,6 +98,12 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
     }
 
     //region Сортировки
+    /**
+     * Сортировать по строковому полю от A до Z
+     * @param inputData
+     * @param fieldNameStrType
+     * @protected
+     */
     protected _sortString_AZ(inputData: TItem[], fieldNameStrType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
             const itemTmpA = a[fieldNameStrType];
@@ -83,6 +126,12 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по строковому полю от Z до А
+     * @param inputData
+     * @param fieldNameStrType
+     * @protected
+     */
     protected _sortString_ZA(inputData: TItem[], fieldNameStrType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
             const itemTmpA = a[fieldNameStrType];
@@ -105,6 +154,12 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по логическому полю от true до false
+     * @param inputData
+     * @param fieldNameStrType
+     * @protected
+     */
     protected _sortBoolean_TrueFalse(inputData: TItem[], fieldNameStrType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
             const itemTmpA = a[fieldNameStrType];
@@ -127,6 +182,12 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по логическому полю от false до true
+     * @param inputData
+     * @param fieldNameStrType
+     * @protected
+     */
     protected _sortBoolean_FalseTrue(inputData: TItem[], fieldNameStrType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
             const itemTmpA = a[fieldNameStrType];
@@ -149,14 +210,19 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по дате, сначала старые
+     * @param inputData
+     * @param fieldNameDateType
+     * @protected
+     */
     protected _sortDate_09(inputData: TItem[], fieldNameDateType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
-            const itemTmpA: unknown  = a[fieldNameDateType];
+            const itemTmpA: unknown = a[fieldNameDateType];
             const itemTmpB: unknown = b[fieldNameDateType];
 
             let itemA: number = 0;
             let itemB: number = 0;
-
 
             if(itemTmpA) {
                 const itemANumber = Number(itemTmpA);
@@ -170,7 +236,7 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
             if(itemTmpB) {
                 const itemBNumber = Number(itemTmpB);
                 if(!isNaN(itemBNumber)) {
-                    itemA = itemBNumber;
+                    itemB = itemBNumber;
                 }
             } else {
                 itemB = Infinity;
@@ -182,13 +248,38 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по дате, сначала новые
+     * @param inputData
+     * @param fieldNameDateType
+     * @protected
+     */
     protected _sortDate_90(inputData: TItem[], fieldNameDateType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
-            const itemTmpA = Number(a[fieldNameDateType]);
-            const itemTmpB = Number(b[fieldNameDateType]);
+            const itemTmpA: unknown = a[fieldNameDateType];
+            const itemTmpB: unknown = b[fieldNameDateType];
 
-            const itemA: number = isNaN(itemTmpA) ? Infinity : itemTmpA;
-            const itemB: number = isNaN(itemTmpB) ? Infinity : itemTmpB;
+            let itemA: number = 0;
+            let itemB: number = 0;
+
+
+            if(itemTmpA) {
+                const itemANumber = Number(itemTmpA);
+                if(!isNaN(itemANumber)) {
+                    itemA = itemANumber;
+                }
+            } else {
+                itemA = -Infinity;
+            }
+
+            if(itemTmpB) {
+                const itemBNumber = Number(itemTmpB);
+                if(!isNaN(itemBNumber)) {
+                    itemB = itemBNumber;
+                }
+            } else {
+                itemB = -Infinity;
+            }
 
             return itemB - itemA;
         });
@@ -196,6 +287,12 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по числовому полю сначала меньше
+     * @param inputData
+     * @param fieldNameStrType
+     * @protected
+     */
     protected _sortNumber_09(inputData: TItem[], fieldNameStrType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
             const itemTmpA = a[fieldNameStrType];
@@ -218,6 +315,12 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return inputData;
     }
 
+    /**
+     * Сортировать по числовому полю сначала больше
+     * @param inputData
+     * @param fieldNameStrType
+     * @protected
+     */
     protected _sortNumber_90(inputData: TItem[], fieldNameStrType: keyof TItem): TItem[] {
         inputData.sort((a: TItem, b: TItem) => {
             const itemTmpA = a[fieldNameStrType];
@@ -241,6 +344,11 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
     }
     //endregion
 
+    /**
+     * Поиск по строке
+     * @param param
+     * @protected
+     */
     protected _searchString(param: SearchStringParams<TItem>): TItem[] {
         const result: TItem[] = [];
         const itemsList = param.itemsList;
@@ -261,14 +369,20 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return result;
     }
 
-    protected _filterByValues(param: FilterByValuesParams<TItem>): TItem[] {
-        const {values, fieldsNames, itemsList} = param;
+    /**
+     * Поиск по полям типа массив
+     * Если поле содержит хотя бы одно поисковое значение, элемент удовлетворяет поиску
+     * @param param
+     * @protected
+     */
+    protected _filterArrayFieldByArrayValues(param: FilterArrayFieldByArrayValuesParams<TItem>): TItem[] {
+        const {searchValuesList, fieldsNames, itemsList} = param;
 
-        if (!Array.isArray(values)) {
+        if (!Array.isArray(searchValuesList)) {
             return itemsList;
         }
 
-        if (!values.length) {
+        if (!searchValuesList.length) {
             return itemsList;
         }
 
@@ -279,10 +393,59 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         const result: TItem[] = [];
 
         for (const item of itemsList) {
+            let isAddItem: boolean = false;
+            for (const fieldName of fieldsNames) {
+                const tmp = item[fieldName];
+                const currentItemValuesList: (string | number)[] = Array.isArray(tmp) ? tmp : [];
+                for (const searchValue of searchValuesList) {
+                    for(const currentItemValue of currentItemValuesList) {
+                        if (currentItemValue === searchValue) {
+                            result.push(item);
+                            isAddItem = true;
+                            break;
+                        }
+                    }
+                    if (isAddItem) {
+                        break;
+                    }
+                }
+                if (isAddItem) {
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * Поиск по полям имеющим примитивный тип
+     * Если значение поле совпадает хотя бы с одним искомым значением, элемент удовлетворяет поиску
+     * @param param
+     * @protected
+     */
+    protected _filterByValuesList(param: FilterByValuesListParams<TItem>): TItem[] {
+        const {searchValuesList, fieldsNames, itemsList} = param;
+
+        if (!Array.isArray(searchValuesList)) {
+            return itemsList;
+        }
+
+        if (!searchValuesList.length) {
+            return itemsList;
+        }
+
+        if (!itemsList.length) {
+            return itemsList;
+        }
+
+        const result: TItem[] = [];
+
+        for (const item of itemsList) {
+            let isAddItem: boolean = false;
             for (const fieldName of fieldsNames) {
                 const currentItemValue = item[fieldName];
-                let isAddItem: boolean = false;
-                for (const value of values) {
+                for (const value of searchValuesList) {
                     if (currentItemValue === value) {
                         result.push(item);
                         isAddItem = true;
@@ -298,25 +461,26 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return result;
     }
 
-    protected _filterByValue(param: FilterByValueParams<TItem>): TItem[] {
-        const {value, fieldsNames, itemsList} = param;
 
-        if (!itemsList.length) {
-            return itemsList;
-        }
-
-        const result: TItem[] = [];
-
-        for (const item of itemsList) {
-            for (const fieldName of fieldsNames) {
-                const currentItemValue = item[fieldName];
-                if (currentItemValue === value) {
-                    result.push(item);
-                    break;
-                }
-            }
-        }
-
-        return result;
-    }
+    // protected _filterByValue(param: FilterByValueParams<TItem>): TItem[] {
+    //     const {value, fieldsNames, itemsList} = param;
+    //
+    //     if (!itemsList.length) {
+    //         return itemsList;
+    //     }
+    //
+    //     const result: TItem[] = [];
+    //
+    //     for (const item of itemsList) {
+    //         for (const fieldName of fieldsNames) {
+    //             const currentItemValue = item[fieldName];
+    //             if (currentItemValue === value) {
+    //                 result.push(item);
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //
+    //     return result;
+    // }
 }
