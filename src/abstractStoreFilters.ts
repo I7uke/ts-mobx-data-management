@@ -46,37 +46,60 @@ type FilterByValuesListParams<TItem extends Object> = {
 }
 
 type FilterByValueParams<TItem extends Object> = {
+    /**
+     * Список элементов для поиска
+     */
     readonly itemsList: TItem[];
-    readonly value: string | number;
+    /**
+     * Искомое значение
+     */
+    readonly searchValue: PrimitiveTypes;
+    /**
+     * Название полей по которым будет происходить поиск
+     */
     readonly fieldsNames: (keyof TItem)[];
 }
 
+export default abstract class AbstractStoreFilters<TItem extends Object> {
+    private _callbackUpdateViewData?: () => void;
 
-
-export abstract class AbstractStoreFilters<TItem extends Object> {
-    protected _callbackUpdateViewData?: () => void;
-
-    protected _eventUpdateViewData() {
+    /**
+     * Событие обновить отображаемые данные
+     */
+    public eventUpdateViewData() {
         if (typeof this._callbackUpdateViewData === 'function') {
             this._callbackUpdateViewData();
         }
     }
 
-    constructor() {
+    protected constructor() {
         this.applyFilters = this.applyFilters.bind(this);
-        this._eventUpdateViewData = this._eventUpdateViewData.bind(this);
+        this.eventUpdateViewData = this.eventUpdateViewData.bind(this);
         this._callbackUpdateViewData = undefined;
     }
 
+    /**
+     * Установить callback обновления данных
+     * @param callback
+     */
     public setCallbackUpdateViewData(callback: () => void) {
         this._callbackUpdateViewData = callback;
     }
 
-    public resetCallbackUpdateViewData() {
+    /**
+     * Удалить callback обновления данных
+     */
+    public removeCallbackUpdateViewData() {
         this._callbackUpdateViewData = undefined;
     }
 
-    protected _applyAllFilters(inputData: TItem[], filtersList: ((itemsList: TItem[]) => TItem[])[]): TItem[] {
+    /**
+     * Применить фильтры по порядку
+     * @param inputData
+     * @param filtersList
+     * @protected
+     */
+    protected _applyFiltersInOrder(inputData: TItem[], filtersList: ((itemsList: TItem[]) => TItem[])[]): TItem[] {
         let result: TItem[] = inputData;
 
         for (const filter of filtersList) {
@@ -224,18 +247,18 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
             let itemA: number = 0;
             let itemB: number = 0;
 
-            if(itemTmpA) {
+            if (itemTmpA) {
                 const itemANumber = Number(itemTmpA);
-                if(!isNaN(itemANumber)) {
+                if (!isNaN(itemANumber)) {
                     itemA = itemANumber;
                 }
             } else {
                 itemA = Infinity;
             }
 
-            if(itemTmpB) {
+            if (itemTmpB) {
                 const itemBNumber = Number(itemTmpB);
-                if(!isNaN(itemBNumber)) {
+                if (!isNaN(itemBNumber)) {
                     itemB = itemBNumber;
                 }
             } else {
@@ -263,18 +286,18 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
             let itemB: number = 0;
 
 
-            if(itemTmpA) {
+            if (itemTmpA) {
                 const itemANumber = Number(itemTmpA);
-                if(!isNaN(itemANumber)) {
+                if (!isNaN(itemANumber)) {
                     itemA = itemANumber;
                 }
             } else {
                 itemA = -Infinity;
             }
 
-            if(itemTmpB) {
+            if (itemTmpB) {
                 const itemBNumber = Number(itemTmpB);
-                if(!isNaN(itemBNumber)) {
+                if (!isNaN(itemBNumber)) {
                     itemB = itemBNumber;
                 }
             } else {
@@ -342,6 +365,7 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
 
         return inputData;
     }
+
     //endregion
 
     /**
@@ -398,7 +422,7 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
                 const tmp = item[fieldName];
                 const currentItemValuesList: (string | number)[] = Array.isArray(tmp) ? tmp : [];
                 for (const searchValue of searchValuesList) {
-                    for(const currentItemValue of currentItemValuesList) {
+                    for (const currentItemValue of currentItemValuesList) {
                         if (currentItemValue === searchValue) {
                             result.push(item);
                             isAddItem = true;
@@ -461,26 +485,31 @@ export abstract class AbstractStoreFilters<TItem extends Object> {
         return result;
     }
 
+    /**
+     * Поиск по полям имеющим примитивный тип
+     * Если значение поля совпадает с искомым значением, элемент удовлетворяет поиску
+     * @param param
+     * @protected
+     */
+    protected _filterByValue(param: FilterByValueParams<TItem>): TItem[] {
+        const {searchValue, fieldsNames, itemsList} = param;
 
-    // protected _filterByValue(param: FilterByValueParams<TItem>): TItem[] {
-    //     const {value, fieldsNames, itemsList} = param;
-    //
-    //     if (!itemsList.length) {
-    //         return itemsList;
-    //     }
-    //
-    //     const result: TItem[] = [];
-    //
-    //     for (const item of itemsList) {
-    //         for (const fieldName of fieldsNames) {
-    //             const currentItemValue = item[fieldName];
-    //             if (currentItemValue === value) {
-    //                 result.push(item);
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //
-    //     return result;
-    // }
+        if (!itemsList.length) {
+            return itemsList;
+        }
+
+        const result: TItem[] = [];
+
+        for (const item of itemsList) {
+            for (const fieldName of fieldsNames) {
+                const currentItemValue = item[fieldName];
+                if (currentItemValue === searchValue) {
+                    result.push(item);
+                    break;
+                }
+            }
+        }
+
+        return result;
+    }
 }

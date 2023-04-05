@@ -1,4 +1,4 @@
-import {AbstractStoreFilters} from "../src/baseStoreFilters";
+import AbstractStoreFilters from "../src/abstractStoreFilters";
 
 type PrimitiveTypes = null | undefined | number | string | boolean;
 
@@ -108,7 +108,6 @@ function GET_TEST_DATA_STATIC(): TestDataType[] {
 }
 
 class StoreFiltersTest extends AbstractStoreFilters<TestDataType> {
-
     public applySortString_AZ(inputItems: TestDataType[]) {
         return this._sortString_AZ(inputItems, 'a');
     }
@@ -161,12 +160,39 @@ class StoreFiltersTest extends AbstractStoreFilters<TestDataType> {
         return this._filterByValuesList({
             fieldsNames: ['a', 'b', 'c'],
             itemsList: inputItems,
-            searchValuesList:searchValuesList
+            searchValuesList: searchValuesList
         });
     }
 
+    public filterByValue(inputItems: TestDataType[], searchValue: PrimitiveTypes) {
+        return this._filterByValue({
+            itemsList: inputItems,
+            searchValue: searchValue,
+            fieldsNames: ['a', 'b', 'c']
+        });
+    }
+
+    private _applyTestSearchString(inputItems: TestDataType[]) {
+
+        return this._searchString({
+            itemsList: inputItems,
+            searchQuery: 'Lorem ipsum dolor sit amet',
+            fieldsNames: ['a']
+        });
+
+    }
+
     protected _applyFilters(inputItems: TestDataType[]): TestDataType[] {
-        return [];
+        return this._applyFiltersInOrder(inputItems, [
+            this.applySortString_AZ,
+            this._applyTestSearchString
+        ]);
+    }
+
+    constructor() {
+        super();
+        this.applySortString_AZ = this.applySortString_AZ.bind(this);
+        this._applyTestSearchString = this._applyTestSearchString.bind(this);
     }
 }
 
@@ -434,4 +460,114 @@ test('filterByValuesList number | string | boolean', () => {
         testData[7],
         testData[9],
     ]);
+});
+
+test('filterByValue number', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), 1);
+    const testData = GET_TEST_DATA_STATIC();
+
+    expect(result).toStrictEqual([
+        testData[0],
+        testData[1]
+    ]);
+});
+
+test('filterByValue number', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), 5);
+    const testData = GET_TEST_DATA_STATIC();
+
+    expect(result).toStrictEqual([
+        testData[8],
+        testData[9]
+    ]);
+});
+
+test('filterByValue number not found', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), 100);
+
+    expect(result).toStrictEqual([]);
+});
+
+test('filterByValue string not found', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), 'string value');
+
+    expect(result).toStrictEqual([]);
+});
+
+test('filterByValue string', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), 'Lorem ipsum dolor sit amet, Per at meliore sadipscing omittantur, modus semper meliore sed ea. His inani choro nemore ut, id quod voluptua mei');
+    const testData = GET_TEST_DATA_STATIC();
+
+    expect(result).toStrictEqual([
+        testData[9]
+    ]);
+});
+
+test('filterByValue boolean true', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), true);
+    const testData = GET_TEST_DATA_STATIC();
+
+    expect(result).toStrictEqual([
+        testData[2],
+        testData[3],
+        testData[6],
+        testData[7],
+    ]);
+});
+
+test('filterByValue boolean false', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.filterByValue(GET_TEST_DATA_STATIC(), false);
+    const testData = GET_TEST_DATA_STATIC();
+
+    expect(result).toStrictEqual([
+        testData[0],
+        testData[1],
+        testData[4],
+        testData[5],
+        testData[8],
+        testData[9],
+    ]);
+});
+
+test('applyFilters', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+    const result = storeFilters.applyFilters(GET_TEST_DATA_STATIC());
+    const testData = GET_TEST_DATA_STATIC();
+
+    expect(result).toStrictEqual([
+        testData[4],
+        testData[9],
+        testData[0],
+    ]);
+});
+
+test('setCallbackUpdateViewData', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+
+    let result: boolean = false;
+    storeFilters.setCallbackUpdateViewData(() => {
+        result = true;
+    });
+
+    storeFilters.eventUpdateViewData();
+    expect(result).toStrictEqual(true);
+});
+
+test('removeCallbackUpdateViewData', () => {
+    const storeFilters: StoreFiltersTest = new StoreFiltersTest();
+
+    let result: boolean = false;
+    storeFilters.setCallbackUpdateViewData(() => {
+        result = true;
+    });
+    storeFilters.removeCallbackUpdateViewData()
+    storeFilters.eventUpdateViewData();
+    expect(result).toStrictEqual(false);
 });

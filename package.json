@@ -5,8 +5,7 @@
   "main": "webpack.config.ts",
   "sideEffects": false,
   "scripts": {
-    "test": "jest",
-    "test-coverage": "jest",
+    "test": "jest --coverage",
     "test-storeDataSource": "jest storeDataSource.test.ts --coverage",
     "test-storeDataDisplay": "jest storeDataDisplay.test.ts --coverage",
     "test-abstractStoreFilters": "jest abstractStoreFilters.test.ts --coverage"
