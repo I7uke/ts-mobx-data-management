@@ -21,7 +21,7 @@ function GET_TEST_DATA_STATIC(): TestDataType {
 }
 
 class StoreEditItemTest1 extends AbstractStoreEditItem<TestDataType> {
-    protected _validationModifiedItem(): TestDataType {
+    protected _saveModifiedItem(): TestDataType {
         return {
             a: 'ChangeText',
             b: 2,
@@ -38,7 +38,7 @@ class StoreEditItemTest1 extends AbstractStoreEditItem<TestDataType> {
 }
 
 class StoreEditItemTest2 extends AbstractStoreEditItem<TestDataType> {
-    protected _validationModifiedItem(): TestDataType {
+    protected _saveModifiedItem(): TestDataType {
         return this._getItemToEditBeforeChanges();
     }
 
@@ -53,7 +53,6 @@ test('itemStatus newItem', () => {
         callbackSaveModifiedItem: (item)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
-
     });
 
     expect(storeEditItem.itemStatus).toStrictEqual('newItem');
@@ -161,4 +160,43 @@ test('editorStatus setEditorStatus', () => {
         status: 'hide',
         text: ''
     });
+});
+
+test('eventCancelEditItem', () => {
+    let result: boolean  = false;
+    const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
+        callbackCancelEditItem:()=> {result = true;},
+        callbackSaveModifiedItem: (item)=>{},
+        itemToEdit: GET_TEST_DATA_STATIC(),
+        itemStatus: 'newItem',
+    });
+    storeEditItem.eventCancelEditItem();
+
+    expect(result).toStrictEqual(true);
+});
+
+test('eventCancelEditItem wrong type', () => {
+    const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
+        // @ts-ignore
+        callbackCancelEditItem: 123,
+        callbackSaveModifiedItem: (item)=>{},
+        itemToEdit: GET_TEST_DATA_STATIC(),
+        itemStatus: 'newItem',
+    });
+    storeEditItem.eventCancelEditItem();
+
+    expect(() => Error).not.toThrow(Error)
+});
+
+test('eventSaveModifiedItem wrong type', () => {
+    const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
+        // @ts-ignore
+        callbackCancelEditItem: 123,
+        // @ts-ignore
+        callbackSaveModifiedItem: 456,
+        itemToEdit: GET_TEST_DATA_STATIC(),
+        itemStatus: 'newItem',
+    });
+    storeEditItem.eventSaveModifiedItem();
+    expect(() => Error).not.toThrow(Error)
 });

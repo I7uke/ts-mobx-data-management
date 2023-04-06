@@ -85,17 +85,21 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
     }
 
     /**
-     * Проверить измененный элемент
+     * Сохранить измененный элемент
      * @protected
      */
-    protected abstract _validationModifiedItem(): TModifiedItem
+    protected abstract _saveModifiedItem(): TModifiedItem
 
     /**
      * Событие сохранить измененный элемент
      * Если элемент не изменился, будет вызвано событие отмены редактирования
      */
     public eventSaveModifiedItem() {
-        const modifiedItem: TModifiedItem = this._validationModifiedItem();
+        if (typeof this._callbackSaveModifiedItem !== 'function') {
+            return;
+        }
+
+        const modifiedItem: TModifiedItem = this._saveModifiedItem();
         const modifiedItemHash: string = sha1(modifiedItem);
         const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
 
@@ -111,7 +115,9 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
      * Событие отменить редактирование элемента
      */
     public eventCancelEditItem() {
-        this._callbackCancelEditItem();
+        if (typeof this._callbackCancelEditItem === 'function') {
+            this._callbackCancelEditItem();
+        }
     }
 
     protected constructor(initData: InitDataAbstractStoreEditItem<TItem, TModifiedItem>) {

@@ -1,4 +1,4 @@
-import StoreDataDisplay from "../src/storeDataDisplay";
+import StoreDisplayedData from "../src/storeDisplayedData";
 import {DataSourceItem} from "../src/storeDataSource";
 
 interface TestDataType extends DataSourceItem {
@@ -24,7 +24,7 @@ function GET_TEST_DATA(): TestDataType[] {
 test('currentPage 1 numberItemsPerPage 2', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 1
@@ -36,7 +36,7 @@ test('currentPage 1 numberItemsPerPage 2', () => {
 test('currentPage 2 numberItemsPerPage 2', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 2
@@ -48,7 +48,7 @@ test('currentPage 2 numberItemsPerPage 2', () => {
 test('currentPage 4 numberItemsPerPage 2', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 4
@@ -60,7 +60,7 @@ test('currentPage 4 numberItemsPerPage 2', () => {
 test('currentPage 2 numberItemsPerPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 2
@@ -72,7 +72,7 @@ test('currentPage 2 numberItemsPerPage 3', () => {
 test('currentPage 4 numberItemsPerPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 4
@@ -84,7 +84,7 @@ test('currentPage 4 numberItemsPerPage 3', () => {
 test('currentPage 0 numberItemsPerPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 0
@@ -96,7 +96,7 @@ test('currentPage 0 numberItemsPerPage 3', () => {
 test('currentPage -1 numberItemsPerPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: -1
@@ -108,7 +108,7 @@ test('currentPage -1 numberItemsPerPage 3', () => {
 test('currentPage 100 numberItemsPerPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 100
@@ -120,7 +120,7 @@ test('currentPage 100 numberItemsPerPage 3', () => {
 test('currentPage 4 numberItemsPerPage 0', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 0,
         currentPage: 4
@@ -132,7 +132,7 @@ test('currentPage 4 numberItemsPerPage 0', () => {
 test('currentPage 4 numberItemsPerPage -1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: -1,
         currentPage: 4
@@ -144,7 +144,7 @@ test('currentPage 4 numberItemsPerPage -1', () => {
 test('currentPage 4 numberItemsPerPage 100', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 100,
         currentPage: 4
@@ -156,7 +156,7 @@ test('currentPage 4 numberItemsPerPage 100', () => {
 test('wrong init data type 1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
             itemsList: TEST_DATA,
         // @ts-ignore
         numberItemsPerPage: undefined,
@@ -169,7 +169,7 @@ test('wrong init data type 1', () => {
 test('wrong init data type 2', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         // @ts-ignore
@@ -182,7 +182,7 @@ test('wrong init data type 2', () => {
 test('wrong init data type 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         // @ts-ignore
         numberItemsPerPage: undefined,
@@ -196,7 +196,7 @@ test('wrong init data type 3', () => {
 test('currentPage 4', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 4
@@ -208,7 +208,7 @@ test('currentPage 4', () => {
 test('currentPage -1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: -1
@@ -220,7 +220,7 @@ test('currentPage -1', () => {
 test('currentPage 100', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 100
@@ -232,7 +232,7 @@ test('currentPage 100', () => {
 test('maxPages 5', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 2
@@ -244,7 +244,7 @@ test('maxPages 5', () => {
 test('maxPages 4', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 2
@@ -256,7 +256,7 @@ test('maxPages 4', () => {
 test('maxPages 4', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 5,
         currentPage: 2
@@ -268,7 +268,7 @@ test('maxPages 4', () => {
 test('availableNumberItemsOnPage Default', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 5,
         currentPage: 2
@@ -280,7 +280,7 @@ test('availableNumberItemsOnPage Default', () => {
 test('availableNumberItemsOnPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 5,
         currentPage: 2,
@@ -293,7 +293,7 @@ test('availableNumberItemsOnPage', () => {
 test('numberItemsPerPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 5,
         currentPage: 2
@@ -305,7 +305,7 @@ test('numberItemsPerPage', () => {
 test('totalItems', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 5,
         currentPage: 2
@@ -317,7 +317,7 @@ test('totalItems', () => {
 test('eventShowNextPage 1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 4,
         currentPage: 2
@@ -331,7 +331,7 @@ test('eventShowNextPage 1', () => {
 test('eventShowNextPage 2', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 4,
         currentPage: 2
@@ -345,7 +345,7 @@ test('eventShowNextPage 2', () => {
 test('eventShowNextPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 4,
         currentPage: 2
@@ -361,7 +361,7 @@ test('eventShowNextPage 3', () => {
 test('eventShowPrevPage 1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 4,
         currentPage: 2
@@ -375,7 +375,7 @@ test('eventShowPrevPage 1', () => {
 test('eventShowPrevPage 2', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 4,
         currentPage: 2
@@ -389,7 +389,7 @@ test('eventShowPrevPage 2', () => {
 test('eventShowPrevPage 3', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 4,
         currentPage: 2
@@ -405,7 +405,7 @@ test('eventShowPrevPage 3', () => {
 test('setOptions currentPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -420,7 +420,7 @@ test('setOptions currentPage', () => {
 test('setOptions setCurrentPage -1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -435,7 +435,7 @@ test('setOptions setCurrentPage -1', () => {
 test('setOptions currentPage wrong type null', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -451,7 +451,7 @@ test('setOptions currentPage wrong type null', () => {
 test('setOptions currentPage wrong type undefined', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -467,7 +467,7 @@ test('setOptions currentPage wrong type undefined', () => {
 test('setCurrentPage wrong type string', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -484,7 +484,7 @@ test('setCurrentPage wrong type string', () => {
 test('set itemsList', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -499,7 +499,7 @@ test('set itemsList', () => {
 test('set itemsList empty', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -514,7 +514,7 @@ test('set itemsList empty', () => {
 test('set itemsList empty', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -529,7 +529,7 @@ test('set itemsList empty', () => {
 test('setOptions availableNumberItemsOnPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -546,7 +546,7 @@ test('setOptions availableNumberItemsOnPage', () => {
 test('setOptions availableNumberItemsOnPage empty', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -562,7 +562,7 @@ test('setOptions availableNumberItemsOnPage empty', () => {
 test('setOptions availableNumberItemsOnPage wrong type null', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -579,7 +579,7 @@ test('setOptions availableNumberItemsOnPage wrong type null', () => {
 test('setOptions availableNumberItemsOnPage wrong type undefined', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -596,7 +596,7 @@ test('setOptions availableNumberItemsOnPage wrong type undefined', () => {
 test('setOptions availableNumberItemsOnPage wrong type string', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -613,7 +613,7 @@ test('setOptions availableNumberItemsOnPage wrong type string', () => {
 test('setOptions availableNumberItemsOnPage wrong type', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -631,7 +631,7 @@ test('setOptions availableNumberItemsOnPage wrong type', () => {
 test('setOptions numberItemsPerPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -647,7 +647,7 @@ test('setOptions numberItemsPerPage', () => {
 test('setOptions numberItemsPerPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -664,7 +664,7 @@ test('setOptions numberItemsPerPage', () => {
 test('setOptions numberItemsPerPage wrong type null', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -681,7 +681,7 @@ test('setOptions numberItemsPerPage wrong type null', () => {
 test('setOptions numberItemsPerPage wrong type undefined', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -698,7 +698,7 @@ test('setOptions numberItemsPerPage wrong type undefined', () => {
 test('setOptions numberItemsPerPage wrong type string', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -716,7 +716,7 @@ test('setOptions numberItemsPerPage wrong type string', () => {
 test('dataStatus 1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 2,
         currentPage: 3
@@ -726,7 +726,7 @@ test('dataStatus 1', () => {
 });
 
 test('dataStatus 2', () => {
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: [],
         numberItemsPerPage: 2,
         currentPage: 3
@@ -736,7 +736,7 @@ test('dataStatus 2', () => {
 });
 
 test('dataStatus 3', () => {
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: [],
         numberItemsPerPage: 2,
         currentPage: 3
@@ -750,7 +750,7 @@ test('dataStatus 3', () => {
 });
 
 test('setItemsListWithoutTriggers', () => {
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: [],
         numberItemsPerPage: 2,
         currentPage: 3
@@ -763,7 +763,7 @@ test('setItemsListWithoutTriggers', () => {
 
 test('setForceUpdate', () => {
     const TEST_DATA = GET_TEST_DATA();
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: [TEST_DATA[0], TEST_DATA[1]],
         numberItemsPerPage: 1,
         currentPage: 1
@@ -779,7 +779,7 @@ test('setForceUpdate', () => {
 
 test('setForceUpdate wrong type', () => {
     const TEST_DATA = GET_TEST_DATA();
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: [TEST_DATA[0], TEST_DATA[1]],
         numberItemsPerPage: 1,
         currentPage: 1
@@ -796,7 +796,7 @@ test('setForceUpdate wrong type', () => {
 
 test('removeForceUpdate', () => {
     const TEST_DATA = GET_TEST_DATA();
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: [TEST_DATA[0], TEST_DATA[1]],
         numberItemsPerPage: 1,
         currentPage: 1
@@ -813,7 +813,7 @@ test('removeForceUpdate', () => {
 
 test('destroy 1', () => {
     const TEST_DATA = GET_TEST_DATA();
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 1
@@ -824,7 +824,7 @@ test('destroy 1', () => {
 
 test('destroy 2', () => {
     const TEST_DATA = GET_TEST_DATA();
-    const storeDataDisplay: StoreDataDisplay<TestDataType> = new StoreDataDisplay<TestDataType>({
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
         itemsList: TEST_DATA,
         numberItemsPerPage: 3,
         currentPage: 1

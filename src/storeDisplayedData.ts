@@ -116,7 +116,7 @@ type ValidationNumberParam = {
 
 /**
  * Проверить число
- * @param inputOptions
+ * @param param
  */
 function validationNumber(param: ValidationNumberParam): number {
 
@@ -302,7 +302,7 @@ function getPagination<TItem extends DataSourceItem>(params: GetPaginationParams
 
 //endregion
 
-type InitStoreDataDisplay<TItem extends DataSourceItem> = {
+type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     /**
      * Источник данных
      */
@@ -321,7 +321,7 @@ type InitStoreDataDisplay<TItem extends DataSourceItem> = {
     readonly currentPage: number;
 }
 
-export default class StoreDataDisplay<TItem extends DataSourceItem> {
+export default class StoreDisplayedData<TItem extends DataSourceItem> {
     private _itemsList: TItem[];
     private _pagination_observable: Pagination<TItem>;
     private _callbackForceUpdate?: CallbackForceUpdate<TItem>;
@@ -545,7 +545,7 @@ export default class StoreDataDisplay<TItem extends DataSourceItem> {
         this._setPagination_action(newPagination);
     }
 
-    constructor(init?: InitStoreDataDisplay<TItem>) {
+    constructor(init?: InitStoreDisplayedData<TItem>) {
         this.eventShowPrevPage = this.eventShowPrevPage.bind(this);
         this.eventShowNextPage = this.eventShowNextPage.bind(this);
 
