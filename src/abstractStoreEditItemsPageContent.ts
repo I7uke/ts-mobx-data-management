@@ -9,7 +9,7 @@ export type InitDataAbstractStoreEditItemsPageContent<TItem extends DataSourceIt
     readonly uniquePageKey: string;
 }
 
-export default abstract class AbstractStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends AbstractStoreFilters<TItem>> {
+export default abstract class AbstractStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
     protected readonly _getNewItem: () => TItem;
     private readonly _uniquePageKey: string;
 
@@ -19,7 +19,6 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
 
     protected readonly _storeDataSource: StoreDataSource<TItem>;
     public readonly storeDisplayedData: StoreDisplayedData<TItem>;
-    public readonly storeFilters:TStoreFilters;
 
     //region Редактирование элемента
     private _storeEditItem_observable?: TStoreEditItem;
@@ -39,7 +38,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
     //endregion
 
     //region Проверить элемент
-    protected _validationItemsList(itemsList: any[]): TItem[] {
+    protected _validationItemsList(itemsList: unknown[]): TItem[] {
         const result: TItem[] = [];
 
         if (!itemsList.length) {
@@ -56,6 +55,36 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         return result;
     }
     //endregion
+
+    public editItem(id: string){
+        const targetItem = this._storeDataSource.getItemByUuid(id);
+
+        if (!targetItem) {
+            return undefined;
+        }
+
+        this._eventEditItem(targetItem, false);
+    }
+
+    public deleteItem(id: string){
+        const targetItem = this._storeDataSource.getItemByUuid(id);
+
+        if (!targetItem) {
+            return undefined;
+        }
+
+        this._eventDeleteItem(targetItem);
+    }
+
+    public getItemInfo(id: string) {
+        const targetItem = this._storeDataSource.getItemByUuid(id);
+
+        if (!targetItem) {
+            return undefined;
+        }
+
+        this._eventGetItemInfo(targetItem);
+    }
 
     //region События
     public eventStartEditItem(e: React.MouseEvent<HTMLElement, MouseEvent>) {
@@ -126,7 +155,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
     //endregion
 
     //region abstract
-    protected abstract _validationItem(item: any): TItem | undefined;
+    protected abstract _validationItem(item: unknown): TItem | undefined;
 
     protected abstract _eventEditItem(item: TItem, isNew: boolean): void;
 
@@ -134,15 +163,15 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
 
     protected abstract _eventGetItemInfo(item: TItem): void;
 
-    protected abstract _serverRequestDeleteItem<TDeleteItem = TItem>(item: TDeleteItem): void;
+    protected abstract _serverRequestDeleteItem(item: unknown): void;
 
-    protected abstract _serverRequestSaveChangedItem<TChangedItem = TItem>(item: TChangedItem): void;
+    protected abstract _serverRequestSaveChangedItem(item: unknown): void;
 
-    protected abstract _serverRequestSaveNewItem<TNewItem = TItem>(item: TNewItem): void;
+    protected abstract _serverRequestSaveNewItem(item: unknown): void;
 
-    protected abstract _createStoreFilters(): TStoreFilters;
+    public abstract readonly storeFilters: Object & AbstractStoreFilters<TItem> ;
 
-    public abstract serverRequestGetInitData: void;
+    public abstract serverRequestGetInitData(): void;
 
     //endregion
 
@@ -194,7 +223,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
         this.storeDisplayedData = new StoreDisplayedData<TItem>();
-        this.storeFilters = this._createStoreFilters();
+
 
         makeObservable<this,
             '_storeEditItem_observable'
