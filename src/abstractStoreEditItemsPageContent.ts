@@ -3,6 +3,7 @@ import {action, computed, makeObservable, observable} from "mobx";
 import AbstractStoreFilters from "./abstractStoreFilters";
 import StoreDisplayedData from "./storeDisplayedData";
 import StoreDataSource, {DataSourceItem, ListenerChangeDataSource} from "./storeDataSource";
+import UniqueUuid from "./uniqueUuid";
 
 export type InitDataAbstractStoreEditItemsPageContent<TItem extends DataSourceItem> = {
     readonly getNewItem: () => TItem;
@@ -12,6 +13,7 @@ export type InitDataAbstractStoreEditItemsPageContent<TItem extends DataSourceIt
 export default abstract class AbstractStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
     protected readonly _getNewItem: () => TItem;
     private readonly _uniquePageKey: string;
+    protected _uniqueUuid: UniqueUuid;
 
     public getUniquePageKey() {
         return this._uniquePageKey;
@@ -176,7 +178,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
     //endregion
 
     //region Слушатель изменение данных
-    private _listenerChangeDataSource(params:ListenerChangeDataSource<TItem>){
+    private _defaultListenerChangeDataSource(params:ListenerChangeDataSource<TItem>){
         if (params.changeType === 'addNewItem') {
             this.storeDisplayedData.setOptions({
                 itemsList: params.itemsList,
@@ -190,24 +192,58 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         });
     }
 
-    protected _addAutoUpdateDisplayedData() {
-        this._storeDataSource.addListenerChangeDataSource(this._listenerChangeDataSource);
+    protected _addAutoUpdateDisplayedDataDefault() {
+        this._storeDataSource.addListenerChangeDataSource(this._defaultListenerChangeDataSource);
     }
 
-    protected _removeAutoUpdateDisplayedData() {
-        this._storeDataSource.removeListenerChangeDataSource(this._listenerChangeDataSource);
+    protected _removeAutoUpdateDisplayedDataDefault() {
+        this._storeDataSource.removeListenerChangeDataSource(this._defaultListenerChangeDataSource);
     }
     //endregion
 
     //region Добавить фильтр
-    protected _addDataSourceFilter() {
+    /**
+     * Добавить фильтр источнику данных
+     * @protected
+     */
+    protected _addDataSourceFilterDefault() {
         this._storeDataSource.setFilter(this.storeFilters.applyFilters);
     }
 
-    protected _removeDataSourceFilter() {
+    /**
+     * Удалить фильтр источника данных
+     * @protected
+     */
+    protected _removeDataSourceFilterDefault() {
         this._storeDataSource.removeFilter();
     }
     //endregion
+
+    /**
+     * Ссылка для перенаправления
+     */
+    private _redirectLink_observable: string;
+
+    /**
+     * Установить ссылку для перенаправления
+     * @param link
+     * @protected
+     */
+    protected _setRedirectLink(link: string) {
+        if(typeof link !== 'string'){
+            this._redirectLink_observable = '';
+            return;
+        }
+
+        this._redirectLink_observable = link;
+    }
+
+    /**
+     * Ссылка для перенаправления
+     */
+    get redirectLink(){
+        return this._redirectLink_observable;
+    }
 
     protected constructor(initData: InitDataAbstractStoreEditItemsPageContent<TItem>) {
         this.eventStartEditItem = this.eventStartEditItem.bind(this);
@@ -216,23 +252,29 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         this.eventGetItemInfo = this.eventGetItemInfo.bind(this);
         this.eventDestroyItemEditor = this.eventDestroyItemEditor.bind(this);
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
-        this._listenerChangeDataSource = this._listenerChangeDataSource.bind(this);
+        this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
 
         this._storeEditItem_observable = undefined;
+        this._redirectLink_observable = '';
         this._getNewItem = initData.getNewItem;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
         this.storeDisplayedData = new StoreDisplayedData<TItem>();
-
+        this._uniqueUuid = new UniqueUuid();
 
         makeObservable<this,
             '_storeEditItem_observable'
             | '_setStoreEditItem'
-            | '_destroyStoreEditItem'>(this, {
+            | '_destroyStoreEditItem'
+            | '_redirectLink_observable'
+            | '_setRedirectLink'>(this, {
             _storeEditItem_observable: observable.ref,
+            _redirectLink_observable: observable.ref,
             _setStoreEditItem: action,
             _destroyStoreEditItem: action,
+            _setRedirectLink: action,
             storeEditItem: computed,
+            redirectLink: computed
         });
     }
 }

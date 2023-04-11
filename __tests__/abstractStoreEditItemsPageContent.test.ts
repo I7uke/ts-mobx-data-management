@@ -1,4 +1,3 @@
-//
 // import AbstractStoreEditItemsPageContent, {
 //     InitDataAbstractStoreEditItemsPageContent
 // } from "../src/abstractStoreEditItemsPageContent";
@@ -120,8 +119,20 @@
 //     ];
 // }
 //
-// class StoreFiltersTest extends AbstractStoreFilters<TestDataType> {
+// function GET_TEST_ITEM_STATIC(): TestDataType {
+//     return {
+//         uuid: '',
+//         a: 'new item',
+//         b: 10,
+//         c: false,
+//         d: new Date('2023-01-01'),
+//         e: [0, 1, 2],
+//         f: ['0', '1', '2'],
+//         index: 0,
+//     }
+// }
 //
+// class StoreFiltersTest extends AbstractStoreFilters<TestDataType> {
 //
 //     protected _applyFilters(inputItems: TestDataType[]): TestDataType[] {
 //         return inputItems;
@@ -143,7 +154,7 @@
 //
 //     protected _validationItem(item: any): TestDataType | undefined {
 //         return {
-//             uuid: '93afeba6-6d13-4bf8-b670-e083be457c5e',
+//             uuid: this._uniqueUuid.getUuid(),
 //             a: 'Lorem ipsum dolor sit amet, te eum aeque quaestio pertinacia',
 //             b: 1,
 //             c: false,
@@ -184,5 +195,4 @@
 //         super(initData);
 //     }
 // }
-//
 //

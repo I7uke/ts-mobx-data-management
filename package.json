@@ -11,7 +11,8 @@
     "test-abstractStoreFilters": "jest abstractStoreFilters.test.ts --coverage",
     "abstractStoreEditItem": "jest abstractStoreEditItem.test.ts --coverage",
     "storeSitePageTitle": "jest storeSitePageTitle.test.ts --coverage",
-    "abstractStorePage": "jest abstractStorePage.test.ts --coverage"
+    "abstractStorePage": "jest abstractStorePage.test.ts --coverage",
+    "uniqueUuid": "jest uniqueUuid.test.ts --coverage"
   },
   "keywords": [
     "ts",

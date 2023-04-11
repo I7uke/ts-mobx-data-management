@@ -1,5 +1,6 @@
 import cloneDeep from "lodash.clonedeep";
 import {v4 as uuidv4} from 'uuid';
+import UniqueUuid from "./uniqueUuid";
 
 export interface DataSourceItem {
     readonly uuid: string;
@@ -19,6 +20,8 @@ type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ListenerCh
  * Хранилище для управления данными
  */
 export default class StoreDataSource<TItem extends DataSourceItem> {
+    private _uniqueUuid: UniqueUuid;
+
     /**
      * Элементы для внутреннего хранения в формат Hash Tables
      * @private
@@ -62,21 +65,21 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         if (typeof copyItem.uuid !== 'string') {
             return {
                 ...copyItem,
-                uuid: uuidv4()
+                uuid: this._uniqueUuid.getUuid()
             }
         }
 
         if (!copyItem.uuid) {
             return {
                 ...copyItem,
-                uuid: uuidv4()
+                uuid: this._uniqueUuid.getUuid()
             }
         }
 
         if (this._internalItems.has(copyItem.uuid)) {
             return {
                 ...copyItem,
-                uuid: uuidv4()
+                uuid: this._uniqueUuid.getUuid()
             }
         }
 
@@ -230,6 +233,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         this._internalItems = new Map<string, TItem>();
         this._callbacksListenersChangeDataSource = {};
         this._callbackApplyFilters = undefined;
+        this._uniqueUuid = new UniqueUuid();
     }
 
     /**
@@ -253,12 +257,12 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      */
     public addListenerChangeDataSource(listener: CallbackChangeDataSource<TItem>) {
         for (const keyListener in this._callbacksListenersChangeDataSource) {
-            if(this._callbacksListenersChangeDataSource[keyListener] === listener) {
+            if (this._callbacksListenersChangeDataSource[keyListener] === listener) {
                 return;
             }
         }
 
-        const listenerId: string = uuidv4();
+        const listenerId: string = this._uniqueUuid.getUuid();
         this._callbacksListenersChangeDataSource[listenerId] = listener;
     }
 
@@ -287,7 +291,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * Удалить функцию фильтрации
      */
     public removeFilter(): boolean {
-        if(this._callbackApplyFilters) {
+        if (this._callbackApplyFilters) {
             this._callbackApplyFilters = undefined;
             return true;
         }
