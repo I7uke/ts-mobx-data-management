@@ -13,7 +13,11 @@ export type InitDataAbstractStoreEditItemsPageContent<TItem extends DataSourceIt
 export default abstract class AbstractStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
     protected readonly _getNewItem: () => TItem;
     private readonly _uniquePageKey: string;
-    protected _uniqueUuid: UniqueUuid;
+    private _uniqueUuid: UniqueUuid;
+
+    protected _getUniqueUuid(): string {
+        return this._uniqueUuid.getUuid();
+    }
 
     public getUniquePageKey() {
         return this._uniquePageKey;
@@ -153,7 +157,6 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
 
         return targetItem;
     }
-
     //endregion
 
     //region abstract
