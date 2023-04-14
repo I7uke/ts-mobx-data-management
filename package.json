@@ -5,6 +5,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "jest --coverage",
+    "install-package": "yarn install",
     "test-storeDataSource": "jest storeDataSource.test.ts --coverage",
     "test-storeDataDisplay": "jest storeDataDisplay.test.ts --coverage",
     "test-abstractStoreFilters": "jest abstractStoreFilters.test.ts --coverage",

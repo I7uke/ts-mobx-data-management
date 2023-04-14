@@ -1,13 +1,8 @@
 import {action, computed, makeObservable, observable} from "mobx";
-import StoreSitePageTitle from "./storeSitePageTitle";
 
 type InitData = {
     /**
-     * Заголовок страницы
-     */
-    readonly storeSitePageTitle: StoreSitePageTitle;
-    /**
-     * Забыть данные после выхода
+     * Забыть данные после выхода.
      * Если истина, после ухода со страницы все данные будут забыты
      */
     readonly isForgetDataAfterLeaving: boolean;
@@ -15,7 +10,6 @@ type InitData = {
 
 export default abstract class AbstractStorePage<StoreContentPage> {
     protected abstract readonly _uniquePageKey: string;
-    protected readonly _storeSitePageTitle: StoreSitePageTitle;
 
     get uniquePageKey(): string {
         return this._uniquePageKey;
@@ -26,7 +20,7 @@ export default abstract class AbstractStorePage<StoreContentPage> {
      * Если истина, после ухода со страницы все данные будут забыты
      * @protected
      */
-    protected readonly _isForgetDataAfterLeaving: boolean;
+    protected _isForgetDataAfterLeaving: boolean;
 
     //region Store контента страницы
     private _storeContentPage_observable?: StoreContentPage;
@@ -75,7 +69,6 @@ export default abstract class AbstractStorePage<StoreContentPage> {
         this.eventPageExit = this.eventPageExit.bind(this);
         this.eventPageShown = this.eventPageShown.bind(this);
         this._storeContentPage_observable = undefined;
-        this._storeSitePageTitle = initData.storeSitePageTitle;
         this._isForgetDataAfterLeaving = initData.isForgetDataAfterLeaving;
 
         makeObservable<this,
