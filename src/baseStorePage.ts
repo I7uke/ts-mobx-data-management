@@ -6,13 +6,41 @@ type InitData = {
      * Если истина, после ухода со страницы все данные будут забыты
      */
     readonly isForgetDataAfterLeaving: boolean;
+    /**
+     *  Уникальный ключ страницы
+     */
+    readonly uniquePageKey?: string;
 }
 
-export default abstract class AbstractStorePage<StoreContentPage> {
-    protected abstract readonly _uniquePageKey: string;
+export default class BaseStorePage<StoreContentPage> {
+    private _uniquePageKey: string;
 
     get uniquePageKey(): string {
         return this._uniquePageKey;
+    }
+
+    /**
+     * Установить уникальный ключ страницы.
+     * Ключ можно установить только один раз.
+     * Если удалось установить ключ вернет true иначе false
+     * @param key - уникальный ключ страницы
+     * @protected
+     */
+    protected _setUniquePageKey(key: string): boolean {
+        if (typeof key !== 'string') {
+            return false;
+        }
+
+        if (!key) {
+            return false;
+        }
+
+        if (this._uniquePageKey) {
+            return false;
+        }
+
+        this._uniquePageKey = key
+        return true;
     }
 
     /**
@@ -39,7 +67,8 @@ export default abstract class AbstractStorePage<StoreContentPage> {
      * Страница показана
      * @protected
      */
-    protected abstract _pageShown(): void;
+    protected _pageShown() {
+    }
 
     /**
      * Уход со страницы
@@ -65,11 +94,21 @@ export default abstract class AbstractStorePage<StoreContentPage> {
         this._pageShown();
     }
 
-    protected constructor(initData: InitData) {
+    constructor(initData: InitData) {
         this.eventPageExit = this.eventPageExit.bind(this);
         this.eventPageShown = this.eventPageShown.bind(this);
         this._storeContentPage_observable = undefined;
         this._isForgetDataAfterLeaving = initData.isForgetDataAfterLeaving;
+
+        let uniquePageKey: string = '';
+
+        if (typeof initData.uniquePageKey === 'string') {
+            if (initData.uniquePageKey) {
+                uniquePageKey = initData.uniquePageKey;
+            }
+        }
+
+        this._uniquePageKey = uniquePageKey;
 
         makeObservable<this,
             '_storeContentPage_observable'

@@ -9,9 +9,9 @@
     "test-storeDataSource": "jest storeDataSource.test.ts --coverage",
     "test-storeDataDisplay": "jest storeDataDisplay.test.ts --coverage",
     "test-abstractStoreFilters": "jest abstractStoreFilters.test.ts --coverage",
-    "abstractStoreEditItem": "jest abstractStoreEditItem.test.ts --coverage",
-    "storeSitePageTitle": "jest storeSitePageTitle.test.ts --coverage",
-    "abstractStorePage": "jest abstractStorePage.test.ts --coverage",
+    "test-abstractStoreEditItem": "jest abstractStoreEditItem.test.ts --coverage",
+    "test-storeSitePageTitle": "jest storeSitePageTitle.test.ts --coverage",
+    "test-baseStorePage": "jest baseStorePage.test.ts --coverage",
     "uniqueUuid": "jest uniqueUuid.test.ts --coverage",
     "build-prod": "cross-env TS_NODE_PROJECT='tsconfig-for-webpack-config.json' webpack --define-process-env-node-env=production --progress"
   },
