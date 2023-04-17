@@ -1,25 +1,19 @@
-import StoreSitePageTitle from "./storeSitePageTitle";
 type InitData = {
     /**
-     * Заголовок страницы
-     */
-    readonly storeSitePageTitle: StoreSitePageTitle;
-    /**
-     * Забыть данные после выхода
+     * Забыть данные после выхода.
      * Если истина, после ухода со страницы все данные будут забыты
      */
     readonly isForgetDataAfterLeaving: boolean;
 };
 export default abstract class AbstractStorePage<StoreContentPage> {
     protected abstract readonly _uniquePageKey: string;
-    protected readonly _storeSitePageTitle: StoreSitePageTitle;
     get uniquePageKey(): string;
     /**
      * Забыть данные после выхода
      * Если истина, после ухода со страницы все данные будут забыты
      * @protected
      */
-    protected readonly _isForgetDataAfterLeaving: boolean;
+    protected _isForgetDataAfterLeaving: boolean;
     private _storeContentPage_observable?;
     protected _setStoreContentPage(store?: StoreContentPage): void;
     get storeContentPage(): StoreContentPage | undefined;
