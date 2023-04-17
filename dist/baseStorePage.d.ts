@@ -4,10 +4,22 @@ type InitData = {
      * Если истина, после ухода со страницы все данные будут забыты
      */
     readonly isForgetDataAfterLeaving: boolean;
+    /**
+     *  Уникальный ключ страницы
+     */
+    readonly uniquePageKey?: string;
 };
-export default abstract class AbstractStorePage<StoreContentPage> {
-    protected abstract readonly _uniquePageKey: string;
+export default class BaseStorePage<StoreContentPage> {
+    private _uniquePageKey;
     get uniquePageKey(): string;
+    /**
+     * Установить уникальный ключ страницы.
+     * Ключ можно установить только один раз.
+     * Если удалось установить ключ вернет true иначе false
+     * @param key - уникальный ключ страницы
+     * @protected
+     */
+    protected _setUniquePageKey(key: string): boolean;
     /**
      * Забыть данные после выхода
      * Если истина, после ухода со страницы все данные будут забыты
@@ -21,7 +33,7 @@ export default abstract class AbstractStorePage<StoreContentPage> {
      * Страница показана
      * @protected
      */
-    protected abstract _pageShown(): void;
+    protected _pageShown(): void;
     /**
      * Уход со страницы
      * @protected
@@ -35,6 +47,6 @@ export default abstract class AbstractStorePage<StoreContentPage> {
      * Событие страница показана
      */
     eventPageShown(): void;
-    protected constructor(initData: InitData);
+    constructor(initData: InitData);
 }
 export {};

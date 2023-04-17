@@ -16,7 +16,7 @@ const config: webpack.Configuration = {
         'abstractStoreEditItem': './src/abstractStoreEditItem.ts',
         'abstractStoreEditItemsPageContent': './src/abstractStoreEditItemsPageContent.ts',
         'abstractStoreFilters': './src/abstractStoreFilters.ts',
-        'abstractStorePage': './src/abstractStorePage.ts',
+        'baseStorePage': './src/baseStorePage.ts',
         'storeDataSource': './src/storeDataSource.ts',
         'storeDisplayedData': './src/storeDisplayedData.ts',
         'storeSitePageTitle': './src/storeSitePageTitle.ts',
