@@ -1,7 +1,7 @@
 import { DataSourceItem } from "./storeDataSource";
 type DataStatus = 'dataIsNotSet' | 'dataIsEmpty' | 'dataIsSet';
 type CallbackForceUpdate<TItem extends DataSourceItem> = () => TItem[];
-type GetPaginationParams<TItem extends DataSourceItem> = {
+interface GetPaginationParams<TItem extends DataSourceItem> {
     /**
      * Количество элементов на одной странице
      */
@@ -18,7 +18,7 @@ type GetPaginationParams<TItem extends DataSourceItem> = {
      * Возможные колличества элементов на странице
      */
     readonly availableNumberItemsOnPage: number[];
-};
+}
 type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     /**
      * Источник данных

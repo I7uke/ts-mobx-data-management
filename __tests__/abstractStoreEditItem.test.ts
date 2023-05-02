@@ -1,4 +1,7 @@
-import AbstractStoreEditItem, {InitDataAbstractStoreEditItem} from "../src/abstractStoreEditItem";
+import AbstractStoreEditItem, {
+    CallbackSaveModifiedItemParams,
+    InitDataAbstractStoreEditItem
+} from "../src/abstractStoreEditItem";
 
 interface TestDataType {
     readonly a: string;
@@ -21,14 +24,18 @@ function GET_TEST_DATA_STATIC(): TestDataType {
 }
 
 class StoreEditItemTest1 extends AbstractStoreEditItem<TestDataType> {
-    protected _saveModifiedItem(): TestDataType {
+    protected _saveModifiedItem(): CallbackSaveModifiedItemParams<TestDataType> {
         return {
-            a: 'ChangeText',
-            b: 2,
-            c: true,
-            d: new Date('2023-01-02'),
-            e: [6, 7, 8, 9],
-            f: ['9', '8', '7'],
+            item:{
+                a: 'ChangeText',
+                b: 2,
+                c: true,
+                d: new Date('2023-01-02'),
+                e: [6, 7, 8, 9],
+                f: ['9', '8', '7'],
+            },
+            status: 'existingItem',
+            other: undefined
         }
     }
 
@@ -38,8 +45,12 @@ class StoreEditItemTest1 extends AbstractStoreEditItem<TestDataType> {
 }
 
 class StoreEditItemTest2 extends AbstractStoreEditItem<TestDataType> {
-    protected _saveModifiedItem(): TestDataType {
-        return this._getItemToEditBeforeChanges();
+    protected _saveModifiedItem(): CallbackSaveModifiedItemParams<TestDataType> {
+        return {
+            item: this._getItemToEditBeforeChanges(),
+            status: 'existingItem',
+            other: undefined
+        }
     }
 
     constructor(initData: InitDataAbstractStoreEditItem<TestDataType>) {
@@ -50,7 +61,7 @@ class StoreEditItemTest2 extends AbstractStoreEditItem<TestDataType> {
 test('itemStatus newItem', () => {
     const storeEditItem: StoreEditItemTest1 = new StoreEditItemTest1({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
@@ -61,7 +72,7 @@ test('itemStatus newItem', () => {
 test('itemStatus existingItem', () => {
     const storeEditItem: StoreEditItemTest1 = new StoreEditItemTest1({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'existingItem',
     });
@@ -72,7 +83,7 @@ test('itemStatus existingItem', () => {
 test('itemStatus change', () => {
     const storeEditItem: StoreEditItemTest1 = new StoreEditItemTest1({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
@@ -85,8 +96,8 @@ test('callbackSaveModifiedItem', () => {
     let result: undefined | TestDataType = undefined;
     const storeEditItem: StoreEditItemTest1 = new StoreEditItemTest1({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{
-            result = item;
+        callbackSaveModifiedItem: (params)=>{
+            result = params.item;
         },
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
@@ -107,7 +118,7 @@ test('callbackSaveModifiedItem', () => {
 test('itemToEditBeforeChanges', () => {
     const storeEditItem: StoreEditItemTest1 = new StoreEditItemTest1({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
@@ -119,8 +130,8 @@ test('callbackSaveModifiedItem', () => {
     let result: undefined | TestDataType = undefined;
     const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{
-            result = item;
+        callbackSaveModifiedItem: (params)=>{
+            result = params.item;
         },
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
@@ -133,32 +144,33 @@ test('callbackSaveModifiedItem', () => {
 test('editorStatus default', () => {
     const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
 
     expect(storeEditItem.editorStatus).toStrictEqual({
-        status: 'editItem'
+        status: 'editItem',
+        text: undefined
     });
 });
 
 test('editorStatus setEditorStatus', () => {
     const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
         callbackCancelEditItem:()=> {},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
 
     storeEditItem.setEditorStatus({
         status: 'hide',
-        text: ''
+        text: undefined
     });
 
     expect(storeEditItem.editorStatus).toStrictEqual({
         status: 'hide',
-        text: ''
+        text: undefined
     });
 });
 
@@ -166,7 +178,7 @@ test('eventCancelEditItem', () => {
     let result: boolean  = false;
     const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
         callbackCancelEditItem:()=> {result = true;},
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
@@ -176,10 +188,12 @@ test('eventCancelEditItem', () => {
 });
 
 test('eventCancelEditItem wrong type', () => {
+
+    // @ts-ignore
     const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
         // @ts-ignore
         callbackCancelEditItem: 123,
-        callbackSaveModifiedItem: (item)=>{},
+        callbackSaveModifiedItem: (params)=>{},
         itemToEdit: GET_TEST_DATA_STATIC(),
         itemStatus: 'newItem',
     });
@@ -189,6 +203,7 @@ test('eventCancelEditItem wrong type', () => {
 });
 
 test('eventSaveModifiedItem wrong type', () => {
+    // @ts-ignore
     const storeEditItem: StoreEditItemTest2 = new StoreEditItemTest2({
         // @ts-ignore
         callbackCancelEditItem: 123,

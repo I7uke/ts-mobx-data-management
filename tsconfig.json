@@ -22,7 +22,6 @@
   },
   "exclude": [
     "node_modules",
-    "api/src",
     "webpack.config.ts",
     "__tests__/"
   ]

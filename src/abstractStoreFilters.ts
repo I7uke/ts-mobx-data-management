@@ -381,7 +381,7 @@ export default abstract class AbstractStoreFilters<TItem extends Object> {
 
         for (const item of itemsList) {
             for (const fieldName of fieldsNamesForSearch) {
-                const valueForSearch = item[fieldName];
+                const valueForSearch: any = item[fieldName];
                 const stringForSearch: string = (typeof valueForSearch === 'string') ? valueForSearch.toLowerCase() : String(valueForSearch).toLowerCase();
                 if (stringForSearch.indexOf(searchQuery) > -1) {
                     result.push(item);

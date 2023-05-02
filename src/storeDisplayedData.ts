@@ -217,7 +217,7 @@ function validationCurrentPage(params: ValidationCurrentPageParams): number {
 //endregion
 
 //region Получить пагинацию
-type GetPaginationParams<TItem extends DataSourceItem> = {
+interface GetPaginationParams<TItem extends DataSourceItem> {
     /**
      * Количество элементов на одной странице
      */

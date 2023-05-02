@@ -1,10 +1,15 @@
-type EditorStatusType<Status extends string> = {
-    readonly status: Status;
-    readonly text?: string;
+type EditorStatusType<TStatus extends string, TText> = {
+    readonly status: TStatus;
+    readonly text: TText;
 };
 type ItemStatus = 'newItem' | 'existingItem';
-type EditorStatus = EditorStatusType<'editItem'> | EditorStatusType<'serverRequest'> | EditorStatusType<'error'> | EditorStatusType<'hide'>;
-type CallbackSaveModifiedItem<TItem extends Object> = (item: TItem) => void;
+type EditorStatus = EditorStatusType<'editItem', undefined> | EditorStatusType<'serverRequest', string> | EditorStatusType<'error', string> | EditorStatusType<'hide', undefined>;
+export type CallbackSaveModifiedItemParams<TItem extends Object> = {
+    readonly item: TItem;
+    readonly status: ItemStatus;
+    readonly other?: unknown;
+};
+type CallbackSaveModifiedItem<TItem extends Object> = (params: CallbackSaveModifiedItemParams<TItem>) => void;
 type CallbackCancelEditItem = () => void;
 export type InitDataAbstractStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
     readonly itemToEdit: TItem;
@@ -50,7 +55,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
      * Сохранить измененный элемент
      * @protected
      */
-    protected abstract _saveModifiedItem(): TModifiedItem;
+    protected abstract _saveModifiedItem(): CallbackSaveModifiedItemParams<TModifiedItem>;
     /**
      * Событие сохранить измененный элемент
      * Если элемент не изменился, будет вызвано событие отмены редактирования

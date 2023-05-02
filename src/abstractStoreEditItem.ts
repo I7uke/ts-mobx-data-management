@@ -2,18 +2,25 @@ import cloneDeep from "lodash.clonedeep";
 import {action, computed, makeObservable, observable} from "mobx";
 import {sha1} from "object-hash";
 
-type EditorStatusType<Status extends string, > = {
-    readonly status: Status;
-    readonly text?: string;
+type EditorStatusType<TStatus extends string, TText> = {
+    readonly status: TStatus;
+    readonly text: TText;
 }
 
 type ItemStatus = 'newItem' | 'existingItem';
-type EditorStatus = EditorStatusType<'editItem'>
-    | EditorStatusType<'serverRequest'>
-    | EditorStatusType<'error'>
-    | EditorStatusType<'hide'>;
 
-type CallbackSaveModifiedItem<TItem extends Object> = (item: TItem) => void;
+type EditorStatus = EditorStatusType<'editItem', undefined>
+    | EditorStatusType<'serverRequest', string>
+    | EditorStatusType<'error', string>
+    | EditorStatusType<'hide', undefined>;
+
+export type CallbackSaveModifiedItemParams<TItem extends Object> = {
+    readonly item: TItem;
+    readonly status: ItemStatus;
+    readonly other?: unknown;
+};
+
+type CallbackSaveModifiedItem<TItem extends Object> = (params: CallbackSaveModifiedItemParams<TItem>) => void;
 type CallbackCancelEditItem = () => void;
 
 export type InitDataAbstractStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
@@ -88,7 +95,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
      * Сохранить измененный элемент
      * @protected
      */
-    protected abstract _saveModifiedItem(): TModifiedItem
+    protected abstract _saveModifiedItem(): CallbackSaveModifiedItemParams<TModifiedItem>
 
     /**
      * Событие сохранить измененный элемент
@@ -99,7 +106,8 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
             return;
         }
 
-        const modifiedItem: TModifiedItem = this._saveModifiedItem();
+        const params: CallbackSaveModifiedItemParams<TModifiedItem> = this._saveModifiedItem();
+        const modifiedItem: TModifiedItem = params.item;
         const modifiedItemHash: string = sha1(modifiedItem);
         const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
 
@@ -108,7 +116,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
             return;
         }
 
-        this._callbackSaveModifiedItem(modifiedItem);
+        this._callbackSaveModifiedItem(params);
     }
 
     /**
@@ -129,7 +137,10 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
 
         this._itemToEditBeforeChanges = cloneDeep(initData.itemToEdit);
         this._itemStatus_observable = initData.itemStatus;
-        this._editorStatus_observable = initData.editorStatus ? initData.editorStatus : {status: 'editItem'};
+        this._editorStatus_observable = initData.editorStatus ? initData.editorStatus : {
+            status: 'editItem',
+            text: undefined
+        };
 
         makeObservable<this,
             '_itemStatus_observable'
