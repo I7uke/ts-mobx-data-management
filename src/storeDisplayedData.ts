@@ -1,5 +1,5 @@
 import {action, computed, makeObservable, observable} from "mobx";
-import {DataSourceItem} from "./storeDataSource";
+import {DataSourceItem} from "./index";
 
 type Pagination<TItem extends DataSourceItem> = {
     /**

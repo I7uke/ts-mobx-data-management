@@ -1,5 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
-import UniqueUuid from "./uniqueUuid";
+import {UniqueUuid} from "./index";
 
 export interface DataSourceItem {
     readonly uuid: string;

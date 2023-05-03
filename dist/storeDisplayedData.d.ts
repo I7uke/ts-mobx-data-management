@@ -1,4 +1,4 @@
-import { DataSourceItem } from "./storeDataSource";
+import { DataSourceItem } from "./index";
 type DataStatus = 'dataIsNotSet' | 'dataIsEmpty' | 'dataIsSet';
 type CallbackForceUpdate<TItem extends DataSourceItem> = () => TItem[];
 interface GetPaginationParams<TItem extends DataSourceItem> {
