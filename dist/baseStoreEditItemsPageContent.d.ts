@@ -74,6 +74,12 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @protected
      */
     protected _setStoreFilters(store: Object & BaseStoreFilters<TItem>): void;
+    /**
+     * Возвращает текст подтверждения при удалении элемента
+     * @param item
+     * @protected
+     */
+    protected _getDeleteItemConfirmTextOverride(item: TItem): string;
     protected _validationItemOverride(item: unknown): TItem | undefined;
     protected _eventEditItemOverride(item: TItem, isNew: boolean): void;
     protected _eventDeleteItemOverride(item: TItem): void;
