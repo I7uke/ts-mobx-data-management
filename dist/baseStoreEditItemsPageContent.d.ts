@@ -86,13 +86,17 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     protected _serverRequestDeleteItemOverride(item: unknown, other?: unknown): void;
     protected _serverRequestSaveChangedItemOverride(item: unknown, other?: unknown): void;
     protected _serverRequestSaveNewItemOverride(item: unknown, other?: unknown): void;
-    serverRequestGetInitDataOverride(): void;
+    protected _serverRequestGetInitDataOverride(): void;
     /**
      * Получить информацию об элементе
      * @param item
      * @protected
      */
     protected _eventGetItemInfoOverride(item: TItem): void;
+    /**
+     * Запрос на сервер, получить начальное состояние хранилища
+     */
+    serverRequestGetInitData(): void;
     private _defaultListenerChangeDataSource;
     protected _addAutoUpdateDisplayedDataDefault(): void;
     protected _removeAutoUpdateDisplayedDataDefault(): void;

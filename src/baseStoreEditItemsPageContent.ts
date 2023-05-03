@@ -263,8 +263,8 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         throw new Error('method _serverRequestSaveNewItemOverride must be override');
     }
 
-    public serverRequestGetInitDataOverride(): void {
-        throw new Error('method serverRequestGetInitDataOverride must be override');
+    protected _serverRequestGetInitDataOverride(): void {
+        throw new Error('method _serverRequestGetInitDataOverride must be override');
     }
 
     /**
@@ -277,6 +277,13 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     }
 
     //endregion
+
+    /**
+     * Запрос на сервер, получить начальное состояние хранилища
+     */
+    public serverRequestGetInitData(): void {
+        this._serverRequestGetInitDataOverride();
+    }
 
     //region Слушатель изменение данных
     private _defaultListenerChangeDataSource(params: ListenerChangeDataSource<TItem>) {
@@ -373,6 +380,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
         this.saveModifiedItemDefault = this.saveModifiedItemDefault.bind(this);
+        this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
 
         this._storeEditItem_observable = undefined;
         this._redirectLink_observable = '';
