@@ -55,7 +55,7 @@ type FilterByValueParams<TItem extends Object> = {
      */
     readonly fieldsNames: (keyof TItem)[];
 };
-export default abstract class AbstractStoreFilters<TItem extends Object> {
+export default class BaseStoreFilters<TItem extends Object> {
     private _callbackUpdateViewData?;
     /**
      * Событие обновить отображаемые данные
@@ -83,7 +83,7 @@ export default abstract class AbstractStoreFilters<TItem extends Object> {
      * @param inputItems
      * @protected
      */
-    protected abstract _applyFilters(inputItems: TItem[]): TItem[];
+    protected _applyFiltersOverride(inputItems: TItem[]): TItem[];
     applyFilters(inputItems: TItem[]): TItem[];
     /**
      * Сортировать по строковому полю от A до Z

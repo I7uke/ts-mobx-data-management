@@ -1,4 +1,4 @@
-import AbstractStoreFilters from "../src/abstractStoreFilters";
+import BaseStoreFilters from "../src/baseStoreFilters";
 
 type PrimitiveTypes = null | undefined | number | string | boolean;
 
@@ -107,7 +107,7 @@ function GET_TEST_DATA_STATIC(): TestDataType[] {
     ];
 }
 
-class StoreFiltersTest extends AbstractStoreFilters<TestDataType> {
+class StoreFiltersTest extends BaseStoreFilters<TestDataType> {
     public applySortString_AZ(inputItems: TestDataType[]) {
         return this._sortString_AZ(inputItems, 'a');
     }
@@ -182,7 +182,7 @@ class StoreFiltersTest extends AbstractStoreFilters<TestDataType> {
 
     }
 
-    protected _applyFilters(inputItems: TestDataType[]): TestDataType[] {
+    protected _applyFiltersOverride(inputItems: TestDataType[]): TestDataType[] {
         return this._applyFiltersInOrder(inputItems, [
             this.applySortString_AZ,
             this._applyTestSearchString

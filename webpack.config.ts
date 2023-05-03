@@ -13,9 +13,9 @@ const config: webpack.Configuration = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     entry: {
         'index': './src/index.ts',
-        'abstractStoreEditItem': './src/abstractStoreEditItem.ts',
-        'abstractStoreEditItemsPageContent': './src/abstractStoreEditItemsPageContent.ts',
-        'abstractStoreFilters': './src/abstractStoreFilters.ts',
+        'baseStoreEditItem': './src/baseStoreEditItem.ts',
+        'baseStoreEditItemsPageContent': './src/baseStoreEditItemsPageContent.ts',
+        'baseStoreFilters': './src/baseStoreFilters.ts',
         'baseStorePage': './src/baseStorePage.ts',
         'storeDataSource': './src/storeDataSource.ts',
         'storeDisplayedData': './src/storeDisplayedData.ts',

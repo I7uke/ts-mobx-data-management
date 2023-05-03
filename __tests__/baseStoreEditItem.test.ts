@@ -1,7 +1,7 @@
-import AbstractStoreEditItem, {
+import BaseStoreEditItem, {
     CallbackSaveModifiedItemParams,
-    InitDataAbstractStoreEditItem
-} from "../src/abstractStoreEditItem";
+    InitDataBaseStoreEditItem
+} from "../src/baseStoreEditItem";
 
 interface TestDataType {
     readonly a: string;
@@ -23,8 +23,8 @@ function GET_TEST_DATA_STATIC(): TestDataType {
     }
 }
 
-class StoreEditItemTest1 extends AbstractStoreEditItem<TestDataType> {
-    protected _saveModifiedItem(): CallbackSaveModifiedItemParams<TestDataType> {
+class StoreEditItemTest1 extends BaseStoreEditItem<TestDataType> {
+    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TestDataType> {
         return {
             item:{
                 a: 'ChangeText',
@@ -39,13 +39,13 @@ class StoreEditItemTest1 extends AbstractStoreEditItem<TestDataType> {
         }
     }
 
-    constructor(initData: InitDataAbstractStoreEditItem<TestDataType>) {
+    constructor(initData: InitDataBaseStoreEditItem<TestDataType>) {
         super(initData);
     }
 }
 
-class StoreEditItemTest2 extends AbstractStoreEditItem<TestDataType> {
-    protected _saveModifiedItem(): CallbackSaveModifiedItemParams<TestDataType> {
+class StoreEditItemTest2 extends BaseStoreEditItem<TestDataType> {
+    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TestDataType> {
         return {
             item: this._getItemToEditBeforeChanges(),
             status: 'existingItem',
@@ -53,7 +53,7 @@ class StoreEditItemTest2 extends AbstractStoreEditItem<TestDataType> {
         }
     }
 
-    constructor(initData: InitDataAbstractStoreEditItem<TestDataType>) {
+    constructor(initData: InitDataBaseStoreEditItem<TestDataType>) {
         super(initData);
     }
 }

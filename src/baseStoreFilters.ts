@@ -60,7 +60,7 @@ type FilterByValueParams<TItem extends Object> = {
     readonly fieldsNames: (keyof TItem)[];
 }
 
-export default abstract class AbstractStoreFilters<TItem extends Object> {
+export default class BaseStoreFilters<TItem extends Object> {
     private _callbackUpdateViewData?: () => void;
 
     /**
@@ -114,10 +114,12 @@ export default abstract class AbstractStoreFilters<TItem extends Object> {
      * @param inputItems
      * @protected
      */
-    protected abstract _applyFilters(inputItems: TItem[]): TItem[]
+    protected _applyFiltersOverride(inputItems: TItem[]): TItem[] {
+        throw new Error('method _applyFiltersOverride must be override');
+    }
 
     public applyFilters(inputItems: TItem[]): TItem[] {
-        return this._applyFilters(inputItems);
+        return this._applyFiltersOverride(inputItems);
     }
 
     //region Сортировки

@@ -1,18 +1,18 @@
 import React from "react";
 import {action, computed, makeObservable, observable} from "mobx";
-import {CallbackSaveModifiedItemParams} from "./abstractStoreEditItem";
-import AbstractStoreFilters from "./abstractStoreFilters";
+import {CallbackSaveModifiedItemParams} from "./baseStoreEditItem";
+import BaseStoreFilters from "./baseStoreFilters";
 import StoreDisplayedData from "./storeDisplayedData";
 import StoreDataSource, {DataSourceItem, ListenerChangeDataSource} from "./storeDataSource";
 import UniqueUuid from "./uniqueUuid";
 
-export type InitDataAbstractStoreEditItemsPageContent<TItem extends DataSourceItem> = {
+export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> = {
     readonly getNewItem: () => TItem;
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 }
 
-export default abstract class AbstractStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
+export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
     protected readonly _getNewItem: () => TItem;
     private readonly _uniquePageKey: string;
     private _uniqueUuid: UniqueUuid;
@@ -55,7 +55,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         }
 
         for (const item of itemsList) {
-            const validItem = this._validationItem(item);
+            const validItem = this._validationItemOverride(item);
             if (validItem) {
                 result.push(validItem);
             }
@@ -78,7 +78,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
             return;
         }
 
-        this._eventEditItem(targetItem, false);
+        this._eventEditItemOverride(targetItem, false);
     }
 
     /**
@@ -92,7 +92,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
             return;
         }
 
-        this._eventDeleteItem(targetItem);
+        this._eventDeleteItemOverride(targetItem);
     }
 
     /**
@@ -106,7 +106,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
             return;
         }
 
-        return this._eventGetItemInfo(targetItem);
+        return this._eventGetItemInfoOverride(targetItem);
     }
 
     //endregion
@@ -123,7 +123,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
             return;
         }
 
-        this._eventEditItem(targetItem, false);
+        this._eventEditItemOverride(targetItem, false);
     }
 
     /**
@@ -131,7 +131,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
      */
     public eventStartAddNewItem(): void {
         const newItem: TItem = this._getNewItem();
-        this._eventEditItem(newItem, true);
+        this._eventEditItemOverride(newItem, true);
     }
 
     /**
@@ -145,21 +145,21 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
             return;
         }
 
-        this._eventDeleteItem(targetItem);
+        this._eventDeleteItemOverride(targetItem);
     }
 
     /**
      * Событие получить информацию об элементе
      * @param e
      */
-    public eventGetItemInfo(e: React.MouseEvent<HTMLElement, MouseEvent>): void {
+    public eventStartGetItemInfo(e: React.MouseEvent<HTMLElement, MouseEvent>): void {
         const targetItem = this._getItemByDataAttribute(e.currentTarget);
 
         if (!targetItem) {
             return;
         }
 
-        this._eventGetItemInfo(targetItem);
+        this._eventGetItemInfoOverride(targetItem);
     }
 
     /**
@@ -179,13 +179,6 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         });
     }
 
-    /**
-     * Получить информацию об элементе
-     * @param item
-     * @protected
-     */
-    protected _eventGetItemInfo(item: TItem): void {
-    }
 
     //endregion
 
@@ -208,22 +201,70 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
 
     //endregion
 
-    //region abstract
-    protected abstract _validationItem(item: unknown): TItem | undefined;
+    //region StoreFilters
+    private _storeFilters?: Object & BaseStoreFilters<TItem>;
 
-    protected abstract _eventEditItem(item: TItem, isNew: boolean): void;
+    get storeFilters(): (Object & BaseStoreFilters<TItem>) {
+        if (!this._storeFilters) {
+            throw new Error('storeFilters not created');
+        }
 
-    protected abstract _eventDeleteItem(item: TItem): void;
+        return this._storeFilters;
+    }
 
-    protected abstract _serverRequestDeleteItem(item: unknown, other?: unknown): void;
+    /**
+     * Установить StoreFilters
+     * Можно установить только раз, если store еще не создан
+     * @param store
+     * @protected
+     */
+    protected _setStoreFilters(store: Object & BaseStoreFilters<TItem>) {
+        if (this._storeFilters) {
+            return;
+        }
 
-    protected abstract _serverRequestSaveChangedItem(item: unknown, other?: unknown): void;
+        this._storeFilters = store;
+    }
 
-    protected abstract _serverRequestSaveNewItem(item: unknown, other?: unknown): void;
+    //endregion
 
-    public abstract readonly storeFilters: Object & AbstractStoreFilters<TItem>;
+    //region Методы для переопределения
+    protected _validationItemOverride(item: unknown): TItem | undefined {
+        throw new Error('method _validationItemOverride must be override');
+    }
 
-    public abstract serverRequestGetInitData(): void;
+    protected _eventEditItemOverride(item: TItem, isNew: boolean): void {
+        throw new Error('method _eventEditItemOverride must be override');
+    }
+
+    protected _eventDeleteItemOverride(item: TItem): void {
+        throw new Error('method _eventDeleteItemOverride must be override');
+    }
+
+    protected _serverRequestDeleteItemOverride(item: unknown, other?: unknown): void {
+        throw new Error('method _serverRequestDeleteItemOverride must be override');
+    }
+
+    protected _serverRequestSaveChangedItemOverride(item: unknown, other?: unknown): void {
+        throw new Error('method _serverRequestSaveChangedItemOverride must be override');
+    }
+
+    protected _serverRequestSaveNewItemOverride(item: unknown, other?: unknown): void {
+        throw new Error('method _serverRequestSaveNewItemOverride must be override');
+    }
+
+    public serverRequestGetInitDataOverride(): void {
+        throw new Error('method serverRequestGetInitDataOverride must be override');
+    }
+
+    /**
+     * Получить информацию об элементе
+     * @param item
+     * @protected
+     */
+    protected _eventGetItemInfoOverride(item: TItem): void {
+        throw new Error('method _eventGetItemInfoOverride must be override');
+    }
 
     //endregion
 
@@ -258,7 +299,11 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
      * @protected
      */
     protected _addDataSourceFilterDefault() {
-        this._storeDataSource.setFilter(this.storeFilters.applyFilters);
+        if (!this._storeFilters) {
+            throw new Error('storeFilters not created');
+        }
+
+        this._storeDataSource.setFilter(this._storeFilters.applyFilters);
     }
 
     /**
@@ -271,14 +316,14 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
 
     //endregion
 
-    protected saveModifiedItemDefault(param:CallbackSaveModifiedItemParams<TItem>){
-        if(param.status === 'newItem') {
-            this._serverRequestSaveNewItem(param.item, param.other);
+    protected saveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>) {
+        if (param.status === 'newItem') {
+            this._serverRequestSaveNewItemOverride(param.item, param.other);
             return;
         }
 
-        if(param.status === 'existingItem') {
-            this._serverRequestSaveChangedItem(param.item, param.other);
+        if (param.status === 'existingItem') {
+            this._serverRequestSaveChangedItemOverride(param.item, param.other);
             return;
         }
     }
@@ -309,11 +354,11 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
         return this._redirectLink_observable;
     }
 
-    protected constructor(initData: InitDataAbstractStoreEditItemsPageContent<TItem>) {
+    protected constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>) {
         this.eventStartEditItem = this.eventStartEditItem.bind(this);
         this.eventStartAddNewItem = this.eventStartAddNewItem.bind(this);
         this.eventStartDeleteItem = this.eventStartDeleteItem.bind(this);
-        this.eventGetItemInfo = this.eventGetItemInfo.bind(this);
+        this.eventStartGetItemInfo = this.eventStartGetItemInfo.bind(this);
         this.eventDestroyItemEditor = this.eventDestroyItemEditor.bind(this);
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);

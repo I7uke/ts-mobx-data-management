@@ -23,7 +23,7 @@ export type CallbackSaveModifiedItemParams<TItem extends Object> = {
 type CallbackSaveModifiedItem<TItem extends Object> = (params: CallbackSaveModifiedItemParams<TItem>) => void;
 type CallbackCancelEditItem = () => void;
 
-export type InitDataAbstractStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
+export type InitDataBaseStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
     readonly itemToEdit: TItem;
     readonly itemStatus: ItemStatus
     readonly editorStatus?: EditorStatus;
@@ -31,7 +31,7 @@ export type InitDataAbstractStoreEditItem<TItem extends Object, TModifiedItem ex
     readonly callbackCancelEditItem: CallbackCancelEditItem;
 }
 
-export default abstract class AbstractStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> {
+export default class BaseStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> {
     private readonly _callbackSaveModifiedItem: CallbackSaveModifiedItem<TModifiedItem>;
     private readonly _callbackCancelEditItem: CallbackCancelEditItem;
     private readonly _itemToEditBeforeChanges: TItem;
@@ -80,7 +80,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
      * Получить исходный элемент для редактирования, без каких либо изменений
      * @protected
      */
-    protected _getItemToEditBeforeChanges() {
+    protected _getItemToEditBeforeChanges(): TItem {
         return cloneDeep(this._itemToEditBeforeChanges);
     }
 
@@ -91,11 +91,16 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
         return this._itemToEditBeforeChanges;
     }
 
+    //region Методы для переопределения
     /**
      * Сохранить измененный элемент
      * @protected
      */
-    protected abstract _saveModifiedItem(): CallbackSaveModifiedItemParams<TModifiedItem>
+    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TModifiedItem> {
+        throw new Error('method _saveModifiedItemOverride must be override!');
+    }
+
+    //endregion
 
     /**
      * Событие сохранить измененный элемент
@@ -106,7 +111,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
             return;
         }
 
-        const params: CallbackSaveModifiedItemParams<TModifiedItem> = this._saveModifiedItem();
+        const params: CallbackSaveModifiedItemParams<TModifiedItem> = this._saveModifiedItemOverride();
         const modifiedItem: TModifiedItem = params.item;
         const modifiedItemHash: string = sha1(modifiedItem);
         const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
@@ -128,7 +133,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
         }
     }
 
-    protected constructor(initData: InitDataAbstractStoreEditItem<TItem, TModifiedItem>) {
+    protected constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>) {
         this.eventSaveModifiedItem = this.eventSaveModifiedItem.bind(this);
         this.eventCancelEditItem = this.eventCancelEditItem.bind(this);
 

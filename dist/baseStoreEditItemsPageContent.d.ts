@@ -1,14 +1,14 @@
 import React from "react";
-import { CallbackSaveModifiedItemParams } from "./abstractStoreEditItem";
-import AbstractStoreFilters from "./abstractStoreFilters";
+import { CallbackSaveModifiedItemParams } from "./baseStoreEditItem";
+import BaseStoreFilters from "./baseStoreFilters";
 import StoreDisplayedData from "./storeDisplayedData";
 import StoreDataSource, { DataSourceItem } from "./storeDataSource";
-export type InitDataAbstractStoreEditItemsPageContent<TItem extends DataSourceItem> = {
+export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> = {
     readonly getNewItem: () => TItem;
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 };
-export default abstract class AbstractStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
+export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
     protected readonly _getNewItem: () => TItem;
     private readonly _uniquePageKey;
     private _uniqueUuid;
@@ -55,7 +55,7 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
      * Событие получить информацию об элементе
      * @param e
      */
-    eventGetItemInfo(e: React.MouseEvent<HTMLElement, MouseEvent>): void;
+    eventStartGetItemInfo(e: React.MouseEvent<HTMLElement, MouseEvent>): void;
     /**
      * Уничтожить редактор
      */
@@ -64,21 +64,29 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
      * Обновить отображаемые данные
      */
     eventUpdateDisplayedData(): void;
+    protected _getItemByDataAttribute(element: HTMLElement): TItem | undefined;
+    private _storeFilters?;
+    get storeFilters(): (Object & BaseStoreFilters<TItem>);
+    /**
+     * Установить StoreFilters
+     * Можно установить только раз, если store еще не создан
+     * @param store
+     * @protected
+     */
+    protected _setStoreFilters(store: Object & BaseStoreFilters<TItem>): void;
+    protected _validationItemOverride(item: unknown): TItem | undefined;
+    protected _eventEditItemOverride(item: TItem, isNew: boolean): void;
+    protected _eventDeleteItemOverride(item: TItem): void;
+    protected _serverRequestDeleteItemOverride(item: unknown, other?: unknown): void;
+    protected _serverRequestSaveChangedItemOverride(item: unknown, other?: unknown): void;
+    protected _serverRequestSaveNewItemOverride(item: unknown, other?: unknown): void;
+    serverRequestGetInitDataOverride(): void;
     /**
      * Получить информацию об элементе
      * @param item
      * @protected
      */
-    protected _eventGetItemInfo(item: TItem): void;
-    protected _getItemByDataAttribute(element: HTMLElement): TItem | undefined;
-    protected abstract _validationItem(item: unknown): TItem | undefined;
-    protected abstract _eventEditItem(item: TItem, isNew: boolean): void;
-    protected abstract _eventDeleteItem(item: TItem): void;
-    protected abstract _serverRequestDeleteItem(item: unknown, other?: unknown): void;
-    protected abstract _serverRequestSaveChangedItem(item: unknown, other?: unknown): void;
-    protected abstract _serverRequestSaveNewItem(item: unknown, other?: unknown): void;
-    abstract readonly storeFilters: Object & AbstractStoreFilters<TItem>;
-    abstract serverRequestGetInitData(): void;
+    protected _eventGetItemInfoOverride(item: TItem): void;
     private _defaultListenerChangeDataSource;
     protected _addAutoUpdateDisplayedDataDefault(): void;
     protected _removeAutoUpdateDisplayedDataDefault(): void;
@@ -107,5 +115,5 @@ export default abstract class AbstractStoreEditItemsPageContent<TItem extends Da
      * Ссылка для перенаправления
      */
     get redirectLink(): string;
-    protected constructor(initData: InitDataAbstractStoreEditItemsPageContent<TItem>);
+    protected constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>);
 }

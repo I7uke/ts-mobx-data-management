@@ -11,14 +11,14 @@ export type CallbackSaveModifiedItemParams<TItem extends Object> = {
 };
 type CallbackSaveModifiedItem<TItem extends Object> = (params: CallbackSaveModifiedItemParams<TItem>) => void;
 type CallbackCancelEditItem = () => void;
-export type InitDataAbstractStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
+export type InitDataBaseStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
     readonly itemToEdit: TItem;
     readonly itemStatus: ItemStatus;
     readonly editorStatus?: EditorStatus;
     readonly callbackSaveModifiedItem: CallbackSaveModifiedItem<TModifiedItem>;
     readonly callbackCancelEditItem: CallbackCancelEditItem;
 };
-export default abstract class AbstractStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> {
+export default class BaseStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> {
     private readonly _callbackSaveModifiedItem;
     private readonly _callbackCancelEditItem;
     private readonly _itemToEditBeforeChanges;
@@ -55,7 +55,7 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
      * Сохранить измененный элемент
      * @protected
      */
-    protected abstract _saveModifiedItem(): CallbackSaveModifiedItemParams<TModifiedItem>;
+    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TModifiedItem>;
     /**
      * Событие сохранить измененный элемент
      * Если элемент не изменился, будет вызвано событие отмены редактирования
@@ -65,6 +65,6 @@ export default abstract class AbstractStoreEditItem<TItem extends Object, TModif
      * Событие отменить редактирование элемента
      */
     eventCancelEditItem(): void;
-    protected constructor(initData: InitDataAbstractStoreEditItem<TItem, TModifiedItem>);
+    protected constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>);
 }
 export {};
