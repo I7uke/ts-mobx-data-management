@@ -333,6 +333,30 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
 
     //endregion
 
+    //region Ошибка
+    private _error_observable?: string;
+
+    protected _setError(error: string) {
+        if (typeof error !== 'string') {
+            return;
+        }
+
+        if (!error) {
+            return;
+        }
+
+        this._error_observable = error;
+    }
+
+    protected _removeError() {
+        this._error_observable = undefined;
+    }
+
+    get error() {
+        return this._error_observable;
+    }
+    //endregion
+
     protected saveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>) {
         if (param.status === 'newItem') {
             this._serverRequestSaveNewItemOverride(param.item, param.other);
@@ -345,6 +369,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         }
     }
 
+    //region Ссылка редиректа
     /**
      * Ссылка для перенаправления
      */
@@ -370,6 +395,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     get redirectLink() {
         return this._redirectLink_observable;
     }
+    //endregion
 
     protected constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>) {
         this.eventStartEditItem = this.eventStartEditItem.bind(this);
@@ -405,14 +431,21 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             | '_setStoreEditItem'
             | '_destroyStoreEditItem'
             | '_redirectLink_observable'
-            | '_setRedirectLink'>(this, {
+            | '_setRedirectLink'
+            | '_error_observable'
+            | '_setError'
+            | '_removeError'>(this, {
             _storeEditItem_observable: observable.ref,
             _redirectLink_observable: observable.ref,
+            _error_observable: observable.ref,
             _setStoreEditItem: action,
             _destroyStoreEditItem: action,
             _setRedirectLink: action,
+            _setError: action,
+            _removeError: action,
             storeEditItem: computed,
-            redirectLink: computed
+            redirectLink: computed,
+            error: computed
         });
     }
 }

@@ -110,6 +110,10 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @protected
      */
     protected _removeDataSourceFilterDefault(): void;
+    private _error_observable?;
+    protected _setError(error: string): void;
+    protected _removeError(): void;
+    get error(): string | undefined;
     protected saveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>): void;
     /**
      * Ссылка для перенаправления
