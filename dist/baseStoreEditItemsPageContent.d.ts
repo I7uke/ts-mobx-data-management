@@ -10,7 +10,7 @@ export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> 
 };
 export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
     protected readonly _getNewItem: () => TItem;
-    private readonly _uniquePageKey;
+    protected readonly _uniquePageKey: string;
     private _uniqueUuid;
     private readonly _itemDataAttribute;
     protected _getUniqueUuid(): string;
