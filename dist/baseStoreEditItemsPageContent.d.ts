@@ -8,7 +8,7 @@ export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> 
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 };
-export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
+export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem>> {
     protected readonly _getNewItem: () => TItem;
     protected readonly _uniquePageKey: string;
     private _uniqueUuid;
@@ -66,14 +66,14 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     eventUpdateDisplayedData(): void;
     protected _getItemByDataAttribute(element: HTMLElement): TItem | undefined;
     private _storeFilters?;
-    get storeFilters(): (Object & BaseStoreFilters<TItem>);
+    get storeFilters(): TStoreFilters;
     /**
      * Установить StoreFilters
      * Можно установить только раз, если store еще не создан
      * @param store
      * @protected
      */
-    protected _setStoreFilters(store: Object & BaseStoreFilters<TItem>): void;
+    protected _setStoreFilters(store: TStoreFilters): void;
     /**
      * Возвращает текст подтверждения при удалении элемента
      * @param item

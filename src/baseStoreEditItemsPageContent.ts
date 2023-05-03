@@ -12,7 +12,7 @@ export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> 
     readonly itemDataAttribute?: string;
 }
 
-export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem> {
+export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem>> {
     protected readonly _getNewItem: () => TItem;
     protected readonly _uniquePageKey: string;
     private _uniqueUuid: UniqueUuid;
@@ -202,9 +202,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     //endregion
 
     //region StoreFilters
-    private _storeFilters?: Object & BaseStoreFilters<TItem>;
+    private _storeFilters?: TStoreFilters;
 
-    get storeFilters(): (Object & BaseStoreFilters<TItem>) {
+    get storeFilters(): TStoreFilters {
         if (!this._storeFilters) {
             throw new Error('storeFilters not created');
         }
@@ -218,7 +218,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @param store
      * @protected
      */
-    protected _setStoreFilters(store: Object & BaseStoreFilters<TItem>) {
+    protected _setStoreFilters(store: TStoreFilters) {
         if (this._storeFilters) {
             return;
         }
