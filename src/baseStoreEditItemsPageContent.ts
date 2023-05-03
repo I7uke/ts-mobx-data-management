@@ -229,6 +229,16 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     //endregion
 
     //region Методы для переопределения
+
+    /**
+     * Возвращает текст подтверждения при удалении элемента
+     * @param item
+     * @protected
+     */
+    protected _getDeleteItemConfirmTextOverride(item: TItem): string {
+        return 'Удалить элемент ?';
+    }
+
     protected _validationItemOverride(item: unknown): TItem | undefined {
         throw new Error('method _validationItemOverride must be override');
     }
