@@ -93,14 +93,43 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
 
     //region Методы для переопределения
     /**
-     * Сохранить измененный элемент
+     * Проверить измененный элемент
      * @protected
      */
-    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TModifiedItem> {
-        throw new Error('method _saveModifiedItemOverride must be override!');
+    protected _validationModifiedItemOverride() {
+        throw new Error('method _validationModifiedItemOverride must be override!');
     }
 
     //endregion
+
+    /**
+     * Отменить редактирование элемента
+     */
+    protected _cancelEditItem() {
+        if (typeof this._callbackCancelEditItem === 'function') {
+            this._callbackCancelEditItem();
+        }
+    }
+
+    /**
+     * Вызывать этот метод при сохранении элемента
+     * @param params
+     * @protected
+     */
+    protected _saveModifiedItem(params: CallbackSaveModifiedItemParams<TModifiedItem>) {
+        const modifiedItem: TModifiedItem = params.item;
+        const modifiedItemHash: string = sha1(modifiedItem);
+        const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
+
+        if (itemToEditBeforeChangesHash === modifiedItemHash) {
+            if (typeof this._callbackCancelEditItem === 'function') {
+                this._callbackCancelEditItem();
+            }
+            return;
+        }
+
+        this._callbackSaveModifiedItem(params);
+    }
 
     /**
      * Событие сохранить измененный элемент
@@ -111,17 +140,8 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
             return;
         }
 
-        const params: CallbackSaveModifiedItemParams<TModifiedItem> = this._saveModifiedItemOverride();
-        const modifiedItem: TModifiedItem = params.item;
-        const modifiedItemHash: string = sha1(modifiedItem);
-        const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
-
-        if (itemToEditBeforeChangesHash === modifiedItemHash) {
-            this._callbackCancelEditItem();
-            return;
-        }
-
-        this._callbackSaveModifiedItem(params);
+        // Вызываем метод проверки элемента
+        this._validationModifiedItemOverride();
     }
 
     /**

@@ -24,7 +24,13 @@ function GET_TEST_DATA_STATIC(): TestDataType {
 }
 
 class StoreEditItemTest1 extends BaseStoreEditItem<TestDataType> {
-    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TestDataType> {
+
+    protected _validationModifiedItemOverride(): CallbackSaveModifiedItemParams<TestDataType> {
+        return super._validationModifiedItemOverride();
+    }
+
+
+    protected _1validationModifiedItemOverride() {
         return {
             item:{
                 a: 'ChangeText',
