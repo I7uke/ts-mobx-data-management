@@ -1,8 +1,5 @@
 import React from "react";
-import { CallbackSaveModifiedItemParams } from "./baseStoreEditItem";
-import BaseStoreFilters from "./baseStoreFilters";
-import StoreDisplayedData from "./storeDisplayedData";
-import StoreDataSource, { DataSourceItem } from "./storeDataSource";
+import { BaseStoreFilters, CallbackSaveModifiedItemParams, DataSourceItem, StoreDataSource, StoreDisplayedData } from "./index";
 export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> = {
     readonly getNewItem: () => TItem;
     readonly uniquePageKey: string;
