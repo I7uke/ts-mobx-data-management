@@ -63,7 +63,17 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     eventUpdateDisplayedData(): void;
     protected _getItemByDataAttribute(element: HTMLElement): TItem | undefined;
     private _storeFilters?;
+    /**
+     * Получить StoreFilters
+     * Если StoreFilters не задан вызовет ошибку
+     */
     get storeFilters(): TStoreFilters;
+    /**
+     * Получить StoreFilters
+     * Если StoreFilters не задан вызовет ошибку
+     * @protected
+     */
+    protected _getStoreFilters(): TStoreFilters;
     /**
      * Установить StoreFilters
      * Можно установить только раз, если store еще не создан
@@ -111,7 +121,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     protected _setError(error: string): void;
     protected _removeError(): void;
     get error(): string | undefined;
-    protected saveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>): void;
+    eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>): void;
     /**
      * Ссылка для перенаправления
      */

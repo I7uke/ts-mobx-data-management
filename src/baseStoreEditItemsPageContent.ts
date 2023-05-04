@@ -207,7 +207,24 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     //region StoreFilters
     private _storeFilters?: TStoreFilters;
 
+    /**
+     * Получить StoreFilters
+     * Если StoreFilters не задан вызовет ошибку
+     */
     get storeFilters(): TStoreFilters {
+        if (!this._storeFilters) {
+            throw new Error('storeFilters not created');
+        }
+
+        return this._storeFilters;
+    }
+
+    /**
+     * Получить StoreFilters
+     * Если StoreFilters не задан вызовет ошибку
+     * @protected
+     */
+    protected _getStoreFilters(): TStoreFilters{
         if (!this._storeFilters) {
             throw new Error('storeFilters not created');
         }
@@ -360,7 +377,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     }
     //endregion
 
-    protected saveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>) {
+    public eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>) {
         if (param.status === 'newItem') {
             this._serverRequestSaveNewItemOverride(param.item, param.other);
             return;
@@ -408,7 +425,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this.eventDestroyItemEditor = this.eventDestroyItemEditor.bind(this);
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
-        this.saveModifiedItemDefault = this.saveModifiedItemDefault.bind(this);
+        this.eventSaveModifiedItemDefault = this.eventSaveModifiedItemDefault.bind(this);
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
 
         this._storeEditItem_observable = undefined;
