@@ -136,5 +136,5 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Ссылка для перенаправления
      */
     get redirectLink(): string;
-    protected constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>);
+    constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>);
 }

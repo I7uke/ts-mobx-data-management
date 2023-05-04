@@ -61,7 +61,7 @@ export default class BaseStoreFilters<TItem extends Object> {
      * Событие обновить отображаемые данные
      */
     eventUpdateViewData(): void;
-    protected constructor();
+    constructor();
     /**
      * Установить callback обновления данных
      * @param callback

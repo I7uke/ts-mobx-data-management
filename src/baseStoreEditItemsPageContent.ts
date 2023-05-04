@@ -224,7 +224,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Если StoreFilters не задан вызовет ошибку
      * @protected
      */
-    protected _getStoreFilters(): TStoreFilters{
+    protected _getStoreFilters(): TStoreFilters {
         if (!this._storeFilters) {
             throw new Error('storeFilters not created');
         }
@@ -375,6 +375,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     get error() {
         return this._error_observable;
     }
+
     //endregion
 
     public eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>) {
@@ -415,9 +416,10 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     get redirectLink() {
         return this._redirectLink_observable;
     }
+
     //endregion
 
-    protected constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>) {
+    constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>) {
         this.eventStartEditItem = this.eventStartEditItem.bind(this);
         this.eventStartAddNewItem = this.eventStartAddNewItem.bind(this);
         this.eventStartDeleteItem = this.eventStartDeleteItem.bind(this);

@@ -72,7 +72,7 @@ export default class BaseStoreFilters<TItem extends Object> {
         }
     }
 
-    protected constructor() {
+    constructor() {
         this.applyFilters = this.applyFilters.bind(this);
         this.eventUpdateViewData = this.eventUpdateViewData.bind(this);
         this._callbackUpdateViewData = undefined;

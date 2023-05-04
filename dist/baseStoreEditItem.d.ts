@@ -88,6 +88,6 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      * Событие отменить редактирование элемента
      */
     eventCancelEditItem(): void;
-    protected constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>);
+    constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>);
 }
 export {};

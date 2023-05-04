@@ -174,7 +174,7 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
         this._cancelEditItem();
     }
 
-    protected constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>) {
+    constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>) {
         this.eventSaveModifiedItem = this.eventSaveModifiedItem.bind(this);
         this.eventCancelEditItem = this.eventCancelEditItem.bind(this);
 
