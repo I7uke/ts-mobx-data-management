@@ -106,13 +106,15 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      * Отменить редактирование элемента
      */
     protected _cancelEditItem() {
-        if (typeof this._callbackCancelEditItem === 'function') {
-            this._callbackCancelEditItem();
+        if (typeof this._callbackCancelEditItem !== 'function') {
+            throw new Error('_callbackCancelEditItem is not a function');
         }
+
+        this._callbackCancelEditItem();
     }
 
     /**
-     * Вызывать этот метод при сохранении элемента
+     * Вызывать этот метод когда элемент прошел проверку и его нужно сохранить
      * @param params
      * @protected
      */
@@ -122,9 +124,7 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
         const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
 
         if (itemToEditBeforeChangesHash === modifiedItemHash) {
-            if (typeof this._callbackCancelEditItem === 'function') {
-                this._callbackCancelEditItem();
-            }
+            this._cancelEditItem();
             return;
         }
 
@@ -137,7 +137,7 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      */
     public eventSaveModifiedItem() {
         if (typeof this._callbackSaveModifiedItem !== 'function') {
-            return;
+            throw new Error('_callbackSaveModifiedItem is not a function');
         }
 
         // Вызываем метод проверки элемента
@@ -148,9 +148,7 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      * Событие отменить редактирование элемента
      */
     public eventCancelEditItem() {
-        if (typeof this._callbackCancelEditItem === 'function') {
-            this._callbackCancelEditItem();
-        }
+        this._cancelEditItem();
     }
 
     protected constructor(initData: InitDataBaseStoreEditItem<TItem, TModifiedItem>) {

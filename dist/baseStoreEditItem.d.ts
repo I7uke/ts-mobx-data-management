@@ -52,10 +52,20 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      */
     get itemToEditBeforeChanges(): TItem;
     /**
-     * Сохранить измененный элемент
+     * Проверить измененный элемент
      * @protected
      */
-    protected _saveModifiedItemOverride(): CallbackSaveModifiedItemParams<TModifiedItem>;
+    protected _validationModifiedItemOverride(): void;
+    /**
+     * Отменить редактирование элемента
+     */
+    protected _cancelEditItem(): void;
+    /**
+     * Вызывать этот метод когда элемент прошел проверку и его нужно сохранить
+     * @param params
+     * @protected
+     */
+    protected _saveModifiedItem(params: CallbackSaveModifiedItemParams<TModifiedItem>): void;
     /**
      * Событие сохранить измененный элемент
      * Если элемент не изменился, будет вызвано событие отмены редактирования
