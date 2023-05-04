@@ -703,7 +703,7 @@ test('setOptions numberItemsPerPage wrong type string', () => {
         numberItemsPerPage: 2,
         currentPage: 3
     });
-
+    // @ts-ignore
     storeDataDisplay.setOptions({
         // @ts-ignore
         numberItemsPerPage: 'test'
@@ -722,7 +722,7 @@ test('dataStatus 1', () => {
         currentPage: 3
     });
 
-    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsSet');
+    expect(storeDataDisplay.dataStatus).toStrictEqual('installed');
 });
 
 test('dataStatus 2', () => {
@@ -732,7 +732,7 @@ test('dataStatus 2', () => {
         currentPage: 3
     });
 
-    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsNotSet');
+    expect(storeDataDisplay.dataStatus).toStrictEqual('notSet');
 });
 
 test('dataStatus 3', () => {
@@ -746,7 +746,7 @@ test('dataStatus 3', () => {
         itemsList:[]
     });
 
-    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsEmpty');
+    expect(storeDataDisplay.dataStatus).toStrictEqual('empty');
 });
 
 test('setItemsListWithoutTriggers', () => {
@@ -757,7 +757,7 @@ test('setItemsListWithoutTriggers', () => {
     });
 
     storeDataDisplay.setItemsListWithoutTriggers([]);
-    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsNotSet');
+    expect(storeDataDisplay.dataStatus).toStrictEqual('notSet');
 });
 
 
@@ -819,7 +819,7 @@ test('destroy 1', () => {
         currentPage: 1
     });
     storeDataDisplay.destroy();
-    expect(storeDataDisplay.dataStatus).toStrictEqual('dataIsNotSet' );
+    expect(storeDataDisplay.dataStatus).toStrictEqual('notSet' );
 });
 
 test('destroy 2', () => {

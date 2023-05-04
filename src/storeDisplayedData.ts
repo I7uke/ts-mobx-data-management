@@ -27,7 +27,7 @@ type Pagination<TItem extends DataSourceItem> = {
      */
     readonly availableNumberItemsOnPage: number[];
 }
-type DataStatus = 'dataIsNotSet' | 'dataIsEmpty' | 'dataIsSet';
+type DataStatus = 'notSet' | 'empty' | 'installed';
 type CallbackForceUpdate<TItem extends DataSourceItem> = () => TItem[];
 
 //region Получить значения по умолчанию
@@ -392,7 +392,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
     public destroy() {
         this._itemsList = [];
         this._callbackForceUpdate = undefined;
-        this._dataStatus_observable = 'dataIsNotSet';
+        this._dataStatus_observable = 'notSet';
         this._pagination_observable = getEmptyPagination();
     }
 
@@ -417,7 +417,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
             this._itemsList = params.itemsList;
         }
 
-        this._dataStatus_observable = this._itemsList.length ? 'dataIsSet' : 'dataIsEmpty';
+        this._dataStatus_observable = this._itemsList.length ? 'installed' : 'empty';
 
         this._pagination_observable = getPagination({
             numberItemsPerPage: (typeof params.numberItemsPerPage === 'number') ? params.numberItemsPerPage : this._pagination_observable.numberItemsPerPage,
@@ -550,14 +550,14 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
         this.eventShowNextPage = this.eventShowNextPage.bind(this);
 
         let itemsList: TItem[] = [];
-        let dataStatus: DataStatus = 'dataIsNotSet';
+        let dataStatus: DataStatus = 'notSet';
 
         if (init) {
             if (Array.isArray(init.itemsList)) {
                 itemsList = init.itemsList;
 
                 if (init.itemsList.length) {
-                    dataStatus = 'dataIsSet';
+                    dataStatus = 'installed';
                 }
             }
         }

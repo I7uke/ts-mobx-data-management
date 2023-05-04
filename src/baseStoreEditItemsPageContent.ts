@@ -55,7 +55,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         }
 
         for (const item of itemsList) {
-            const validItem = this._validationItemOverride(item);
+            const validItem: TItem | undefined = this._validationItemOverride(item);
             if (validItem) {
                 result.push(validItem);
             }
@@ -106,7 +106,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             return;
         }
 
-        return this._eventGetItemInfoOverride(targetItem);
+        this._eventGetItemInfoOverride(targetItem);
     }
 
     //endregion
