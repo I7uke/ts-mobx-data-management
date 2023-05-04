@@ -18,7 +18,13 @@ export type CallbackSaveModifiedItemParams<TItem extends Object> = {
     readonly item: TItem;
     readonly status: ItemStatus;
     readonly other?: unknown;
-};
+}
+
+type SaveModifiedItemParams<TItem extends Object> = {
+    readonly item: TItem;
+    readonly status?: ItemStatus;
+    readonly other?: unknown;
+}
 
 type CallbackSaveModifiedItem<TItem extends Object> = (params: CallbackSaveModifiedItemParams<TItem>) => void;
 type CallbackCancelEditItem = () => void;
@@ -50,7 +56,15 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
     /**
      * Статус элемента
      */
-    get itemStatus() {
+    get itemStatus(): ItemStatus {
+        return this._itemStatus_observable;
+    }
+
+    /**
+     * Получить статус элемента
+     * @protected
+     */
+    protected _getItemStatus(): ItemStatus {
         return this._itemStatus_observable;
     }
 
@@ -116,9 +130,12 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
     /**
      * Вызывать этот метод когда элемент прошел проверку и его нужно сохранить
      * @param params
+     *  item - Элемент который нужно сохранить
+     *  status - Статус элемента, если не передать, будет автоматически подставлен текущий статус
+     * other - Прочее. Может являться чем угодно
      * @protected
      */
-    protected _saveModifiedItem(params: CallbackSaveModifiedItemParams<TModifiedItem>) {
+    protected _saveModifiedItem(params: SaveModifiedItemParams<TModifiedItem>) {
         const modifiedItem: TModifiedItem = params.item;
         const modifiedItemHash: string = sha1(modifiedItem);
         const itemToEditBeforeChangesHash: string = sha1(this._itemToEditBeforeChanges);
@@ -128,7 +145,13 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
             return;
         }
 
-        this._callbackSaveModifiedItem(params);
+        const callbackSaveModifiedItemParams: CallbackSaveModifiedItemParams<TModifiedItem> = {
+            item: params.item,
+            status: typeof params.status === 'string' ? params.status : this._itemStatus_observable,
+            other: params.other
+        };
+
+        this._callbackSaveModifiedItem(callbackSaveModifiedItemParams);
     }
 
     /**

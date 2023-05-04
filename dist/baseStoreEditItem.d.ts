@@ -9,6 +9,11 @@ export type CallbackSaveModifiedItemParams<TItem extends Object> = {
     readonly status: ItemStatus;
     readonly other?: unknown;
 };
+type SaveModifiedItemParams<TItem extends Object> = {
+    readonly item: TItem;
+    readonly status?: ItemStatus;
+    readonly other?: unknown;
+};
 type CallbackSaveModifiedItem<TItem extends Object> = (params: CallbackSaveModifiedItemParams<TItem>) => void;
 type CallbackCancelEditItem = () => void;
 export type InitDataBaseStoreEditItem<TItem extends Object, TModifiedItem extends Object = TItem> = {
@@ -32,6 +37,11 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      * Статус элемента
      */
     get itemStatus(): ItemStatus;
+    /**
+     * Получить статус элемента
+     * @protected
+     */
+    protected _getItemStatus(): ItemStatus;
     private _editorStatus_observable;
     /**
      * Установить статус редактора
@@ -63,9 +73,12 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
     /**
      * Вызывать этот метод когда элемент прошел проверку и его нужно сохранить
      * @param params
+     *  item - Элемент который нужно сохранить
+     *  status - Статус элемента, если не передать, будет автоматически подставлен текущий статус
+     * other - Прочее. Может являться чем угодно
      * @protected
      */
-    protected _saveModifiedItem(params: CallbackSaveModifiedItemParams<TModifiedItem>): void;
+    protected _saveModifiedItem(params: SaveModifiedItemParams<TModifiedItem>): void;
     /**
      * Событие сохранить измененный элемент
      * Если элемент не изменился, будет вызвано событие отмены редактирования
