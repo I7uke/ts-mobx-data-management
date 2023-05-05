@@ -48,7 +48,7 @@ function getEmptyPagination<TItem extends DataSourceItem>(): Pagination<TItem> {
 
 //endregion
 
-//region Проверки
+//region ПроверкиitemsList
 function validationAvailableNumberItemsOnPage(numList?: number[] | null): number[] {
 
     if (!Array.isArray(numList)) {
@@ -231,7 +231,7 @@ interface GetPaginationParams<TItem extends DataSourceItem> {
      */
     readonly itemsList: TItem[];
     /**
-     * Возможные колличества элементов на странице
+     * Возможные количества элементов на странице
      */
     readonly availableNumberItemsOnPage: number[];
 }
@@ -306,7 +306,7 @@ export type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     /**
      * Источник данных
      */
-    readonly itemsList: TItem[];
+    readonly itemsList?: TItem[];
     /**
      * Возможные колличества элементов на странице
      */
@@ -322,8 +322,23 @@ export type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     readonly currentPage: number;
 }
 
+interface InternalPagination<TItem extends DataSourceItem> {
+    /**
+     * Текущая страница
+     */
+    readonly currentPage: number;
+    /**
+     * Возможные количества элементов на странице
+     */
+    readonly numberItemsPerPage: number;
+    /**
+     * Список всех элементов
+     */
+    readonly itemsList: TItem[];
+}
+
 export default class StoreDisplayedData<TItem extends DataSourceItem> {
-    private _itemsList: TItem[];
+    private _internalData: InternalPagination<TItem>;
     private _pagination_observable: Pagination<TItem>;
     private _callbackForceUpdate?: CallbackForceUpdate<TItem>;
 
@@ -342,8 +357,9 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
         if (!Array.isArray(!itemsList)) {
             return;
         }
-
-        this._itemsList = itemsList;
+        this._internalData = this._changeInternalData({
+            itemsList: itemsList
+        });
     }
 
     /**
@@ -363,7 +379,9 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
             return;
         }
 
-        this._itemsList = newItemsList;
+        this._internalData = this._changeInternalData({
+            itemsList: newItemsList
+        });
     }
 
     /**
@@ -391,7 +409,12 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      * Будет возвравщен в первоначальное состояние
      */
     public destroy() {
-        this._itemsList = [];
+        this._internalData = {
+            itemsList: [],
+            numberItemsPerPage: 0,
+            currentPage: 0
+        };
+
         this._callbackForceUpdate = undefined;
         this._dataStatus_observable = 'notSet';
         this._pagination_observable = getEmptyPagination();
@@ -414,16 +437,20 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
 
         this._applyCallbackForceUpdate();
 
-        if (Array.isArray(params.itemsList)) {
-            this._itemsList = params.itemsList;
-        }
 
-        this._dataStatus_observable = this._itemsList.length ? 'installed' : 'empty';
+        this._internalData = this._changeInternalData({
+            itemsList: params.itemsList,
+            currentPage: params.currentPage,
+            numberItemsPerPage: params.numberItemsPerPage
+        });
+
+
+        this._dataStatus_observable = this._internalData.itemsList.length ? 'installed' : 'empty';
 
         this._pagination_observable = getPagination({
-            numberItemsPerPage: (typeof params.numberItemsPerPage === 'number') ? params.numberItemsPerPage : this._pagination_observable.numberItemsPerPage,
-            currentPage: (typeof params.currentPage === 'number') ? params.currentPage : this._pagination_observable.currentPage,
-            itemsList: this._itemsList,
+            numberItemsPerPage: this._internalData.numberItemsPerPage,
+            currentPage: this._internalData.currentPage,
+            itemsList: this._internalData.itemsList,
             availableNumberItemsOnPage: Array.isArray(params.availableNumberItemsOnPage) ? params.availableNumberItemsOnPage : this._pagination_observable.availableNumberItemsOnPage,
         });
     }
@@ -450,7 +477,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
     }
 
     /**
-     * Возможные колличества элементов на странице
+     * Возможные количества элементов на странице
      */
     get availableNumberItemsOnPage(): number[] {
         return this._pagination_observable.availableNumberItemsOnPage;
@@ -478,34 +505,74 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
     }
 
     /**
+     * Перейти на первую страницу
+     */
+    public goToFirstPage(): void {
+        this._internalData = this._changeInternalData({
+            currentPage: 1,
+        });
+
+        const newPagination = getPagination({
+            availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
+            currentPage: this._internalData.currentPage,
+            numberItemsPerPage: this._internalData.numberItemsPerPage,
+            itemsList: this._internalData.itemsList
+        });
+
+        this._setPagination_action(newPagination);
+    }
+
+    /**
+     * Перейти на последнюю страницу
+     */
+    public goToLastPage(): void {
+        this._internalData = this._changeInternalData({
+            currentPage: this._pagination_observable.maxPages,
+        });
+
+        const newPagination = getPagination({
+            availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
+            currentPage: this._internalData.currentPage,
+            numberItemsPerPage: this._internalData.numberItemsPerPage,
+            itemsList: this._internalData.itemsList
+        });
+
+        this._setPagination_action(newPagination);
+    }
+
+    /**
      * Показать следующую страницу
      */
     public eventShowNextPage() {
-        if (!this._itemsList.length) {
+        if (!this._internalData.itemsList.length) {
             return;
         }
 
         const maxPages: number = this._pagination_observable.maxPages;
         const nextPage: number = validationCurrentPage({
             maxPages: maxPages,
-            currentPage: this._pagination_observable.currentPage + 1
+            currentPage: this._internalData.currentPage + 1
         });
 
         if (!nextPage) {
             return;
         }
 
-        if (nextPage === this._pagination_observable.currentPage) {
+        if (nextPage === this._internalData.currentPage) {
             return;
         }
 
         this._applyCallbackForceUpdate();
 
+        this._internalData = this._changeInternalData({
+            currentPage: nextPage
+        });
+
         const newPagination = getPagination({
-            currentPage: nextPage,
+            currentPage: this._internalData.currentPage,
             availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
-            numberItemsPerPage: this._pagination_observable.numberItemsPerPage,
-            itemsList: this._itemsList
+            numberItemsPerPage: this._internalData.numberItemsPerPage,
+            itemsList: this._internalData.itemsList
         });
 
         this._setPagination_action(newPagination);
@@ -515,14 +582,14 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      * Показать предыдущую страницу
      */
     public eventShowPrevPage() {
-        if (!this._itemsList.length) {
+        if (!this._internalData.itemsList.length) {
             return;
         }
 
         const maxPages: number = this._pagination_observable.maxPages;
 
         const prevPage: number = validationCurrentPage({
-            currentPage: this._pagination_observable.currentPage - 1,
+            currentPage: this._internalData.currentPage - 1,
             maxPages: maxPages
         });
 
@@ -530,53 +597,106 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
             return;
         }
 
-        if (prevPage === this._pagination_observable.currentPage) {
+        if (prevPage === this._internalData.currentPage) {
             return;
         }
 
         this._applyCallbackForceUpdate();
 
+        this._internalData = this._changeInternalData({
+            currentPage: prevPage
+        });
+
         const newPagination = getPagination({
-            currentPage: prevPage,
+            currentPage: this._internalData.currentPage,
             availableNumberItemsOnPage: this._pagination_observable.availableNumberItemsOnPage,
-            numberItemsPerPage: this._pagination_observable.numberItemsPerPage,
-            itemsList: this._itemsList
+            numberItemsPerPage: this._internalData.numberItemsPerPage,
+            itemsList: this._internalData.itemsList
         });
 
         this._setPagination_action(newPagination);
     }
 
+    private _changeInternalData(params?: Partial<InternalPagination<TItem>>): InternalPagination<TItem> {
+        const inputItemsList: TItem[] | undefined | null = params?.itemsList;
+        const inputNumberItemsPerPage: number | undefined | null = params?.numberItemsPerPage;
+        const inputCurrentPage: number | undefined | null = params?.currentPage;
+
+        const tmpItemsList: TItem[] | undefined | null = this?._internalData?.itemsList;
+        const tmpCurrentPage: number | undefined | null = this?._internalData?.currentPage;
+        const tmpNumberItemsPerPage: number | undefined | null = this?._internalData?.numberItemsPerPage;
+
+        let itemsList: TItem[] = Array.isArray(tmpItemsList) ? tmpItemsList : [];
+
+        let currentPage: number = validationNumber({
+            valueForValidation: tmpCurrentPage,
+            defaultValue: 0
+        });
+
+        let numberItemsPerPage: number = validationNumber({
+            valueForValidation: tmpNumberItemsPerPage,
+            defaultValue: 0
+        });
+
+        if (Array.isArray(inputItemsList)) {
+            itemsList = inputItemsList;
+        }
+
+        if (typeof inputCurrentPage === 'number') {
+            currentPage = validationNumber({
+                valueForValidation: inputCurrentPage,
+                defaultValue: 0
+            });
+        }
+
+        if (typeof inputNumberItemsPerPage === 'number') {
+            numberItemsPerPage = validationNumber({
+                valueForValidation: inputNumberItemsPerPage,
+                defaultValue: 0
+            });
+        }
+
+        return {
+            numberItemsPerPage: numberItemsPerPage,
+            currentPage: currentPage,
+            itemsList: itemsList
+        }
+    }
+
     constructor(init?: InitStoreDisplayedData<TItem>) {
         this.eventShowPrevPage = this.eventShowPrevPage.bind(this);
         this.eventShowNextPage = this.eventShowNextPage.bind(this);
+        this.goToFirstPage = this.goToFirstPage.bind(this);
+        this.goToLastPage = this.goToLastPage.bind(this);
 
         let itemsList: TItem[] = [];
         let dataStatus: DataStatus = 'notSet';
 
         if (init) {
-            if (Array.isArray(init.itemsList)) {
-                itemsList = init.itemsList;
-
-                if (init.itemsList.length) {
+            const initItemsList: TItem[] | undefined | null = init?.itemsList;
+            if (Array.isArray(initItemsList)) {
+                itemsList = initItemsList;
+                if (itemsList.length) {
                     dataStatus = 'installed';
                 }
             }
         }
 
+        const internalData = this._changeInternalData({
+            itemsList: Array.isArray(itemsList) ? itemsList : [],
+            currentPage: init?.currentPage ?? 0,
+            numberItemsPerPage: init?.numberItemsPerPage ?? 0
+        });
+
+        this._internalData = internalData;
+
         this._callbackForceUpdate = undefined;
-        this._itemsList = itemsList;
         this._dataStatus_observable = dataStatus;
         this._pagination_observable = getPagination({
             availableNumberItemsOnPage: validationAvailableNumberItemsOnPage(init?.availableNumberItemsOnPage),
-            numberItemsPerPage: validationNumber({
-                valueForValidation: init?.numberItemsPerPage,
-                defaultValue: 0
-            }),
-            currentPage: validationNumber({
-                valueForValidation: init?.currentPage,
-                defaultValue: 0
-            }),
-            itemsList: this._itemsList
+            numberItemsPerPage: this._internalData.numberItemsPerPage,
+            currentPage: this._internalData.currentPage,
+            itemsList: this._internalData.itemsList
         });
 
         makeObservable<this,

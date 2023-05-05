@@ -1,5 +1,5 @@
+import {DataSourceItem} from "../src";
 import StoreDisplayedData from "../src/storeDisplayedData";
-import {DataSourceItem} from "../src/storeDataSource";
 
 interface TestDataType extends DataSourceItem {
     readonly a: string;
@@ -402,6 +402,7 @@ test('eventShowPrevPage 3', () => {
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0],TEST_DATA[1], TEST_DATA[2], TEST_DATA[3]]);
 });
 
+
 test('setOptions currentPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
@@ -414,6 +415,7 @@ test('setOptions currentPage', () => {
     storeDataDisplay.setOptions({
         currentPage: 2
     });
+
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[2], TEST_DATA[3]]);
 });
 
@@ -472,7 +474,7 @@ test('setCurrentPage wrong type string', () => {
         numberItemsPerPage: 2,
         currentPage: 3
     });
-
+    // @ts-ignore
     storeDataDisplay.setOptions({
         // @ts-ignore
         currentPage: 'test'
@@ -601,7 +603,7 @@ test('setOptions availableNumberItemsOnPage wrong type string', () => {
         numberItemsPerPage: 2,
         currentPage: 3
     });
-
+    // @ts-ignore
     storeDataDisplay.setOptions({
         // @ts-ignore
         availableNumberItemsOnPage: 'test'
@@ -618,7 +620,7 @@ test('setOptions availableNumberItemsOnPage wrong type', () => {
         numberItemsPerPage: 2,
         currentPage: 3
     });
-
+    // @ts-ignore
     storeDataDisplay.setOptions({
         // @ts-ignore
         availableNumberItemsOnPage: [1, 2, 4, 'test', null, NaN, '5', 6, 7]
@@ -626,7 +628,6 @@ test('setOptions availableNumberItemsOnPage wrong type', () => {
 
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 4, 6, 7]);
 });
-
 
 test('setOptions numberItemsPerPage', () => {
     const TEST_DATA = GET_TEST_DATA();
@@ -760,7 +761,6 @@ test('setItemsListWithoutTriggers', () => {
     expect(storeDataDisplay.dataStatus).toStrictEqual('notSet');
 });
 
-
 test('setForceUpdate', () => {
     const TEST_DATA = GET_TEST_DATA();
     const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
@@ -776,6 +776,7 @@ test('setForceUpdate', () => {
 
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[3]]);
 });
+
 
 test('setForceUpdate wrong type', () => {
     const TEST_DATA = GET_TEST_DATA();
@@ -832,4 +833,64 @@ test('destroy 2', () => {
 
     storeDataDisplay.destroy();
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([] );
+});
+
+test('goToFirstPage 1', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        currentPage: 3,
+        numberItemsPerPage: 2
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: TEST_DATA
+    });
+
+    storeDataDisplay.goToFirstPage();
+    expect(storeDataDisplay.currentPage).toStrictEqual(1);
+});
+
+test('goToFirstPage 2', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        currentPage: 3,
+        numberItemsPerPage: 2
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: TEST_DATA
+    });
+
+    storeDataDisplay.goToFirstPage();
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0], TEST_DATA[1]]);
+});
+
+test('goToLastPage 1', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        currentPage: 3,
+        numberItemsPerPage: 2
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: TEST_DATA
+    });
+
+    storeDataDisplay.goToLastPage();
+    expect(storeDataDisplay.currentPage).toStrictEqual(5);
+});
+
+test('goToLastPage 2', () => {
+    const TEST_DATA = GET_TEST_DATA();
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        currentPage: 3,
+        numberItemsPerPage: 2
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: TEST_DATA
+    });
+
+    storeDataDisplay.goToLastPage();
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[8], TEST_DATA[9]]);
 });

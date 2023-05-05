@@ -15,7 +15,7 @@ interface GetPaginationParams<TItem extends DataSourceItem> {
      */
     readonly itemsList: TItem[];
     /**
-     * Возможные колличества элементов на странице
+     * Возможные количества элементов на странице
      */
     readonly availableNumberItemsOnPage: number[];
 }
@@ -23,7 +23,7 @@ export type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     /**
      * Источник данных
      */
-    readonly itemsList: TItem[];
+    readonly itemsList?: TItem[];
     /**
      * Возможные колличества элементов на странице
      */
@@ -39,7 +39,7 @@ export type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     readonly currentPage: number;
 };
 export default class StoreDisplayedData<TItem extends DataSourceItem> {
-    private _itemsList;
+    private _internalData;
     private _pagination_observable;
     private _callbackForceUpdate?;
     private _setPagination_action;
@@ -91,7 +91,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      */
     get currentPage(): number;
     /**
-     * Возможные колличества элементов на странице
+     * Возможные количества элементов на странице
      */
     get availableNumberItemsOnPage(): number[];
     /**
@@ -107,6 +107,14 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      */
     get totalItems(): number;
     /**
+     * Перейти на первую страницу
+     */
+    goToFirstPage(): void;
+    /**
+     * Перейти на последнюю страницу
+     */
+    goToLastPage(): void;
+    /**
      * Показать следующую страницу
      */
     eventShowNextPage(): void;
@@ -114,6 +122,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      * Показать предыдущую страницу
      */
     eventShowPrevPage(): void;
+    private _changeInternalData;
     constructor(init?: InitStoreDisplayedData<TItem>);
 }
 export {};

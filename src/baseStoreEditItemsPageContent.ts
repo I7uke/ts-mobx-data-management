@@ -300,7 +300,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Получить данные инициализации для StoreDisplayedData
      * @protected
      */
-    protected _getInitDataForStoreDisplayedDataOverride():InitStoreDisplayedData<TItem>{
+    protected _getInitDataForStoreDisplayedDataOverride(): InitStoreDisplayedData<TItem> {
         return {
             itemsList: [],
             numberItemsPerPage: 10,
@@ -322,8 +322,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         if (params.changeType === 'addNewItem') {
             this.storeDisplayedData.setOptions({
                 itemsList: params.itemsList,
-                currentPage: 1
             });
+
+            this.storeDisplayedData.goToLastPage();
             return;
         }
 
