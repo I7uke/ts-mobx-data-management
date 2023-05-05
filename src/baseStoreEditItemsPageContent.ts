@@ -300,7 +300,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Получить данные инициализации для StoreDisplayedData
      * @protected
      */
-    protected _getInitDataForStoreDisplayedData():InitStoreDisplayedData<TItem>{
+    protected _getInitDataForStoreDisplayedDataOverride():InitStoreDisplayedData<TItem>{
         return {
             itemsList: [],
             numberItemsPerPage: 10,
@@ -447,7 +447,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._getNewItem = initData.getNewItem;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
-        this.storeDisplayedData = new StoreDisplayedData<TItem>(this._getInitDataForStoreDisplayedData());
+        this.storeDisplayedData = new StoreDisplayedData<TItem>(this._getInitDataForStoreDisplayedDataOverride());
         this._uniqueUuid = new UniqueUuid();
 
         let itemDataAttribute: string = 'data-uuid';

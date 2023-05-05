@@ -104,7 +104,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Получить данные инициализации для StoreDisplayedData
      * @protected
      */
-    protected _getInitDataForStoreDisplayedData(): InitStoreDisplayedData<TItem>;
+    protected _getInitDataForStoreDisplayedDataOverride(): InitStoreDisplayedData<TItem>;
     /**
      * Запрос на сервер, получить начальное состояние хранилища
      */
