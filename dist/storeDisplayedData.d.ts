@@ -7,7 +7,7 @@ interface GetPaginationParams<TItem extends DataSourceItem> {
      */
     readonly numberItemsPerPage: number;
     /**
-     * Текущая страница
+     * Текущая страница, ВАЖНО! отсчет идет с 1
      */
     readonly currentPage: number;
     /**
@@ -19,7 +19,7 @@ interface GetPaginationParams<TItem extends DataSourceItem> {
      */
     readonly availableNumberItemsOnPage: number[];
 }
-type InitStoreDisplayedData<TItem extends DataSourceItem> = {
+export type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     /**
      * Источник данных
      */
@@ -34,6 +34,7 @@ type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     readonly numberItemsPerPage: number;
     /**
      * Текущая страница
+     * ВАЖНО! отсчет идет с 1
      */
     readonly currentPage: number;
 };

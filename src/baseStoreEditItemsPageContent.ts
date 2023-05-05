@@ -2,7 +2,7 @@ import React from "react";
 import {action, computed, makeObservable, observable} from "mobx";
 import {
     BaseStoreFilters, CallbackSaveModifiedItemParams,
-    DataSourceItem,
+    DataSourceItem, InitStoreDisplayedData,
     ListenerChangeDataSource,
     StoreDataSource,
     StoreDisplayedData,
@@ -296,6 +296,18 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         throw new Error('method _eventGetItemInfoOverride must be override');
     }
 
+    /**
+     * Получить данные инициализации для StoreDisplayedData
+     * @protected
+     */
+    protected _getInitDataForStoreDisplayedData():InitStoreDisplayedData<TItem>{
+        return {
+            itemsList: [],
+            numberItemsPerPage: 10,
+            currentPage: 1
+        };
+    }
+
     //endregion
 
     /**
@@ -435,7 +447,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._getNewItem = initData.getNewItem;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
-        this.storeDisplayedData = new StoreDisplayedData<TItem>();
+        this.storeDisplayedData = new StoreDisplayedData<TItem>(this._getInitDataForStoreDisplayedData());
         this._uniqueUuid = new UniqueUuid();
 
         let itemDataAttribute: string = 'data-uuid';

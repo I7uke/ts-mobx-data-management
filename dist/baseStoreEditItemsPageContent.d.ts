@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseStoreFilters, CallbackSaveModifiedItemParams, DataSourceItem, StoreDataSource, StoreDisplayedData } from "./index";
+import { BaseStoreFilters, CallbackSaveModifiedItemParams, DataSourceItem, InitStoreDisplayedData, StoreDataSource, StoreDisplayedData } from "./index";
 export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> = {
     readonly getNewItem: () => TItem;
     readonly uniquePageKey: string;
@@ -100,6 +100,11 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @protected
      */
     protected _eventGetItemInfoOverride(item: TItem): void;
+    /**
+     * Получить данные инициализации для StoreDisplayedData
+     * @protected
+     */
+    protected _getInitDataForStoreDisplayedData(): InitStoreDisplayedData<TItem>;
     /**
      * Запрос на сервер, получить начальное состояние хранилища
      */

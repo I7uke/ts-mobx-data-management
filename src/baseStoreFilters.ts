@@ -115,7 +115,8 @@ export default class BaseStoreFilters<TItem extends Object> {
      * @protected
      */
     protected _applyFiltersOverride(inputItems: TItem[]): TItem[] {
-        throw new Error('method _applyFiltersOverride must be override');
+        console.warn('method _applyFiltersOverride must be override');
+        return inputItems;
     }
 
     public applyFilters(inputItems: TItem[]): TItem[] {

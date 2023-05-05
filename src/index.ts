@@ -1,3 +1,4 @@
+export {type InitStoreDisplayedData} from "./storeDisplayedData";
 export {type DataSourceItem, type DataSourceItemChangeType, type ListenerChangeDataSource} from "./storeDataSource";
 export {type InitDataBaseStoreEditItemsPageContent} from "./baseStoreEditItemsPageContent";
 export {type CallbackSaveModifiedItemParams, type InitDataBaseStoreEditItem} from "./baseStoreEditItem";
