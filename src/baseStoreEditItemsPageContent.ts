@@ -322,9 +322,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         if (params.changeType === 'addNewItem') {
             this.storeDisplayedData.setOptions({
                 itemsList: params.itemsList,
+                currentPage: 'lastPage'
             });
 
-            this.storeDisplayedData.goToLastPage();
             return;
         }
 

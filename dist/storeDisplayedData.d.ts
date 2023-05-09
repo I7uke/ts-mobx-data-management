@@ -1,42 +1,39 @@
 import { DataSourceItem } from "./index";
+type CurrentPageType = number | 'firstPage' | 'lastPage';
 type DataStatus = 'notSet' | 'empty' | 'installed';
 type CallbackForceUpdate<TItem extends DataSourceItem> = () => TItem[];
-interface GetPaginationParams<TItem extends DataSourceItem> {
-    /**
-     * Количество элементов на одной странице
-     */
-    readonly numberItemsPerPage: number;
-    /**
-     * Текущая страница, ВАЖНО! отсчет идет с 1
-     */
-    readonly currentPage: number;
-    /**
-     * Список всех элементов
-     */
-    readonly itemsList: TItem[];
-    /**
-     * Возможные количества элементов на странице
-     */
-    readonly availableNumberItemsOnPage: number[];
-}
 export type InitStoreDisplayedData<TItem extends DataSourceItem> = {
     /**
      * Источник данных
      */
-    readonly itemsList?: TItem[];
+    readonly itemsList?: TItem[] | undefined | null;
     /**
      * Возможные колличества элементов на странице
      */
-    readonly availableNumberItemsOnPage?: number[];
+    readonly availableNumberItemsOnPage?: number[] | undefined | null;
     /**
      * Количество элементов на одной странице
      */
-    readonly numberItemsPerPage: number;
+    readonly numberItemsPerPage?: number | undefined | null;
     /**
      * Текущая страница
      * ВАЖНО! отсчет идет с 1
      */
-    readonly currentPage: number;
+    readonly currentPage?: number | undefined | null;
+};
+type SetOptionsParams<TItem extends DataSourceItem> = {
+    /**
+     * Количество элементов на одной странице
+     */
+    readonly numberItemsPerPage?: number | undefined | null;
+    /**
+     * Текущая страница, ВАЖНО! отсчет идет с 1
+     */
+    readonly currentPage?: CurrentPageType | undefined | null;
+    /**
+     * Список всех элементов
+     */
+    readonly itemsList?: TItem[] | undefined | null;
 };
 export default class StoreDisplayedData<TItem extends DataSourceItem> {
     private _internalData;
@@ -44,6 +41,11 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
     private _callbackForceUpdate?;
     private _setPagination_action;
     private _dataStatus_observable;
+    /**
+     * Возможные колличества элементов на странице
+     */
+    private _availableNumberItemsOnPage_observable;
+    setAvailableNumberItemsOnPage(itemsList: number[]): void;
     /**
      * Установить список элементов без триггеров
      * Данная установка не вызовет обновления данных в визуальном представлении
@@ -77,7 +79,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      * Если поле отсутствует то будет сохранено текущее значение этого поля
      * @param params
      */
-    setOptions(params: Partial<GetPaginationParams<TItem>>): void;
+    setOptions(params: SetOptionsParams<TItem>): void;
     /**
      * Статус данных
      */
@@ -107,14 +109,6 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      */
     get totalItems(): number;
     /**
-     * Перейти на первую страницу
-     */
-    goToFirstPage(): void;
-    /**
-     * Перейти на последнюю страницу
-     */
-    goToLastPage(): void;
-    /**
      * Показать следующую страницу
      */
     eventShowNextPage(): void;
@@ -123,6 +117,6 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      */
     eventShowPrevPage(): void;
     private _changeInternalData;
-    constructor(init?: InitStoreDisplayedData<TItem>);
+    constructor(initData?: InitStoreDisplayedData<TItem>);
 }
 export {};

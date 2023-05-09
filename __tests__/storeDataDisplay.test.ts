@@ -402,7 +402,6 @@ test('eventShowPrevPage 3', () => {
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0],TEST_DATA[1], TEST_DATA[2], TEST_DATA[3]]);
 });
 
-
 test('setOptions currentPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
@@ -417,6 +416,53 @@ test('setOptions currentPage', () => {
     });
 
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[2], TEST_DATA[3]]);
+});
+
+
+test('setOptions currentPage and numberItemsPerPage', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        currentPage: 1,
+        numberItemsPerPage: 3
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2]]);
+});
+
+
+test('setOptions change', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    storeDataDisplay.setOptions({
+        currentPage: 4,
+        numberItemsPerPage: 3,
+        itemsList: []
+    });
+
+    storeDataDisplay.setOptions({
+        currentPage: 1,
+        numberItemsPerPage: 5,
+        itemsList: []
+    });
+
+    storeDataDisplay.setOptions({
+        itemsList: TEST_DATA
+    });
+
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2], TEST_DATA[3], TEST_DATA[4]]);
 });
 
 test('setOptions setCurrentPage -1', () => {
@@ -528,7 +574,7 @@ test('set itemsList empty', () => {
     expect(storeDataDisplay.currentPage).toStrictEqual(0);
 });
 
-test('setOptions availableNumberItemsOnPage', () => {
+test('setAvailableNumberItemsOnPage', () => {
     const TEST_DATA = GET_TEST_DATA();
 
     const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
@@ -537,15 +583,13 @@ test('setOptions availableNumberItemsOnPage', () => {
         currentPage: 3
     });
 
-    storeDataDisplay.setOptions({
-        availableNumberItemsOnPage: [1,2,3]
-    });
+    storeDataDisplay.setAvailableNumberItemsOnPage([1,2,3]);
 
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1,2,3]);
 });
 
 
-test('setOptions availableNumberItemsOnPage empty', () => {
+test('setAvailableNumberItemsOnPage empty', () => {
     const TEST_DATA = GET_TEST_DATA();
 
     const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
@@ -554,12 +598,57 @@ test('setOptions availableNumberItemsOnPage empty', () => {
         currentPage: 3
     });
 
-    storeDataDisplay.setOptions({
-        availableNumberItemsOnPage: []
-    });
+    storeDataDisplay.setAvailableNumberItemsOnPage([]);
 
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
+
+test('setAvailableNumberItemsOnPage wrong type', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    // @ts-ignore
+    storeDataDisplay.setAvailableNumberItemsOnPage(['1', '2', '3', '4', '5', '6', '7']);
+
+   expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
+});
+
+
+test('setAvailableNumberItemsOnPage wrong type', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+    // @ts-ignore
+    storeDataDisplay.setAvailableNumberItemsOnPage(['1', 2, '3', 4, '5', 6, '7']);
+
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([2, 4, 6]);
+});
+
+
+test('setAvailableNumberItemsOnPage not unique', () => {
+    const TEST_DATA = GET_TEST_DATA();
+
+    const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
+        itemsList: TEST_DATA,
+        numberItemsPerPage: 2,
+        currentPage: 3
+    });
+
+
+    storeDataDisplay.setAvailableNumberItemsOnPage([1, 1, 1, 2, 2, 3, 4, 3, 5, 2, 4, 5, 1, 3]);
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 3, 4, 5]);
+});
+
 
 test('setOptions availableNumberItemsOnPage wrong type null', () => {
     const TEST_DATA = GET_TEST_DATA();
@@ -570,11 +659,8 @@ test('setOptions availableNumberItemsOnPage wrong type null', () => {
         currentPage: 3
     });
 
-    storeDataDisplay.setOptions({
-        // @ts-ignore
-        availableNumberItemsOnPage: null
-    });
-
+    // @ts-ignore
+    storeDataDisplay.setAvailableNumberItemsOnPage(null);
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
 
@@ -587,11 +673,8 @@ test('setOptions availableNumberItemsOnPage wrong type undefined', () => {
         currentPage: 3
     });
 
-    storeDataDisplay.setOptions({
-        // @ts-ignore
-        availableNumberItemsOnPage: undefined
-    });
-
+       // @ts-ignore
+       storeDataDisplay.setAvailableNumberItemsOnPage(undefined);
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
 
@@ -603,12 +686,10 @@ test('setOptions availableNumberItemsOnPage wrong type string', () => {
         numberItemsPerPage: 2,
         currentPage: 3
     });
-    // @ts-ignore
-    storeDataDisplay.setOptions({
-        // @ts-ignore
-        availableNumberItemsOnPage: 'test'
-    });
 
+
+           // @ts-ignore
+           storeDataDisplay.setAvailableNumberItemsOnPage('test');
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
 
@@ -620,12 +701,9 @@ test('setOptions availableNumberItemsOnPage wrong type', () => {
         numberItemsPerPage: 2,
         currentPage: 3
     });
-    // @ts-ignore
-    storeDataDisplay.setOptions({
-        // @ts-ignore
-        availableNumberItemsOnPage: [1, 2, 4, 'test', null, NaN, '5', 6, 7]
-    });
 
+      // @ts-ignore
+      storeDataDisplay.setAvailableNumberItemsOnPage([1, 2, 4, 'test', null, NaN, '5', 6, 7]);
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 4, 6, 7]);
 });
 
@@ -843,10 +921,10 @@ test('goToFirstPage 1', () => {
     });
 
     storeDataDisplay.setOptions({
-        itemsList: TEST_DATA
+        itemsList: TEST_DATA,
+        currentPage: 'firstPage'
     });
 
-    storeDataDisplay.goToFirstPage();
     expect(storeDataDisplay.currentPage).toStrictEqual(1);
 });
 
@@ -858,10 +936,10 @@ test('goToFirstPage 2', () => {
     });
 
     storeDataDisplay.setOptions({
-        itemsList: TEST_DATA
+        itemsList: TEST_DATA,
+        currentPage: 'firstPage'
     });
 
-    storeDataDisplay.goToFirstPage();
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0], TEST_DATA[1]]);
 });
 
@@ -873,10 +951,10 @@ test('goToLastPage 1', () => {
     });
 
     storeDataDisplay.setOptions({
-        itemsList: TEST_DATA
+        itemsList: TEST_DATA,
+        currentPage: 'lastPage'
     });
 
-    storeDataDisplay.goToLastPage();
     expect(storeDataDisplay.currentPage).toStrictEqual(5);
 });
 
@@ -888,9 +966,9 @@ test('goToLastPage 2', () => {
     });
 
     storeDataDisplay.setOptions({
-        itemsList: TEST_DATA
+        itemsList: TEST_DATA,
+        currentPage: 'lastPage'
     });
 
-    storeDataDisplay.goToLastPage();
     expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[8], TEST_DATA[9]]);
 });
