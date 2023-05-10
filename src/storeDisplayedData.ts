@@ -359,16 +359,16 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
 
     private _dataStatus_observable: DataStatus;
 
-
+    //region availableNumberItemsOnPage
     /**
-     * Возможные колличества элементов на странице
+     * Возможные количества элементов на странице
      */
     private _availableNumberItemsOnPage_observable: number[];
 
     public setAvailableNumberItemsOnPage(itemsList: number[]) {
         this._availableNumberItemsOnPage_observable = validationAvailableNumberItemsOnPage(itemsList);
     }
-
+    //endregion
 
     /**
      * Установить список элементов без триггеров
@@ -427,8 +427,8 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
     }
 
     /**
-     * Очищает все переданные данные
-     * Будет возвравщен в первоначальное состояние
+     * Очищает все переданные данные.
+     * Будет возвращен в первоначальное состояние
      */
     public destroy() {
         this._internalData = {
@@ -440,6 +440,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
         this._callbackForceUpdate = undefined;
         this._dataStatus_observable = 'notSet';
         this._pagination_observable = getEmptyPagination();
+        this._availableNumberItemsOnPage_observable = getDefaultAvailableNumberItemsOnPage();
     }
 
     /**
@@ -665,7 +666,6 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
 
         let availableNumberItemsOnPage: number[] = getDefaultAvailableNumberItemsOnPage();
 
-
         if (initData) {
             const initAvailableNumberItemsOnPage: number[] | null | undefined = initData.availableNumberItemsOnPage;
             const initCurrentPage: number | null | undefined = initData.currentPage;
@@ -702,16 +702,15 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
         }
 
         this._internalData = internalData;
-
         this._callbackForceUpdate = undefined;
         this._dataStatus_observable = dataStatus;
+        this._availableNumberItemsOnPage_observable = availableNumberItemsOnPage;
         this._pagination_observable = getPagination({
             numberItemsPerPage: this._internalData.numberItemsPerPage,
             currentPage: this._internalData.currentPage,
             itemsList: this._internalData.itemsList
         });
 
-        this._availableNumberItemsOnPage_observable = availableNumberItemsOnPage;
 
         makeObservable<this,
             '_pagination_observable' |

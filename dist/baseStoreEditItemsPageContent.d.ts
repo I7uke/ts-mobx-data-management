@@ -87,7 +87,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @protected
      */
     protected _getDeleteItemConfirmTextOverride(item: TItem): string;
-    protected _validationItemOverride(item: unknown): TItem | undefined;
+    protected _validationItemOverride(item: unknown, existingUuid?: string): TItem | undefined;
     protected _eventEditItemOverride(item: TItem, isNew: boolean): void;
     protected _eventDeleteItemOverride(item: TItem): void;
     protected _serverRequestDeleteItemOverride(item: unknown, other?: unknown): void;

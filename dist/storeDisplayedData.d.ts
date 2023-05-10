@@ -42,7 +42,7 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
     private _setPagination_action;
     private _dataStatus_observable;
     /**
-     * Возможные колличества элементов на странице
+     * Возможные количества элементов на странице
      */
     private _availableNumberItemsOnPage_observable;
     setAvailableNumberItemsOnPage(itemsList: number[]): void;
@@ -69,8 +69,8 @@ export default class StoreDisplayedData<TItem extends DataSourceItem> {
      */
     removeForceUpdate(): void;
     /**
-     * Очищает все переданные данные
-     * Будет возвравщен в первоначальное состояние
+     * Очищает все переданные данные.
+     * Будет возвращен в первоначальное состояние
      */
     destroy(): void;
     /**

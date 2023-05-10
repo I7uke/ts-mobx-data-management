@@ -259,7 +259,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         return 'Удалить элемент ?';
     }
 
-    protected _validationItemOverride(item: unknown): TItem | undefined {
+    protected _validationItemOverride(item: unknown, existingUuid?: string): TItem | undefined {
         throw new Error('method _validationItemOverride must be override');
     }
 
@@ -328,8 +328,25 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             return;
         }
 
+        if(params.changeType === 'editItem' || params.changeType === 'deleteItem') {
+            this.storeDisplayedData.setOptions({
+                itemsList: params.itemsList
+            });
+
+            return;
+        }
+
+        if(params.changeType === 'newDataSource') {
+            this.storeDisplayedData.setOptions({
+                itemsList: params.itemsList,
+                currentPage: 'firstPage'
+            });
+
+            return;
+        }
+
         this.storeDisplayedData.setOptions({
-            itemsList: params.itemsList
+            itemsList: params.itemsList,
         });
     }
 
