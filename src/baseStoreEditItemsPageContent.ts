@@ -43,10 +43,13 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._storeEditItem_observable = undefined;
     }
 
-    get storeEditItem() {
+    protected _getStoreEditItem(): TStoreEditItem | undefined {
         return this._storeEditItem_observable;
     }
 
+    get storeEditItem(): TStoreEditItem | undefined {
+        return this._storeEditItem_observable;
+    }
     //endregion
 
     //region Проверить элемент
@@ -328,7 +331,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             return;
         }
 
-        if(params.changeType === 'editItem' || params.changeType === 'deleteItem') {
+        if (params.changeType === 'editItem' || params.changeType === 'deleteItem') {
             this.storeDisplayedData.setOptions({
                 itemsList: params.itemsList
             });
@@ -366,7 +369,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._storeDataSource.setFilter(this._storeFilters.applyFilters);
 
         // Добавляем обновление данных
-        this._storeFilters.setCallbackUpdateViewData(()=>{
+        this._storeFilters.setCallbackUpdateViewData(() => {
             this.storeDisplayedData.setOptions({
                 currentPage: 1,
                 itemsList: this._storeDataSource.itemsList
@@ -381,7 +384,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     protected _removeDataSourceFilterDefault() {
         this._storeDataSource.removeFilter();
 
-        if(this._storeFilters) {
+        if (this._storeFilters) {
             this._storeFilters.removeCallbackUpdateViewData();
         }
     }

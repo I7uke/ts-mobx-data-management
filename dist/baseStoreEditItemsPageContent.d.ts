@@ -17,6 +17,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     private _storeEditItem_observable?;
     protected _setStoreEditItem(inputStore: TStoreEditItem | undefined): void;
     protected _destroyStoreEditItem(): void;
+    protected _getStoreEditItem(): TStoreEditItem | undefined;
     get storeEditItem(): TStoreEditItem | undefined;
     protected _validationItemsList(itemsList: unknown[]): TItem[];
     /**
