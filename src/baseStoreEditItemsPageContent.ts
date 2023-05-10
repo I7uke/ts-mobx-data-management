@@ -336,17 +336,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             return;
         }
 
-        if(params.changeType === 'newDataSource') {
-            this.storeDisplayedData.setOptions({
-                itemsList: params.itemsList,
-                currentPage: 'firstPage'
-            });
-
-            return;
-        }
-
         this.storeDisplayedData.setOptions({
             itemsList: params.itemsList,
+            currentPage: 1
         });
     }
 
@@ -370,7 +362,16 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             throw new Error('storeFilters not created');
         }
 
+        // Добавляем фильтрацию
         this._storeDataSource.setFilter(this._storeFilters.applyFilters);
+
+        // Добавляем обновление данных
+        this._storeFilters.setCallbackUpdateViewData(()=>{
+            this.storeDisplayedData.setOptions({
+                currentPage: 1,
+                itemsList: this._storeDataSource.itemsList
+            });
+        });
     }
 
     /**
@@ -379,6 +380,10 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      */
     protected _removeDataSourceFilterDefault() {
         this._storeDataSource.removeFilter();
+
+        if(this._storeFilters) {
+            this._storeFilters.removeCallbackUpdateViewData();
+        }
     }
 
     //endregion

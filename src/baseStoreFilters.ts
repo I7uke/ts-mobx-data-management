@@ -83,7 +83,9 @@ export default class BaseStoreFilters<TItem extends Object> {
      * @param callback
      */
     public setCallbackUpdateViewData(callback: () => void) {
-        this._callbackUpdateViewData = callback;
+        if(typeof callback === 'function'){
+            this._callbackUpdateViewData = callback;
+        }
     }
 
     /**
