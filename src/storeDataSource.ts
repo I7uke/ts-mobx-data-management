@@ -244,6 +244,14 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
     }
 
     /**
+     * Получить список всех элементов
+     * Фильтрация применяться не будет
+     */
+    get allItemsList(){
+        return this._getItemsArray();
+    }
+
+    /**
      * Количество элементов
      */
     get itemsCount(): number {
