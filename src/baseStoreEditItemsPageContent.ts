@@ -50,6 +50,40 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     get storeEditItem(): TStoreEditItem | undefined {
         return this._storeEditItem_observable;
     }
+
+    //endregion
+
+    //region Детальная информация об элементе
+    private _detailInfoAboutItem_observable?: TItem;
+
+    /**
+     * Установить элемент, для детального просмотра
+     * @param item
+     * @protected
+     */
+    protected _setDetailInfoAboutItem(item: TItem | undefined) {
+        this._detailInfoAboutItem_observable = item;
+    }
+
+    /**
+     * Забыть текущий выбранный элемент для детального просмотра
+     * @protected
+     */
+    protected _resetDetailInfoAboutItem() {
+        this._detailInfoAboutItem_observable = undefined;
+    }
+
+    /**
+     * Детальная информация о выбранном элементе
+     */
+    get detailInfoAboutItem(): TItem | undefined {
+        return this._detailInfoAboutItem_observable;
+    }
+
+    protected _getDetailInfoAboutItem(): TItem | undefined {
+        return this._detailInfoAboutItem_observable;
+    }
+
     //endregion
 
     //region Проверить элемент
@@ -166,6 +200,13 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         }
 
         this._eventGetItemInfoOverride(targetItem);
+    }
+
+    /**
+     * Событие, забыть текущий выбранный элемент для детального просмотра
+     */
+    public eventResetDetailInfoAboutItem() {
+        this._setDetailInfoAboutItem(undefined);
     }
 
     /**
@@ -296,7 +337,11 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @protected
      */
     protected _eventGetItemInfoOverride(item: TItem): void {
-        throw new Error('method _eventGetItemInfoOverride must be override');
+        if (!item) {
+            return;
+        }
+
+        this._setDetailInfoAboutItem(item);
     }
 
     /**
@@ -464,12 +509,14 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this.eventStartGetItemInfo = this.eventStartGetItemInfo.bind(this);
         this.eventDestroyItemEditor = this.eventDestroyItemEditor.bind(this);
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
+        this.eventResetDetailInfoAboutItem = this.eventResetDetailInfoAboutItem.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
         this.eventSaveModifiedItemDefault = this.eventSaveModifiedItemDefault.bind(this);
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
 
         this._storeEditItem_observable = undefined;
         this._redirectLink_observable = '';
+        this._detailInfoAboutItem_observable = undefined;
         this._getNewItem = initData.getNewItem;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
@@ -494,18 +541,25 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             | '_setRedirectLink'
             | '_error_observable'
             | '_setError'
-            | '_removeError'>(this, {
+            | '_removeError'
+            | '_detailInfoAboutItem_observable'
+            | '_setDetailInfoAboutItem'
+            | '_resetDetailInfoAboutItem'>(this, {
             _storeEditItem_observable: observable.ref,
             _redirectLink_observable: observable.ref,
+            _detailInfoAboutItem_observable: observable.ref,
             _error_observable: observable.ref,
             _setStoreEditItem: action,
             _destroyStoreEditItem: action,
             _setRedirectLink: action,
             _setError: action,
             _removeError: action,
+            _setDetailInfoAboutItem: action,
+            _resetDetailInfoAboutItem: action,
             storeEditItem: computed,
             redirectLink: computed,
-            error: computed
+            error: computed,
+            detailInfoAboutItem: computed
         });
     }
 }

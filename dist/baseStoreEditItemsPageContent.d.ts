@@ -19,6 +19,23 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     protected _destroyStoreEditItem(): void;
     protected _getStoreEditItem(): TStoreEditItem | undefined;
     get storeEditItem(): TStoreEditItem | undefined;
+    private _detailInfoAboutItem_observable?;
+    /**
+     * Установить элемент, для детального просмотра
+     * @param item
+     * @protected
+     */
+    protected _setDetailInfoAboutItem(item: TItem | undefined): void;
+    /**
+     * Забыть текущий выбранный элемент для детального просмотра
+     * @protected
+     */
+    protected _resetDetailInfoAboutItem(): void;
+    /**
+     * Детальная информация о выбранном элементе
+     */
+    get detailInfoAboutItem(): TItem | undefined;
+    protected _getDetailInfoAboutItem(): TItem | undefined;
     protected _validationItemsList(itemsList: unknown[]): TItem[];
     /**
      * Начать изменение элемента
@@ -54,6 +71,10 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @param e
      */
     eventStartGetItemInfo(e: React.MouseEvent<HTMLElement, MouseEvent>): void;
+    /**
+     * Событие, забыть текущий выбранный элемент для детального просмотра
+     */
+    eventResetDetailInfoAboutItem(): void;
     /**
      * Уничтожить редактор
      */
