@@ -164,8 +164,7 @@ test('editorStatus default', () => {
     });
 
     expect(storeEditItem.editorStatus).toStrictEqual({
-        status: 'editItem',
-        text: undefined
+        status: 'editItem'
     });
 });
 
@@ -178,13 +177,11 @@ test('editorStatus setEditorStatus', () => {
     });
 
     storeEditItem.setEditorStatus({
-        status: 'hide',
-        text: undefined
+        status: 'hide'
     });
 
     expect(storeEditItem.editorStatus).toStrictEqual({
-        status: 'hide',
-        text: undefined
+        status: 'hide'
     });
 });
 

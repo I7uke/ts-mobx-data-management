@@ -2,17 +2,25 @@ import cloneDeep from "lodash.clonedeep";
 import {action, computed, makeObservable, observable} from "mobx";
 import {sha1} from "object-hash";
 
-type EditorStatusType<TStatus extends string, TText> = {
-    readonly status: TStatus;
-    readonly text: TText;
-}
-
 type ItemStatus = 'newItem' | 'existingItem';
 
-type EditorStatus = EditorStatusType<'editItem', undefined>
-    | EditorStatusType<'serverRequest', string>
-    | EditorStatusType<'error', string>
-    | EditorStatusType<'hide', undefined>;
+interface EditorStatusBaseType<TStatus extends string> {
+    readonly status: TStatus;
+}
+
+type EditorStatusEditItem = EditorStatusBaseType<'editItem'>;
+type EditorStatusHide = EditorStatusBaseType<'hide'>;
+
+interface EditorStatusServerRequest extends EditorStatusBaseType<'serverRequest'> {
+    readonly loaderText: string;
+}
+
+interface EditorStatusError extends EditorStatusBaseType<'error'> {
+    readonly errorText: string;
+}
+
+type EditorStatus = EditorStatusEditItem | EditorStatusHide | EditorStatusServerRequest | EditorStatusError;
+
 
 export type CallbackSaveModifiedItemParams<TItem extends Object> = {
     readonly item: TItem;
@@ -184,8 +192,7 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
         this._itemToEditBeforeChanges = cloneDeep(initData.itemToEdit);
         this._itemStatus_observable = initData.itemStatus;
         this._editorStatus_observable = initData.editorStatus ? initData.editorStatus : {
-            status: 'editItem',
-            text: undefined
+            status: 'editItem'
         };
 
         makeObservable<this,
