@@ -21,6 +21,7 @@ const config: webpack.Configuration = {
         'storeDisplayedData': './src/storeDisplayedData.ts',
         'storeSitePageTitle': './src/storeSitePageTitle.ts',
         'uniqueUuid': './src/uniqueUuid.ts',
+        'baseStoreReadOnlyItemsPageContent': './src/baseStoreReadOnlyItemsPageContent.ts'
     },
     devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
     module: {
