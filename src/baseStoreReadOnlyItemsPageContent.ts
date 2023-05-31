@@ -367,6 +367,7 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent) {
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
         this.eventResetDetailInfoAboutItem = this.eventResetDetailInfoAboutItem.bind(this);
+        this.eventStartGetItemInfo = this.eventStartGetItemInfo.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
 
