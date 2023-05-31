@@ -1,7 +1,7 @@
 import React from "react";
 import {action, computed, makeObservable, observable} from "mobx";
 import {
-    BaseStoreFilters, CallbackSaveModifiedItemParams,
+    BaseStoreFilters,
     DataSourceItem, InitStoreDisplayedData,
     ListenerChangeDataSource,
     StoreDataSource,
@@ -9,14 +9,13 @@ import {
     UniqueUuid
 } from "./index";
 
-export type InitDataBaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem> = {
-    readonly getNewItem: () => TItem;
+export type InitDataBaseStoreReadOnlyItemsPageContent = {
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 }
 
 export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem>> {
-    protected readonly _getNewItem: () => TItem;
+
     protected readonly _uniquePageKey: string;
     private _uniqueUuid: UniqueUuid;
     private readonly _itemDataAttribute: string;
@@ -365,7 +364,7 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     }
     //#endregion
 
-    constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent<TItem>) {
+    constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent) {
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
         this.eventResetDetailInfoAboutItem = this.eventResetDetailInfoAboutItem.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
@@ -373,7 +372,6 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
 
         this._redirectLink_observable = '';
         this._detailInfoAboutItem_observable = undefined;
-        this._getNewItem = initData.getNewItem;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
         this.storeDisplayedData = new StoreDisplayedData<TItem>(this._getInitDataForStoreDisplayedDataOverride());

@@ -1,12 +1,10 @@
 import React from "react";
 import { BaseStoreFilters, DataSourceItem, InitStoreDisplayedData, StoreDataSource, StoreDisplayedData } from "./index";
-export type InitDataBaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem> = {
-    readonly getNewItem: () => TItem;
+export type InitDataBaseStoreReadOnlyItemsPageContent = {
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 };
 export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem>> {
-    protected readonly _getNewItem: () => TItem;
     protected readonly _uniquePageKey: string;
     private _uniqueUuid;
     private readonly _itemDataAttribute;
@@ -118,5 +116,5 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
      * Ссылка для перенаправления
      */
     get redirectLink(): string;
-    constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent<TItem>);
+    constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent);
 }
