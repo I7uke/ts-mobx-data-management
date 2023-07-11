@@ -11,3 +11,4 @@ export { default as BaseStoreEditItem } from "./baseStoreEditItem";
 export { default as StoreDataSource } from "./storeDataSource";
 export { default as StoreDisplayedData } from "./storeDisplayedData";
 export { default as BaseStoreFilters } from "./baseStoreFilters";
+export { default as BaseStoreContent } from "./baseStoreContent";
