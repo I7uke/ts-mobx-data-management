@@ -5,7 +5,7 @@ type InitData = {
      * Забыть данные после выхода.
      * Если истина, после ухода со страницы все данные будут забыты
      */
-    readonly isForgetDataAfterLeaving: boolean;
+    readonly isForgetDataAfterLeaving?: boolean;
     /**
      *  Уникальный ключ страницы
      */
@@ -94,15 +94,15 @@ export default class BaseStorePage<StoreContentPage> {
         this._pageShown();
     }
 
-    constructor(initData: InitData) {
+    constructor(initData?: InitData) {
         this.eventPageExit = this.eventPageExit.bind(this);
         this.eventPageShown = this.eventPageShown.bind(this);
         this._storeContentPage_observable = undefined;
-        this._isForgetDataAfterLeaving = initData.isForgetDataAfterLeaving;
+        this._isForgetDataAfterLeaving = !!initData?.isForgetDataAfterLeaving;
 
         let uniquePageKey: string = '';
 
-        if (typeof initData.uniquePageKey === 'string') {
+        if (typeof initData?.uniquePageKey === 'string') {
             if (initData.uniquePageKey) {
                 uniquePageKey = initData.uniquePageKey;
             }

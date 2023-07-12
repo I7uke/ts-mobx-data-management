@@ -3,7 +3,7 @@ type InitData = {
      * Забыть данные после выхода.
      * Если истина, после ухода со страницы все данные будут забыты
      */
-    readonly isForgetDataAfterLeaving: boolean;
+    readonly isForgetDataAfterLeaving?: boolean;
     /**
      *  Уникальный ключ страницы
      */
@@ -47,6 +47,6 @@ export default class BaseStorePage<StoreContentPage> {
      * Событие страница показана
      */
     eventPageShown(): void;
-    constructor(initData: InitData);
+    constructor(initData?: InitData);
 }
 export {};
