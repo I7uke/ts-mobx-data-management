@@ -163,5 +163,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Ссылка для перенаправления
      */
     get redirectLink(): string;
+    /**
+    * Вызывать перед удалением store
+    */
+    beforeRemovingStore(): void;
     constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>);
 }

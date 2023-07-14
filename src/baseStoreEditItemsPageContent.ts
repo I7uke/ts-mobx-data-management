@@ -502,6 +502,12 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
 
     //endregion
 
+    /**
+    * Вызывать перед удалением store
+    */
+    public beforeRemovingStore() {
+    }
+
     constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>) {
         this.eventStartEditItem = this.eventStartEditItem.bind(this);
         this.eventStartAddNewItem = this.eventStartAddNewItem.bind(this);

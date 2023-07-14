@@ -364,6 +364,12 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     }
     //#endregion
 
+    /**
+    * Вызывать перед удалением store
+    */
+    public beforeRemovingStore() {
+    }
+
     constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent) {
         this.eventUpdateDisplayedData = this.eventUpdateDisplayedData.bind(this);
         this.eventResetDetailInfoAboutItem = this.eventResetDetailInfoAboutItem.bind(this);

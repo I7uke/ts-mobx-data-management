@@ -74,6 +74,12 @@ export default class BaseStoreContent {
         this._serverRequestGetInitDataOverride();
     }
 
+    /**
+     * Вызывать перед удалением store
+     */
+    public beforeRemovingStore() {
+    }
+
     constructor(initData: InitDataBaseStoreContent) {
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
         this._redirectLink_observable = '';

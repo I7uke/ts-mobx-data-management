@@ -27,5 +27,9 @@ export default class BaseStoreContent {
     * Запрос на сервер, получить начальное состояние хранилища
     */
     serverRequestGetInitData(): void;
+    /**
+     * Вызывать перед удалением store
+     */
+    beforeRemovingStore(): void;
     constructor(initData: InitDataBaseStoreContent);
 }

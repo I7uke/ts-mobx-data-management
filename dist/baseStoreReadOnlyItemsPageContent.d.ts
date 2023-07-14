@@ -116,5 +116,9 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
      * Ссылка для перенаправления
      */
     get redirectLink(): string;
+    /**
+    * Вызывать перед удалением store
+    */
+    beforeRemovingStore(): void;
     constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent);
 }
