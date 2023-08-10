@@ -1,7 +1,7 @@
-export type InitDataBaseStoreContent = {
+export type InitDataBaseStoreDefaultContent = {
     readonly uniquePageKey: string;
 };
-export default class BaseStoreContent {
+export default class BaseStoreDefaultContent {
     protected readonly _uniquePageKey: string;
     getUniquePageKey(): string;
     private _error_observable?;
@@ -31,5 +31,5 @@ export default class BaseStoreContent {
      * Вызывать перед удалением store
      */
     beforeRemovingStore(): void;
-    constructor(initData: InitDataBaseStoreContent);
+    constructor(initData: InitDataBaseStoreDefaultContent);
 }

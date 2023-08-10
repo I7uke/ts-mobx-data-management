@@ -1,10 +1,10 @@
 import { action, computed, makeObservable, observable } from "mobx";
 
-export type InitDataBaseStoreContent = {
+export type InitDataBaseStoreDefaultContent = {
     readonly uniquePageKey: string;
 }
 
-export default class BaseStoreContent {
+export default class BaseStoreDefaultContent {
     protected readonly _uniquePageKey: string;
 
     public getUniquePageKey() {
@@ -80,7 +80,7 @@ export default class BaseStoreContent {
     public beforeRemovingStore() {
     }
 
-    constructor(initData: InitDataBaseStoreContent) {
+    constructor(initData: InitDataBaseStoreDefaultContent) {
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
         this._redirectLink_observable = '';
         this._uniquePageKey = initData.uniquePageKey;

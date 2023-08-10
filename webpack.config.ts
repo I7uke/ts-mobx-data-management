@@ -13,16 +13,6 @@ const config: webpack.Configuration = {
     mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
     entry: {
         'index': './src/index.ts',
-        'baseStoreEditItem': './src/baseStoreEditItem.ts',
-        'baseStoreEditItemsPageContent': './src/baseStoreEditItemsPageContent.ts',
-        'baseStoreFilters': './src/baseStoreFilters.ts',
-        'baseStorePage': './src/baseStorePage.ts',
-        'storeDataSource': './src/storeDataSource.ts',
-        'storeDisplayedData': './src/storeDisplayedData.ts',
-        'storeSitePageTitle': './src/storeSitePageTitle.ts',
-        'uniqueUuid': './src/uniqueUuid.ts',
-        'baseStoreReadOnlyItemsPageContent': './src/baseStoreReadOnlyItemsPageContent.ts',
-        'baseStoreContent': './src/baseStoreContent.ts'
     },
     devtool: process.env.NODE_ENV === 'production' ? false : 'source-map',
     module: {

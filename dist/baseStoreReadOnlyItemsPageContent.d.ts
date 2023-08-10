@@ -4,7 +4,7 @@ export type InitDataBaseStoreReadOnlyItemsPageContent = {
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 };
-export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem>> {
+export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> {
     protected readonly _uniquePageKey: string;
     private _uniqueUuid;
     private readonly _itemDataAttribute;
