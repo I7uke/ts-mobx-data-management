@@ -113,7 +113,14 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
         return this._itemToEditBeforeChanges;
     }
 
-    //region Методы для переопределения
+    /**
+     * Измененный элемент
+     */
+    get modifiedItem(): TModifiedItem {
+        return this._getModifiedItemOverride();
+    }
+
+    //#region Методы для переопределения
     /**
      * Проверить измененный элемент
      * @protected
@@ -122,7 +129,14 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
         throw new Error('method _validationModifiedItemOverride must be override!');
     }
 
-    //endregion
+    /**
+     * Измененный элемент
+     */
+    protected _getModifiedItemOverride(): TModifiedItem {
+        throw new Error('method _getModifiedItemOverride must be override!');
+    }
+
+    //#endregion
 
     /**
      * Отменить редактирование элемента

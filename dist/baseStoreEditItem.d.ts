@@ -69,10 +69,18 @@ export default class BaseStoreEditItem<TItem extends Object, TModifiedItem exten
      */
     get itemToEditBeforeChanges(): TItem;
     /**
+     * Измененный элемент
+     */
+    get modifiedItem(): TModifiedItem;
+    /**
      * Проверить измененный элемент
      * @protected
      */
     protected _validationModifiedItemOverride(): void;
+    /**
+     * Измененный элемент
+     */
+    protected _getModifiedItemOverride(): TModifiedItem;
     /**
      * Отменить редактирование элемента
      */
