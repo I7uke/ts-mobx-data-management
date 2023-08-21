@@ -1,10 +1,10 @@
 import React from "react";
-import { BaseStoreFilters, DataSourceItem, InitStoreDisplayedData, StoreDataSource, StoreDisplayedData } from "./index";
+import { BaseStoreContent, BaseStoreFilters, DataSourceItem, InitStoreDisplayedData, StoreDataSource, StoreDisplayedData } from "./index";
 export type InitDataBaseStoreReadOnlyItemsPageContent = {
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 };
-export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> {
+export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
     protected readonly _uniquePageKey: string;
     private _uniqueUuid;
     private readonly _itemDataAttribute;
@@ -81,6 +81,8 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
      * @protected
      */
     protected _getInitDataForStoreDisplayedDataOverride(): InitStoreDisplayedData<TItem>;
+    protected _beforeRemovingStoreOverride(): void;
+    protected _initOverride(): void;
     /**
      * Запрос на сервер, получить начальное состояние хранилища
      */
@@ -115,10 +117,14 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     /**
      * Ссылка для перенаправления
      */
-    get redirectLink(): string;
+    get redirectLink(): string | undefined;
     /**
     * Вызывать перед удалением store
     */
     beforeRemovingStore(): void;
+    /**
+     * Вызывать для инициализации
+     */
+    init(): void;
     constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent);
 }

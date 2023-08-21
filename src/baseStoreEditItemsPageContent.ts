@@ -1,6 +1,7 @@
 import React from "react";
-import {action, computed, makeObservable, observable} from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import {
+    BaseStoreContent,
     BaseStoreFilters, CallbackSaveModifiedItemParams,
     DataSourceItem, InitStoreDisplayedData,
     ListenerChangeDataSource,
@@ -15,7 +16,7 @@ export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> 
     readonly itemDataAttribute?: string;
 }
 
-export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined > {
+export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
     protected readonly _getNewItem: () => TItem;
     protected readonly _uniquePageKey: string;
     private _uniqueUuid: UniqueUuid;
@@ -32,7 +33,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     protected readonly _storeDataSource: StoreDataSource<TItem>;
     public readonly storeDisplayedData: StoreDisplayedData<TItem>;
 
-    //region Редактирование элемента
+    //#region Редактирование элемента
     private _storeEditItem_observable?: TStoreEditItem;
 
     protected _setStoreEditItem(inputStore: TStoreEditItem | undefined) {
@@ -51,9 +52,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         return this._storeEditItem_observable;
     }
 
-    //endregion
+    //#endregion
 
-    //region Детальная информация об элементе
+    //#region Детальная информация об элементе
     private _detailInfoAboutItem_observable?: TItem;
 
     /**
@@ -84,9 +85,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         return this._detailInfoAboutItem_observable;
     }
 
-    //endregion
+    //#endregion
 
-    //region Проверить элемент
+    //#region Проверить элемент
     protected _validationItemsList(itemsList: unknown[]): TItem[] {
         const result: TItem[] = [];
 
@@ -104,9 +105,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         return result;
     }
 
-    //endregion
+    //#endregion
 
-    //region Действия над элементом (не события)
+    //#region Действия над элементом (не события)
     /**
      * Начать изменение элемента
      * @param id - id элемента
@@ -149,9 +150,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._eventGetItemInfoOverride(targetItem);
     }
 
-    //endregion
+    //#endregion
 
-    //region События
+    //#region События
     /**
      * Событие начать редактировать элемент
      * @param e
@@ -205,7 +206,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     /**
      * Событие, забыть текущий выбранный элемент для детального просмотра
      */
-    public eventResetDetailInfoAboutItem() {
+    public eventResetDetailInfoAboutItem(): void {
         this._setDetailInfoAboutItem(undefined);
     }
 
@@ -226,10 +227,20 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         });
     }
 
+    public eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>): void {
+        if (param.status === 'newItem') {
+            this._serverRequestSaveNewItemOverride(param.item, param.other);
+            return;
+        }
 
-    //endregion
+        if (param.status === 'existingItem') {
+            this._serverRequestSaveChangedItemOverride(param.item, param.other);
+            return;
+        }
+    }
+    //#endregion
 
-    //region Получить элемент по data attribute
+    //#region Получить элемент по data attribute
     protected _getItemByDataAttribute(element: HTMLElement): TItem | undefined {
         const uuid: string | null = element.getAttribute(this._itemDataAttribute);
 
@@ -246,9 +257,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         return targetItem;
     }
 
-    //endregion
+    //#endregion
 
-    //region StoreFilters
+    //#region StoreFilters
     private _storeFilters?: TStoreFilters;
 
     /**
@@ -290,10 +301,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._storeFilters = store;
     }
 
-    //endregion
+    //#endregion
 
-    //region Методы для переопределения
-
+    //#region Методы для переопределения
     /**
      * Возвращает текст подтверждения при удалении элемента
      * @param item
@@ -356,16 +366,25 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         };
     }
 
-    //endregion
+    protected _beforeRemovingStoreOverride(): void {
+        throw new Error('method _beforeRemovingStoreOverride must be override');
+    }
 
+    protected _initOverride(): void {
+        throw new Error('method _initOverride must be override');
+    }
+    //#endregion
+
+    //#region Запросы на сервер
     /**
      * Запрос на сервер, получить начальное состояние хранилища
      */
     public serverRequestGetInitData(): void {
         this._serverRequestGetInitDataOverride();
     }
+    //#endregion
 
-    //region Слушатель изменение данных
+    //#region Слушатель изменение данных
     private _defaultListenerChangeDataSource(params: ListenerChangeDataSource<TItem>) {
         if (params.changeType === 'addNewItem') {
             this.storeDisplayedData.setOptions({
@@ -398,9 +417,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._storeDataSource.removeListenerChangeDataSource(this._defaultListenerChangeDataSource);
     }
 
-    //endregion
+    //#endregion
 
-    //region Добавить фильтр
+    //#region Добавить фильтр
     /**
      * Добавить фильтр источнику данных
      * @protected
@@ -434,12 +453,12 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         }
     }
 
-    //endregion
+    //#endregion
 
-    //region Ошибка
+    //#region Ошибка
     private _error_observable?: string;
 
-    protected _setError(error: string) {
+    protected _setError(error: string): void {
         if (typeof error !== 'string') {
             return;
         }
@@ -451,33 +470,21 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._error_observable = error;
     }
 
-    protected _removeError() {
+    protected _removeError():void {
         this._error_observable = undefined;
     }
 
-    get error() {
+    get error(): string | undefined {
         return this._error_observable;
     }
 
-    //endregion
+    //#endregion
 
-    public eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>) {
-        if (param.status === 'newItem') {
-            this._serverRequestSaveNewItemOverride(param.item, param.other);
-            return;
-        }
-
-        if (param.status === 'existingItem') {
-            this._serverRequestSaveChangedItemOverride(param.item, param.other);
-            return;
-        }
-    }
-
-    //region Ссылка редиректа
+    //#region Ссылка редиректа
     /**
      * Ссылка для перенаправления
      */
-    private _redirectLink_observable: string;
+    private _redirectLink_observable: string | undefined;
 
     /**
      * Установить ссылку для перенаправления
@@ -496,16 +503,24 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     /**
      * Ссылка для перенаправления
      */
-    get redirectLink() {
+    get redirectLink(): string | undefined {
         return this._redirectLink_observable;
     }
 
-    //endregion
+    //#endregion
 
     /**
     * Вызывать перед удалением store
     */
     public beforeRemovingStore() {
+        this._beforeRemovingStoreOverride();
+    }
+
+    /**
+     * Вызывать для инициализации
+     */
+    public init(): void {
+        this._initOverride();
     }
 
     constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>) {
@@ -519,10 +534,13 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
         this.eventSaveModifiedItemDefault = this.eventSaveModifiedItemDefault.bind(this);
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
+        this.beforeRemovingStore = this.beforeRemovingStore.bind(this);
+        this.init = this.init.bind(this);
 
         this._storeEditItem_observable = undefined;
-        this._redirectLink_observable = '';
+        this._redirectLink_observable = undefined;
         this._detailInfoAboutItem_observable = undefined;
+        this._error_observable = undefined;
         this._getNewItem = initData.getNewItem;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
@@ -551,22 +569,22 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
             | '_detailInfoAboutItem_observable'
             | '_setDetailInfoAboutItem'
             | '_resetDetailInfoAboutItem'>(this, {
-            _storeEditItem_observable: observable.ref,
-            _redirectLink_observable: observable.ref,
-            _detailInfoAboutItem_observable: observable.ref,
-            _error_observable: observable.ref,
-            _setStoreEditItem: action,
-            _destroyStoreEditItem: action,
-            _setRedirectLink: action,
-            _setError: action,
-            _removeError: action,
-            _setDetailInfoAboutItem: action,
-            _resetDetailInfoAboutItem: action,
-            storeEditItem: computed,
-            redirectLink: computed,
-            error: computed,
-            detailInfoAboutItem: computed
-        });
+                _storeEditItem_observable: observable.ref,
+                _redirectLink_observable: observable.ref,
+                _detailInfoAboutItem_observable: observable.ref,
+                _error_observable: observable.ref,
+                _setStoreEditItem: action,
+                _destroyStoreEditItem: action,
+                _setRedirectLink: action,
+                _setError: action,
+                _removeError: action,
+                _setDetailInfoAboutItem: action,
+                _resetDetailInfoAboutItem: action,
+                storeEditItem: computed,
+                redirectLink: computed,
+                error: computed,
+                detailInfoAboutItem: computed
+            });
     }
 }
 

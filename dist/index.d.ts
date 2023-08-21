@@ -4,6 +4,7 @@ export { type DataSourceItem, type DataSourceItemChangeType, type ListenerChange
 export { type InitDataBaseStoreEditItemsPageContent } from "./baseStoreEditItemsPageContent";
 export { type CallbackSaveModifiedItemParams, type InitDataBaseStoreEditItem } from "./baseStoreEditItem";
 export { type InitDataBaseStoreDefaultContent } from "./baseStoreDefaultContent";
+export { type BaseStoreContent } from "./models/baseStoreContent";
 export { default as UniqueUuid } from "./uniqueUuid";
 export { default as StoreSitePageTitle } from "./storeSitePageTitle";
 export { default as BaseStorePage } from "./baseStorePage";

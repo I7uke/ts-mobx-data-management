@@ -1,6 +1,7 @@
 import React from "react";
-import {action, computed, makeObservable, observable} from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 import {
+    BaseStoreContent,
     BaseStoreFilters,
     DataSourceItem, InitStoreDisplayedData,
     ListenerChangeDataSource,
@@ -14,7 +15,7 @@ export type InitDataBaseStoreReadOnlyItemsPageContent = {
     readonly itemDataAttribute?: string;
 }
 
-export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> {
+export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
 
     protected readonly _uniquePageKey: string;
     private _uniqueUuid: UniqueUuid;
@@ -198,7 +199,6 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     //#endregion
 
     //#region Методы для переопределения
-
     protected _validationItemOverride(item: unknown, existingUuid?: string): TItem | undefined {
         throw new Error('method _validationItemOverride must be override');
     }
@@ -232,14 +232,24 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
         };
     }
 
+    protected _beforeRemovingStoreOverride() {
+        throw new Error('method _beforeRemovingStoreOverride must be override');
+    }
+
+    protected _initOverride(): void {
+        throw new Error('method _initOverride must be override');
+    }
+
     //#endregion
 
+    //#region Запросы на сервер
     /**
      * Запрос на сервер, получить начальное состояние хранилища
      */
     public serverRequestGetInitData(): void {
         this._serverRequestGetInitDataOverride();
     }
+    //#endregion
 
     //#region Слушатель изменение данных
     private _defaultListenerChangeDataSource(params: ListenerChangeDataSource<TItem>) {
@@ -340,7 +350,7 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     /**
      * Ссылка для перенаправления
      */
-    private _redirectLink_observable: string;
+    private _redirectLink_observable: string | undefined;
 
     /**
      * Установить ссылку для перенаправления
@@ -359,7 +369,7 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     /**
      * Ссылка для перенаправления
      */
-    get redirectLink() {
+    get redirectLink():string | undefined {
         return this._redirectLink_observable;
     }
     //#endregion
@@ -368,6 +378,14 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     * Вызывать перед удалением store
     */
     public beforeRemovingStore() {
+        this._beforeRemovingStoreOverride();
+    }
+
+    /**
+     * Вызывать для инициализации
+     */
+    public init(): void {
+        this._initOverride();
     }
 
     constructor(initData: InitDataBaseStoreReadOnlyItemsPageContent) {
@@ -376,9 +394,12 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
         this.eventStartGetItemInfo = this.eventStartGetItemInfo.bind(this);
         this._defaultListenerChangeDataSource = this._defaultListenerChangeDataSource.bind(this);
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
+        this.beforeRemovingStore = this.beforeRemovingStore.bind(this);
+        this.init = this.init.bind(this);
 
-        this._redirectLink_observable = '';
+        this._redirectLink_observable = undefined;
         this._detailInfoAboutItem_observable = undefined;
+        this._error_observable = undefined;
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
         this.storeDisplayedData = new StoreDisplayedData<TItem>(this._getInitDataForStoreDisplayedDataOverride());
@@ -403,17 +424,17 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
             | '_detailInfoAboutItem_observable'
             | '_setDetailInfoAboutItem'
             | '_resetDetailInfoAboutItem'>(this, {
-            _redirectLink_observable: observable.ref,
-            _detailInfoAboutItem_observable: observable.ref,
-            _error_observable: observable.ref,
-            _setRedirectLink: action,
-            _setError: action,
-            _removeError: action,
-            _setDetailInfoAboutItem: action,
-            _resetDetailInfoAboutItem: action,
-            redirectLink: computed,
-            error: computed,
-            detailInfoAboutItem: computed
-        });
+                _redirectLink_observable: observable.ref,
+                _detailInfoAboutItem_observable: observable.ref,
+                _error_observable: observable.ref,
+                _setRedirectLink: action,
+                _setError: action,
+                _removeError: action,
+                _setDetailInfoAboutItem: action,
+                _resetDetailInfoAboutItem: action,
+                redirectLink: computed,
+                error: computed,
+                detailInfoAboutItem: computed
+            });
     }
 }

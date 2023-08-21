@@ -1,6 +1,6 @@
 {
-  "name": "ball-beverage-packaging-frontend",
-  "version": "0.1.0",
+  "name": "ts-mobx-data-management",
+  "version": "1.0.0",
   "description": "ts-mobx-data-management",
   "sideEffects": false,
   "scripts": {
@@ -37,7 +37,7 @@
     "@babel/preset-react": "7.22.5",
     "@babel/preset-typescript": "7.22.5",
     "@types/jest": "29.5.3",
-    "@types/node": "20.4.9",
+    "@types/node": "20.5.1",
     "@types/webpack": "5.28.1",
     "@types/webpack-bundle-analyzer": "4.6.0",
     "babel-loader": "9.1.3",

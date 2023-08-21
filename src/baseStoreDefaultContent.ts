@@ -1,18 +1,19 @@
 import { action, computed, makeObservable, observable } from "mobx";
+import { BaseStoreContent } from "./models/baseStoreContent";
 
 export type InitDataBaseStoreDefaultContent = {
     readonly uniquePageKey: string;
 }
 
-export default class BaseStoreDefaultContent {
+export default class BaseStoreDefaultContent implements BaseStoreContent {
     protected readonly _uniquePageKey: string;
 
-    public getUniquePageKey() {
+    public getUniquePageKey(): string {
         return this._uniquePageKey;
     }
 
     //#region Ошибка
-    private _error_observable?: string;
+    private _error_observable: string | undefined;
 
     protected _setError(error: string) {
         if (typeof error !== 'string') {
@@ -30,7 +31,7 @@ export default class BaseStoreDefaultContent {
         this._error_observable = undefined;
     }
 
-    get error() {
+    get error(): string | undefined {
         return this._error_observable;
     }
     //#endregion
@@ -39,7 +40,7 @@ export default class BaseStoreDefaultContent {
     /**
      * Ссылка для перенаправления
      */
-    private _redirectLink_observable: string;
+    private _redirectLink_observable: string | undefined;
 
     /**
      * Установить ссылку для перенаправления
@@ -74,15 +75,38 @@ export default class BaseStoreDefaultContent {
         this._serverRequestGetInitDataOverride();
     }
 
+    //#region beforeRemovingStore
+    protected _beforeRemovingStoreOverride() {
+        throw new Error('method _beforeRemovingStoreOverride must be override');
+    }
+
     /**
      * Вызывать перед удалением store
      */
-    public beforeRemovingStore() {
+    public beforeRemovingStore(): void {
+        this._beforeRemovingStoreOverride();
     }
+    //#endregion
+
+    //#region init
+    protected _initOverride(): void {
+        throw new Error('method _initOverride must be override');
+    }
+
+    /**
+     * Вызывать для инициализации
+     */
+    public init(): void {
+        this._initOverride();
+    }
+    //#endregion
 
     constructor(initData: InitDataBaseStoreDefaultContent) {
         this.serverRequestGetInitData = this.serverRequestGetInitData.bind(this);
-        this._redirectLink_observable = '';
+        this.beforeRemovingStore = this.beforeRemovingStore.bind(this);
+        this.init = this.init.bind(this);
+        this._redirectLink_observable = undefined;
+        this._error_observable = undefined;
         this._uniquePageKey = initData.uniquePageKey;
 
         makeObservable<this,

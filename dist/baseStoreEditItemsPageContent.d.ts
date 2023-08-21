@@ -1,11 +1,11 @@
 import React from "react";
-import { BaseStoreFilters, CallbackSaveModifiedItemParams, DataSourceItem, InitStoreDisplayedData, StoreDataSource, StoreDisplayedData } from "./index";
+import { BaseStoreContent, BaseStoreFilters, CallbackSaveModifiedItemParams, DataSourceItem, InitStoreDisplayedData, StoreDataSource, StoreDisplayedData } from "./index";
 export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> = {
     readonly getNewItem: () => TItem;
     readonly uniquePageKey: string;
     readonly itemDataAttribute?: string;
 };
-export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> {
+export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
     protected readonly _getNewItem: () => TItem;
     protected readonly _uniquePageKey: string;
     private _uniqueUuid;
@@ -83,6 +83,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * Обновить отображаемые данные
      */
     eventUpdateDisplayedData(): void;
+    eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>): void;
     protected _getItemByDataAttribute(element: HTMLElement): TItem | undefined;
     private _storeFilters?;
     /**
@@ -127,6 +128,8 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      * @protected
      */
     protected _getInitDataForStoreDisplayedDataOverride(): InitStoreDisplayedData<TItem>;
+    protected _beforeRemovingStoreOverride(): void;
+    protected _initOverride(): void;
     /**
      * Запрос на сервер, получить начальное состояние хранилища
      */
@@ -148,7 +151,6 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     protected _setError(error: string): void;
     protected _removeError(): void;
     get error(): string | undefined;
-    eventSaveModifiedItemDefault(param: CallbackSaveModifiedItemParams<TItem>): void;
     /**
      * Ссылка для перенаправления
      */
@@ -162,10 +164,14 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     /**
      * Ссылка для перенаправления
      */
-    get redirectLink(): string;
+    get redirectLink(): string | undefined;
     /**
     * Вызывать перед удалением store
     */
     beforeRemovingStore(): void;
+    /**
+     * Вызывать для инициализации
+     */
+    init(): void;
     constructor(initData: InitDataBaseStoreEditItemsPageContent<TItem>);
 }
