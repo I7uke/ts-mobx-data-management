@@ -1,0 +1,14 @@
+node_modules/
+.vscode/
+.idea/
+package-lock.json
+yarn.lock
+coverage/
+__tests__/
+src/
+.babelrc
+.browserslistrc
+jest.config.js
+tsconfig-for-webpack-config.json
+tsconfig.json
+webpack.config.ts
