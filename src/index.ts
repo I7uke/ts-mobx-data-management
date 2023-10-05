@@ -5,7 +5,7 @@ export {type InitDataBaseStoreEditItemsPageContent} from "./baseStoreEditItemsPa
 export {type CallbackSaveModifiedItemParams, type InitDataBaseStoreEditItem} from "./baseStoreEditItem";
 export {type InitDataBaseStoreDefaultContent} from "./baseStoreDefaultContent";
 export {type BaseStoreContent} from "./models/baseStoreContent";
-export {default as UniqueUuid} from "./uniqueUuid";
+export {default as getUniqueUuid} from "./getUniqueUuid";
 export {default as StoreSitePageTitle} from "./storeSitePageTitle";
 export {default as BaseStorePage} from "./baseStorePage";
 export {default as BaseStoreEditItemsPageContent} from "./baseStoreEditItemsPageContent";

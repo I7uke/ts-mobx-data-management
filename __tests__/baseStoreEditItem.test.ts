@@ -25,7 +25,7 @@ function GET_TEST_DATA_STATIC(): TestDataType {
 
 class StoreEditItemTest1 extends BaseStoreEditItem<TestDataType> {
 
-    protected _validationModifiedItemOverride(): void {
+    protected override _validationModifiedItemOverride(): void {
         this._saveModifiedItem({
             item:{
                 a: 'ChangeText',
@@ -47,7 +47,7 @@ class StoreEditItemTest1 extends BaseStoreEditItem<TestDataType> {
 
 class StoreEditItemTest2 extends BaseStoreEditItem<TestDataType> {
 
-    protected _validationModifiedItemOverride(): void {
+    protected override _validationModifiedItemOverride(): void {
         this._saveModifiedItem(
             {
                 item: this._getItemToEditBeforeChanges(),

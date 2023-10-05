@@ -7,7 +7,7 @@ import {
     ListenerChangeDataSource,
     StoreDataSource,
     StoreDisplayedData,
-    UniqueUuid
+    getUniqueUuid
 } from "./index";
 
 export type InitDataBaseStoreReadOnlyItemsPageContent = {
@@ -18,11 +18,10 @@ export type InitDataBaseStoreReadOnlyItemsPageContent = {
 export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
 
     protected readonly _uniquePageKey: string;
-    private _uniqueUuid: UniqueUuid;
     private readonly _itemDataAttribute: string;
 
     protected _getUniqueUuid(): string {
-        return this._uniqueUuid.getUuid();
+        return getUniqueUuid();
     }
 
     public getUniquePageKey() {
@@ -66,8 +65,12 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     //#endregion
 
     //#region Проверить элемент
-    protected _validationItemsList(itemsList: unknown[]): TItem[] {
+    protected _validationItemsList(itemsList?: any | undefined | null): TItem[] {
         const result: TItem[] = [];
+
+        if (!Array.isArray(itemsList)) {
+            return result;
+        }
 
         if (!itemsList.length) {
             return result;
@@ -403,7 +406,6 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
         this._uniquePageKey = initData.uniquePageKey;
         this._storeDataSource = new StoreDataSource<TItem>();
         this.storeDisplayedData = new StoreDisplayedData<TItem>(this._getInitDataForStoreDisplayedDataOverride());
-        this._uniqueUuid = new UniqueUuid();
 
         let itemDataAttribute: string = 'data-uuid';
 

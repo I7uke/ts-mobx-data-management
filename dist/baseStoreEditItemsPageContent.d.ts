@@ -8,7 +8,6 @@ export type InitDataBaseStoreEditItemsPageContent<TItem extends DataSourceItem> 
 export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem, TStoreEditItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
     protected readonly _getNewItem: () => TItem;
     protected readonly _uniquePageKey: string;
-    private _uniqueUuid;
     private readonly _itemDataAttribute;
     protected _getUniqueUuid(): string;
     getUniquePageKey(): string;
@@ -36,7 +35,7 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
      */
     get detailInfoAboutItem(): TItem | undefined;
     protected _getDetailInfoAboutItem(): TItem | undefined;
-    protected _validationItemsList(itemsList: unknown[]): TItem[];
+    protected _validationItemsList(itemsList?: any | undefined | null): TItem[];
     /**
      * Начать изменение элемента
      * @param id - id элемента

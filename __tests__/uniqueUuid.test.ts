@@ -1,18 +1,15 @@
-import UniqueUuid from "../src/uniqueUuid";
+import getUniqueUuid from "../src/getUniqueUuid";
 
 test('typeof string', () => {
-    const uniqueUuid = new UniqueUuid();
-    const uuid = uniqueUuid.getUuid();
+    const uuid = getUniqueUuid();
     expect(typeof uuid === 'string').toStrictEqual(true);
 });
 
 test('unique 100', () => {
-    const uniqueUuid = new UniqueUuid();
-
     const testMap: Map<string, null> = new Map<string, null>();
 
     for (let i = 0; i < 100; ++i) {
-        const uuid = uniqueUuid.getUuid();
+        const uuid = getUniqueUuid();
         testMap.set(uuid, null)
     }
 
@@ -20,12 +17,12 @@ test('unique 100', () => {
 });
 
 test('unique 5000000', () => {
-    const uniqueUuid = new UniqueUuid();
+    const uniqueUuid = getUniqueUuid();
 
     const testMap: Map<string, null> = new Map<string, null>();
 
     for (let i = 0; i < 5000000; ++i) {
-        const uuid = uniqueUuid.getUuid();
+        const uuid = getUniqueUuid();
         testMap.set(uuid, null)
     }
 

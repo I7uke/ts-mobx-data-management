@@ -2,7 +2,7 @@ import AbstractStorePage from "../src/baseStorePage";
 
 class TestStorePage1 extends AbstractStorePage<string> {
 
-    protected _pageShown() {
+    protected override _pageShown() {
         this._setStoreContentPage('Test store');
     }
 
@@ -15,7 +15,7 @@ class TestStorePage1 extends AbstractStorePage<string> {
 }
 
 class TestStorePage2 extends AbstractStorePage<string> {
-    protected _pageShown() {
+    protected override _pageShown() {
         this._setStoreContentPage('Test store');
     }
 

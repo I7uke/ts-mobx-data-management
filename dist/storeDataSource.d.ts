@@ -12,7 +12,6 @@ type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ListenerCh
  * Хранилище для управления данными
  */
 export default class StoreDataSource<TItem extends DataSourceItem> {
-    private _uniqueUuid;
     /**
      * Элементы для внутреннего хранения в формат Hash Tables
      * @private

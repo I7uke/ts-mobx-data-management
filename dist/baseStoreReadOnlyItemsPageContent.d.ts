@@ -6,7 +6,6 @@ export type InitDataBaseStoreReadOnlyItemsPageContent = {
 };
 export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceItem, TStoreFilters extends BaseStoreFilters<TItem> | undefined = undefined> implements BaseStoreContent {
     protected readonly _uniquePageKey: string;
-    private _uniqueUuid;
     private readonly _itemDataAttribute;
     protected _getUniqueUuid(): string;
     getUniquePageKey(): string;
@@ -29,7 +28,7 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
      */
     get detailInfoAboutItem(): TItem | undefined;
     protected _getDetailInfoAboutItem(): TItem | undefined;
-    protected _validationItemsList(itemsList: unknown[]): TItem[];
+    protected _validationItemsList(itemsList?: any | undefined | null): TItem[];
     /**
      * Получить информацию о элементе
      * @param id - id элемента

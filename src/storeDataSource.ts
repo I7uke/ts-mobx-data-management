@@ -1,5 +1,5 @@
 import cloneDeep from "lodash.clonedeep";
-import {UniqueUuid} from "./index";
+import {getUniqueUuid} from "./index";
 
 export interface DataSourceItem {
     readonly uuid: string;
@@ -19,7 +19,6 @@ type CallbackChangeDataSource<TItem extends DataSourceItem> = (param: ListenerCh
  * Хранилище для управления данными
  */
 export default class StoreDataSource<TItem extends DataSourceItem> {
-    private _uniqueUuid: UniqueUuid;
 
     /**
      * Элементы для внутреннего хранения в формат Hash Tables
@@ -64,21 +63,21 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         if (typeof copyItem.uuid !== 'string') {
             return {
                 ...copyItem,
-                uuid: this._uniqueUuid.getUuid()
+                uuid: getUniqueUuid()
             }
         }
 
         if (!copyItem.uuid) {
             return {
                 ...copyItem,
-                uuid: this._uniqueUuid.getUuid()
+                uuid: getUniqueUuid()
             }
         }
 
         if (this._internalItems.has(copyItem.uuid)) {
             return {
                 ...copyItem,
-                uuid: this._uniqueUuid.getUuid()
+                uuid: getUniqueUuid()
             }
         }
 
@@ -232,7 +231,6 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         this._internalItems = new Map<string, TItem>();
         this._callbacksListenersChangeDataSource = {};
         this._callbackApplyFilters = undefined;
-        this._uniqueUuid = new UniqueUuid();
     }
 
     /**
@@ -269,7 +267,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
             }
         }
 
-        const listenerId: string = this._uniqueUuid.getUuid();
+        const listenerId: string = getUniqueUuid();
         this._callbacksListenersChangeDataSource[listenerId] = listener;
     }
 

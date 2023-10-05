@@ -182,7 +182,7 @@ class StoreFiltersTest extends BaseStoreFilters<TestDataType> {
 
     }
 
-    protected _applyFiltersOverride(inputItems: TestDataType[]): TestDataType[] {
+    protected override _applyFiltersOverride(inputItems: TestDataType[]): TestDataType[] {
         return this._applyFiltersInOrder(inputItems, [
             this.applySortString_AZ,
             this._applyTestSearchString
