@@ -1,6 +1,6 @@
 {
   "name": "ts-mobx-data-management",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "ts-mobx-data-management",
   "sideEffects": false,
   "scripts": {

@@ -1,4 +1,3 @@
-import cloneDeep from "lodash.clonedeep";
 import {getUniqueUuid} from "./index";
 
 export interface DataSourceItem {
@@ -58,30 +57,28 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
             return undefined;
         }
 
-        const copyItem: TItem = cloneDeep(item);
-
-        if (typeof copyItem.uuid !== 'string') {
+        if (typeof item.uuid !== 'string') {
             return {
-                ...copyItem,
+                ...item,
                 uuid: getUniqueUuid()
             }
         }
 
-        if (!copyItem.uuid) {
+        if (!item.uuid) {
             return {
-                ...copyItem,
+                ...item,
                 uuid: getUniqueUuid()
             }
         }
 
-        if (this._internalItems.has(copyItem.uuid)) {
+        if (this._internalItems.has(item.uuid)) {
             return {
-                ...copyItem,
+                ...item,
                 uuid: getUniqueUuid()
             }
         }
 
-        return copyItem;
+        return item;
     }
 
     /**
@@ -116,7 +113,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
             return undefined;
         }
 
-        return cloneDeep(item);
+        return item;
     }
 
     /**
@@ -132,7 +129,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         }
 
         this._internalItems.set(validNewItem.uuid, validNewItem);
-        return cloneDeep(validNewItem);
+        return validNewItem;
     }
 
     /**
@@ -145,7 +142,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
 
         if (validExistingItem) {
             this._internalItems.set(validExistingItem.uuid, validExistingItem);
-            return cloneDeep(validExistingItem);
+            return validExistingItem;
         }
 
         return undefined;
@@ -183,7 +180,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
         }
 
         if (this._internalItems.has(uuid)) {
-            return cloneDeep(this._internalItems.get(uuid));
+            return this._internalItems.get(uuid);
         }
 
         return undefined;
@@ -194,8 +191,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
      * @private
      */
     private _getItemsArray(): TItem[] {
-        const arr: TItem[] = Array.from(this._internalItems.values());
-        return cloneDeep(arr);
+        return Array.from(this._internalItems.values());
     }
 
     /**
@@ -330,7 +326,7 @@ export default class StoreDataSource<TItem extends DataSourceItem> {
             }
         }
 
-        return cloneDeep(result);
+        return result;
     }
 
     /**
