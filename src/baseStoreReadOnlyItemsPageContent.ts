@@ -236,11 +236,9 @@ export default class BaseStoreReadOnlyItemsPageContent<TItem extends DataSourceI
     }
 
     protected _beforeRemovingStoreOverride() {
-        throw new Error('method _beforeRemovingStoreOverride must be override');
     }
 
     protected _initOverride(): void {
-        throw new Error('method _initOverride must be override');
     }
 
     //#endregion

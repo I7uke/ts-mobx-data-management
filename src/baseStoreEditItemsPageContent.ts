@@ -370,11 +370,9 @@ export default class BaseStoreEditItemsPageContent<TItem extends DataSourceItem,
     }
 
     protected _beforeRemovingStoreOverride(): void {
-        throw new Error('method _beforeRemovingStoreOverride must be override');
     }
 
     protected _initOverride(): void {
-        throw new Error('method _initOverride must be override');
     }
     //#endregion
 

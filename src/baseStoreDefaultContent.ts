@@ -77,7 +77,6 @@ export default class BaseStoreDefaultContent implements BaseStoreContent {
 
     //#region beforeRemovingStore
     protected _beforeRemovingStoreOverride() {
-        throw new Error('method _beforeRemovingStoreOverride must be override');
     }
 
     /**
@@ -90,7 +89,6 @@ export default class BaseStoreDefaultContent implements BaseStoreContent {
 
     //#region init
     protected _initOverride(): void {
-        throw new Error('method _initOverride must be override');
     }
 
     /**
