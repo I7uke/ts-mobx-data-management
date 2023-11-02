@@ -1,6 +1,6 @@
 {
   "name": "ts-mobx-data-management",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "ts-mobx-data-management",
   "sideEffects": false,
   "scripts": {
@@ -21,7 +21,7 @@
   },
   "main": "./dist",
   "author": "Ivan",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/CoraxEidolon/ts-mobx-data-management/issues"
   },
