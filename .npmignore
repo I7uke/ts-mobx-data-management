@@ -8,8 +8,9 @@ __tests__/
 src/
 .babelrc
 .browserslistrc
-jest.config.js
+jest.config.json
 tsconfig-for-webpack-config.json
 tsconfig.json
 webpack.config.ts
 stats.html
+rollup.config.js
