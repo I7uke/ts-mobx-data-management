@@ -1,12 +1,9 @@
 import resolve from '@rollup/plugin-node-resolve';
 import terser from '@rollup/plugin-terser';
 import typescript from '@rollup/plugin-typescript';
-import replace from '@rollup/plugin-replace';
-import commonjs from '@rollup/plugin-commonjs';
-import peerDepsExternal from 'rollup-plugin-peer-deps-external';
-
 import * as fs from 'fs';
 import * as path from 'path';
+import peerDepsExternal from 'rollup-plugin-peer-deps-external';
 
 function deleteFolder(folderPath) {
 	if (!fs.existsSync(folderPath)) {
@@ -28,19 +25,10 @@ const rollupOptions = {
 		sourcemap: false
 	},
 	plugins: [
-		peerDepsExternal({
-
-		}),
-		replace({
-			"process.env.NODE_ENV": JSON.stringify("production")
-		}),
+		peerDepsExternal(),
 		resolve(),
 		terser(),
 		typescript(),
-		commonjs({
-			include: /node_modules/,
-			requireReturnsDefault: 'auto', // <---- this solves default issue
-		})
 	]
 };
 

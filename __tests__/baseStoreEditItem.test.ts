@@ -1,7 +1,8 @@
-import BaseStoreEditItem, {
+import {
+    BaseStoreEditItem,
     CallbackSaveModifiedItemParams,
     InitDataBaseStoreEditItem
-} from "../src/baseStoreEditItem";
+} from "../dist";
 
 interface TestDataType {
     readonly a: string;

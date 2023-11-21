@@ -23,7 +23,8 @@
   },
   "exclude": [
     "node_modules",
-    "webpack.config.ts",
-    "__tests__/"
+    "__tests__/",
+    "dist",
+    "coverage"
   ]
 }

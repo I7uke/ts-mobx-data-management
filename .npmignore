@@ -12,3 +12,4 @@ jest.config.js
 tsconfig-for-webpack-config.json
 tsconfig.json
 webpack.config.ts
+stats.html

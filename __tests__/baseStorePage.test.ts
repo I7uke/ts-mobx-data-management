@@ -1,6 +1,6 @@
-import AbstractStorePage from "../src/baseStorePage";
+import {BaseStorePage} from "../dist";
 
-class TestStorePage1 extends AbstractStorePage<string> {
+class TestStorePage1 extends BaseStorePage<string> {
 
     protected override _pageShown() {
         this._setStoreContentPage('Test store');
@@ -14,7 +14,7 @@ class TestStorePage1 extends AbstractStorePage<string> {
     }
 }
 
-class TestStorePage2 extends AbstractStorePage<string> {
+class TestStorePage2 extends BaseStorePage<string> {
     protected override _pageShown() {
         this._setStoreContentPage('Test store');
     }

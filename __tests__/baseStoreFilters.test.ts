@@ -1,4 +1,4 @@
-import BaseStoreFilters from "../src/baseStoreFilters";
+import { BaseStoreFilters } from "../dist";
 
 type PrimitiveTypes = null | undefined | number | string | boolean;
 

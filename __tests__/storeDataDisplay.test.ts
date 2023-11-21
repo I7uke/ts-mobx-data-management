@@ -1,5 +1,4 @@
-import {DataSourceItem} from "../src";
-import StoreDisplayedData from "../src/storeDisplayedData";
+import { DataSourceItem, StoreDisplayedData } from "../dist";
 
 interface TestDataType extends DataSourceItem {
     readonly a: string;
@@ -8,16 +7,16 @@ interface TestDataType extends DataSourceItem {
 
 function GET_TEST_DATA(): TestDataType[] {
     return [
-        {uuid: '93afeba6-6d13-4bf8-b670-e083be457c5e', a: '0', b: 0}, //1
-        {uuid: 'ef952f20-b3b2-463d-b8ee-a0f88c91d227', a: '1', b: 1}, //2
-        {uuid: 'caa59895-d356-4433-89e1-a1eb698cf1f1', a: '2', b: 2}, //3
-        {uuid: '20e31d0b-47d3-430a-abaf-f81c5582279e', a: '3', b: 3}, //4
-        {uuid: 'ac339108-0c9d-406b-97b3-b36da19266bb', a: '4', b: 4}, //5
-        {uuid: 'ac77342c-050a-4764-af5b-79b8668d9193', a: '5', b: 5}, //6
-        {uuid: 'f6266d74-dd83-44ce-9b12-c3ba8c251dcd', a: '6', b: 6}, //7
-        {uuid: '99feabd1-b403-482f-aa40-eb4e0402f5d8', a: '7', b: 7}, //8
-        {uuid: '6a79f18d-5899-4f92-8864-f277d047f53c', a: '8', b: 8}, //9
-        {uuid: '5aa33293-5a6a-411e-870f-83952bc2889c', a: '9', b: 9}  //10
+        { uuid: '93afeba6-6d13-4bf8-b670-e083be457c5e', a: '0', b: 0 }, //1
+        { uuid: 'ef952f20-b3b2-463d-b8ee-a0f88c91d227', a: '1', b: 1 }, //2
+        { uuid: 'caa59895-d356-4433-89e1-a1eb698cf1f1', a: '2', b: 2 }, //3
+        { uuid: '20e31d0b-47d3-430a-abaf-f81c5582279e', a: '3', b: 3 }, //4
+        { uuid: 'ac339108-0c9d-406b-97b3-b36da19266bb', a: '4', b: 4 }, //5
+        { uuid: 'ac77342c-050a-4764-af5b-79b8668d9193', a: '5', b: 5 }, //6
+        { uuid: 'f6266d74-dd83-44ce-9b12-c3ba8c251dcd', a: '6', b: 6 }, //7
+        { uuid: '99feabd1-b403-482f-aa40-eb4e0402f5d8', a: '7', b: 7 }, //8
+        { uuid: '6a79f18d-5899-4f92-8864-f277d047f53c', a: '8', b: 8 }, //9
+        { uuid: '5aa33293-5a6a-411e-870f-83952bc2889c', a: '9', b: 9 }  //10
     ];
 }
 
@@ -157,7 +156,7 @@ test('wrong init data type 1', () => {
     const TEST_DATA = GET_TEST_DATA();
 
     const storeDataDisplay: StoreDisplayedData<TestDataType> = new StoreDisplayedData<TestDataType>({
-            itemsList: TEST_DATA,
+        itemsList: TEST_DATA,
         // @ts-ignore
         numberItemsPerPage: undefined,
         currentPage: 4
@@ -284,10 +283,10 @@ test('availableNumberItemsOnPage', () => {
         itemsList: TEST_DATA,
         numberItemsPerPage: 5,
         currentPage: 2,
-        availableNumberItemsOnPage: [1,2,3,4,5]
+        availableNumberItemsOnPage: [1, 2, 3, 4, 5]
     });
 
-    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1,2,3,4,5]);
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 3, 4, 5]);
 });
 
 test('numberItemsPerPage', () => {
@@ -325,7 +324,7 @@ test('eventShowNextPage 1', () => {
 
     storeDataDisplay.eventShowNextPage();
 
-    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[8],TEST_DATA[9]]);
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[8], TEST_DATA[9]]);
 });
 
 test('eventShowNextPage 2', () => {
@@ -355,7 +354,7 @@ test('eventShowNextPage 3', () => {
     storeDataDisplay.eventShowNextPage();
     storeDataDisplay.eventShowNextPage();
 
-    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[8],TEST_DATA[9]]);
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[8], TEST_DATA[9]]);
 });
 
 test('eventShowPrevPage 1', () => {
@@ -369,7 +368,7 @@ test('eventShowPrevPage 1', () => {
 
     storeDataDisplay.eventShowPrevPage();
 
-    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0],TEST_DATA[1], TEST_DATA[2],  TEST_DATA[3]]);
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2], TEST_DATA[3]]);
 });
 
 test('eventShowPrevPage 2', () => {
@@ -399,7 +398,7 @@ test('eventShowPrevPage 3', () => {
     storeDataDisplay.eventShowPrevPage();
     storeDataDisplay.eventShowPrevPage();
 
-    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0],TEST_DATA[1], TEST_DATA[2], TEST_DATA[3]]);
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([TEST_DATA[0], TEST_DATA[1], TEST_DATA[2], TEST_DATA[3]]);
 });
 
 test('setOptions currentPage', () => {
@@ -583,9 +582,9 @@ test('setAvailableNumberItemsOnPage', () => {
         currentPage: 3
     });
 
-    storeDataDisplay.setAvailableNumberItemsOnPage([1,2,3]);
+    storeDataDisplay.setAvailableNumberItemsOnPage([1, 2, 3]);
 
-    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1,2,3]);
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 3]);
 });
 
 
@@ -615,7 +614,7 @@ test('setAvailableNumberItemsOnPage wrong type', () => {
     // @ts-ignore
     storeDataDisplay.setAvailableNumberItemsOnPage(['1', '2', '3', '4', '5', '6', '7']);
 
-   expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
+    expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
 
 
@@ -673,8 +672,8 @@ test('setOptions availableNumberItemsOnPage wrong type undefined', () => {
         currentPage: 3
     });
 
-       // @ts-ignore
-       storeDataDisplay.setAvailableNumberItemsOnPage(undefined);
+    // @ts-ignore
+    storeDataDisplay.setAvailableNumberItemsOnPage(undefined);
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
 
@@ -688,8 +687,8 @@ test('setOptions availableNumberItemsOnPage wrong type string', () => {
     });
 
 
-           // @ts-ignore
-           storeDataDisplay.setAvailableNumberItemsOnPage('test');
+    // @ts-ignore
+    storeDataDisplay.setAvailableNumberItemsOnPage('test');
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 100]);
 });
 
@@ -702,8 +701,8 @@ test('setOptions availableNumberItemsOnPage wrong type', () => {
         currentPage: 3
     });
 
-      // @ts-ignore
-      storeDataDisplay.setAvailableNumberItemsOnPage([1, 2, 4, 'test', null, NaN, '5', 6, 7]);
+    // @ts-ignore
+    storeDataDisplay.setAvailableNumberItemsOnPage([1, 2, 4, 'test', null, NaN, '5', 6, 7]);
     expect(storeDataDisplay.availableNumberItemsOnPage).toStrictEqual([1, 2, 4, 6, 7]);
 });
 
@@ -822,7 +821,7 @@ test('dataStatus 3', () => {
     });
 
     storeDataDisplay.setOptions({
-        itemsList:[]
+        itemsList: []
     });
 
     expect(storeDataDisplay.dataStatus).toStrictEqual('empty');
@@ -898,7 +897,7 @@ test('destroy 1', () => {
         currentPage: 1
     });
     storeDataDisplay.destroy();
-    expect(storeDataDisplay.dataStatus).toStrictEqual('notSet' );
+    expect(storeDataDisplay.dataStatus).toStrictEqual('notSet');
 });
 
 test('destroy 2', () => {
@@ -910,7 +909,7 @@ test('destroy 2', () => {
     });
 
     storeDataDisplay.destroy();
-    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([] );
+    expect(storeDataDisplay.itemsOnCurrentPage).toStrictEqual([]);
 });
 
 test('goToFirstPage 1', () => {

@@ -1,4 +1,4 @@
-import StoreSitePageTitle from "../src/storeSitePageTitle";
+import { StoreSitePageTitle } from "../dist";
 
 test('linkBack', () => {
     const storeSitePageTitle = new StoreSitePageTitle();

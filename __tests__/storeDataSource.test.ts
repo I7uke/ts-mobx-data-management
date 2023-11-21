@@ -1,8 +1,9 @@
-import StoreDataSource, {
+import { v4 as uuidv4 } from 'uuid';
+import {
     DataSourceItem,
-    ListenerChangeDataSource
-} from "../src/storeDataSource";
-import {v4 as uuidv4} from 'uuid';
+    ListenerChangeDataSource,
+    StoreDataSource
+} from "../dist";
 
 interface TestDataType extends DataSourceItem {
     readonly fieldString: string;
@@ -252,7 +253,7 @@ test('Try get item by uuid wrong type Object', () => {
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     testStoreDataSource.setNewDataSource(TEST_DATA);
     // @ts-ignore
-    expect(testStoreDataSource.getItemByUuid({a: 1, b: 2})).toStrictEqual(undefined);
+    expect(testStoreDataSource.getItemByUuid({ a: 1, b: 2 })).toStrictEqual(undefined);
 });
 
 test('Try get item by uuid wrong type null', () => {
@@ -345,7 +346,7 @@ test('Delete item by uuid wrong type Object', () => {
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     testStoreDataSource.setNewDataSource(TEST_DATA);
     // @ts-ignore
-    expect(testStoreDataSource.deleteItemByUuid({a: 1, b: 2})).toStrictEqual(false);
+    expect(testStoreDataSource.deleteItemByUuid({ a: 1, b: 2 })).toStrictEqual(false);
 });
 
 test('Delete item by uuid wrong type null', () => {
@@ -417,14 +418,14 @@ test('Add new item wrong type empty Object', () => {
     const testStoreDataSource: StoreDataSource<TestDataType> = new StoreDataSource<TestDataType>();
     // @ts-ignore
     const newItem = testStoreDataSource.addNewItem({})
-    expect(newItem).toStrictEqual({uuid: newItem?.uuid});
+    expect(newItem).toStrictEqual({ uuid: newItem?.uuid });
 });
 
 test('Add new item wrong type Object without uuid', () => {
     const testStoreDataSource: StoreDataSource<{ uuid: string, a: number, b: number }> = new StoreDataSource<{ uuid: string, a: number, b: number }>();
     // @ts-ignore
-    const newItem = testStoreDataSource.addNewItem({a: 1, b: 2})
-    expect(newItem).toStrictEqual({uuid: newItem?.uuid, a: 1, b: 2});
+    const newItem = testStoreDataSource.addNewItem({ a: 1, b: 2 })
+    expect(newItem).toStrictEqual({ uuid: newItem?.uuid, a: 1, b: 2 });
 });
 
 test('Edit item', () => {
@@ -499,7 +500,7 @@ test('Edit item wrong type empty Object', () => {
 test('Edit item wrong type Object without uuid', () => {
     const testStoreDataSource: StoreDataSource<{ uuid: string, a: number, b: number }> = new StoreDataSource<{ uuid: string, a: number, b: number }>();
     // @ts-ignore
-    const newItem = testStoreDataSource.editItem({a: 1, b: 2})
+    const newItem = testStoreDataSource.editItem({ a: 1, b: 2 })
     expect(newItem).toStrictEqual(undefined);
 });
 
@@ -601,7 +602,7 @@ test('Add new items list wrong type 1', () => {
     const newItem1: TestDataType = GET_TEST_ITEM();
     const newItem2: TestDataType = GET_TEST_ITEM();
     // @ts-ignore
-    testStoreDataSource.addNewItemsList([newItem1, newItem2, 0, 1, 2, undefined, null, '', 'uuid', [], {a: 1, b: 2}]);
+    testStoreDataSource.addNewItemsList([newItem1, newItem2, 0, 1, 2, undefined, null, '', 'uuid', [], { a: 1, b: 2 }]);
     expect(testStoreDataSource.itemsCount).toStrictEqual(103);
 });
 
